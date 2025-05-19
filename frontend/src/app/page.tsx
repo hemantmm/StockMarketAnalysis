@@ -36,7 +36,8 @@ const StockSearch = () => {
 
   const predictPrice = async (pastPrices: number[]): Promise<number | null> => {
   try {
-    const res = await fetch("http://localhost:8000/predict", {
+    // const res = await fetch("http://localhost:8000/predict", {
+    const res = await fetch("https://stockmarketanalysis-1.onrender.com/predict", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ prices: pastPrices }),
