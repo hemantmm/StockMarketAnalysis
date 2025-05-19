@@ -30,6 +30,37 @@ const StockSearch = () => {
   const [showDetails, setShowDetails] = useState(false);
   const [stockPriceData, setStockPriceData] = useState<Array<[string,string]>>([]);
   const [periodWise, setPeriodWise] = useState('1m');
+  const [predictedPrice, setPredictedPrice] = useState<number | null>(null);
+
+
+
+  const predictPrice = async (pastPrices: number[]): Promise<number | null> => {
+  try {
+    const res = await fetch("http://localhost:8000/predict", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prices: pastPrices }),
+    });
+
+    if (!res.ok) {
+      console.error("Server error:", res.statusText);
+      return null;
+    }
+
+    const data = await res.json();
+    console.log("Full Response from Backend:", data);
+
+    if (data.prediction_price !== undefined && typeof data.prediction_price === "number") {
+      return data.prediction_price;
+    } else {
+      console.error("Invalid prediction response format:", data);
+      return null;
+    }
+  } catch (error) {
+    console.error("Prediction error:", error);
+    return null;
+  }
+};
   
   const toggleDetails = () => {
     setShowDetails(!showDetails);
@@ -131,7 +162,7 @@ const StockSearch = () => {
         </div>
       )}
 
-      {
+      {/* {
         stockPriceData.length > 0 && !loading && (
           <div className="mt-4">
             <h3 className="text-lg font-medium">Stock Price Data:</h3>
@@ -176,8 +207,82 @@ const StockSearch = () => {
             />
           </div>
         )
-      }
+      } */}
 
+      {
+  stockPriceData.length > 0 && !loading && (
+    <div className="mt-4">
+      <h3 className="text-lg font-medium">Stock Price Data:</h3>
+      <Line
+        data={{
+          labels: stockPriceData.map(([date]) => date),
+          datasets: [
+            {
+              label: 'Stock Price',
+              data: stockPriceData.map(([, price]) => parseFloat(price)),
+              tension: 0.1,
+              fill: false,
+              borderColor: 'rgba(75, 192, 192, 1)',
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            },
+          ],
+        }}
+        options={{
+          responsive: true,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+            },
+          },
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Date',
+              },
+            },
+            y: {
+              title: {
+                display: true,
+                text: 'Price',
+              },
+              beginAtZero: false,
+            },
+          },
+        }}
+      />
+
+      <div className="mt-4 text-center">
+        <button
+          onClick={async () => {
+    const priceArray = stockPriceData.map(([, price]) => parseFloat(price));
+    const prediction = await predictPrice(priceArray);
+
+    if (typeof prediction === 'number' && !isNaN(prediction)) {
+      setPredictedPrice(prediction);
+    } else {
+      console.error("Prediction failed or returned invalid value:", prediction);
+      setPredictedPrice(null);
+    }
+  }}
+  className="p-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+>
+  Predict Future Price
+</button>
+
+      </div>
+
+      {typeof predictedPrice === 'number' && !isNaN(predictedPrice) && (
+        <div className="mt-4 text-center text-xl font-semibold text-blue-600">
+          <h3>Predicted Future Price:</h3>
+          <p>₹ {predictedPrice.toFixed(2)}</p>  
+        </div>
+      )}
+
+    </div>
+  )
+}
     </div>
   );
 };
