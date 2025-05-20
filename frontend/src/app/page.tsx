@@ -9,6 +9,7 @@ import { FaArrowTrendDown } from "react-icons/fa6";
 import fetchStockData from './stockDataAPI';
 import {Chart as ChartJS, LineElement, LinearScale, CategoryScale, PointElement, Tooltip,Legend} from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import { useRouter } from 'next/navigation';
 
 ChartJS.register(LineElement, LinearScale, CategoryScale, PointElement, Tooltip, Legend);
 
@@ -31,6 +32,7 @@ const StockSearch = () => {
   const [stockPriceData, setStockPriceData] = useState<Array<[string,string]>>([]);
   const [periodWise, setPeriodWise] = useState('1m');
   const [predictedPrice, setPredictedPrice] = useState<number | null>(null);
+  const router = useRouter();
 
 
 
@@ -85,7 +87,16 @@ const StockSearch = () => {
     }
   };
 
+  const handleLogin = () => {
+    router.push('/Login');
+
+  };
+
   return (
+    <div>
+      <div className='flex p-4 bg-gray-100 mr-0'>
+          <button className='p-2 ml-auto bg-blue-500 text-white rounded-lg cursor-pointer' onClick={handleLogin}>Login</button>
+      </div>
     <div className="max-w-lg mx-auto p-4">
       <h1 className="text-3xl font-semibold text-center">Stock Market Search</h1>
       <div className="mt-4 flex space-x-4">
@@ -302,6 +313,7 @@ const StockSearch = () => {
     </div>
   )
 }
+    </div>
     </div>
   );
 };
