@@ -99,7 +99,24 @@ const StockSearch = () => {
         <select
           className="p-2 border border-gray-300 rounded-lg"
           value={periodWise}
-          onChange={(e) => setPeriodWise(e.target.value)}
+          // onChange={(e) => setPeriodWise(e.target.value)}
+          onChange={async (e) => {
+            const newPeriod= e.target.value;
+            setPeriodWise(newPeriod);
+            if(stockName){
+              setLoading(true);
+              setError('');
+              try {
+                const historicalData= await fetchStockData(stockName, newPeriod);
+                setStockPriceData(historicalData.datasets[0].values);
+              } catch (err) {
+                setError('Failed to fetch stock data: ' + err);
+              }
+              finally {
+                setLoading(false);
+              }
+            }
+          }}
         >
           {periodWiseOptions.map((option) => (
             <option key={option} value={option}>
