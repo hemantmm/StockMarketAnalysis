@@ -71,6 +71,7 @@ const StockSearch = () => {
     if (stockName) {
       setLoading(true);
       setError('');
+      setPredictedPrice(null)
       try {
         const data = await fetchStockDetails(stockName);
         const historicalData= await fetchStockData(stockName, periodWise);
