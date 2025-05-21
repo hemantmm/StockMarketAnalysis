@@ -1,0 +1,66 @@
+'use client';
+import { useRouter } from "next/navigation";
+
+const SignUpPage = () => {
+
+    const router = useRouter();
+
+    const handleLoginPage = () => {
+        // window.location.href = '/Login';
+        router.push('/Login');
+    };
+
+  return (
+    <div className="flex flex-col items-center justify-center h-screen">
+      <h1 className="text-4xl font-bold mb-4">Sign Up</h1>
+      <form className="flex flex-col space-y-4">
+        <input
+          type="text"
+          placeholder="Username"
+          className="border border-gray-300 p-2 rounded"
+        />
+        <input
+          type="email"
+          placeholder="Email"
+          className="border border-gray-300 p-2 rounded"
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          className="border border-gray-300 p-2 w-md rounded"
+        />
+        <button
+          type="submit"
+          className="bg-purple-600 text-xl font-bold text-white p-2 cursor-pointer rounded-lg hover:bg-white hover:text-purple-600 transition duration-200"
+        >
+          Sign Up
+        </button>
+      </form>
+        <div className="mt-4 flex items-center justify-between flex-col space-y-4">
+            <p className="text-gray-600">
+            Already have an account?{' '}
+            </p>
+
+            <button
+                className="bg-purple-600 text-xl hover:bg-white hover:text-purple-600 text-white font-bold py-2 w-md cursor-pointer rounded-lg focus:outline-none focus:shadow-outline"
+                onClick={handleLoginPage}
+            >
+                Login
+            </button>
+            </div>
+        <div className="mt-4">
+            <p className="text-gray-600">
+            By signing up, you agree to our{' '}
+            <a href="/terms" className="text-blue-500 hover:underline">
+                Terms of Service
+            </a>{' '}
+            and{' '}
+            <a href="/privacy" className="text-blue-500 hover:underline">
+                Privacy Policy
+            </a>
+            </p>
+            </div>
+    </div>
+  );
+}
+export default SignUpPage;
