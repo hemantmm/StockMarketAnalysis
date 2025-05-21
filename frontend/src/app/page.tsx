@@ -32,6 +32,7 @@ const StockSearch = () => {
   const [stockPriceData, setStockPriceData] = useState<Array<[string,string]>>([]);
   const [periodWise, setPeriodWise] = useState('1m');
   const [predictedPrice, setPredictedPrice] = useState<number | null>(null);
+  const [isPredicted, setIsPredicted] = useState(false);
   const router = useRouter();
 
 
@@ -285,20 +286,23 @@ const StockSearch = () => {
 
       <div className="mt-4 text-center">
         <button
+        disabled={isPredicted}
           onClick={async () => {
     const priceArray = stockPriceData.map(([, price]) => parseFloat(price));
     const prediction = await predictPrice(priceArray);
 
     if (typeof prediction === 'number' && !isNaN(prediction)) {
       setPredictedPrice(prediction);
+      setIsPredicted(true);
     } else {
       console.error("Prediction failed or returned invalid value:", prediction);
       setPredictedPrice(null);
     }
   }}
-  className="p-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+  className="p-2 bg-green-600 text-white rounded-lg hover:bg-green-700 cursor-pointer"
 >
-  Predict Future Price
+  {/* Predict Future Price */}
+  {isPredicted ? 'Price Predicted' : 'Predict Future Price'}
 </button>
 
       </div>
