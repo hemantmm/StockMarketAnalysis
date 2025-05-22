@@ -1,9 +1,13 @@
 'use client';
+import axios from 'axios';
 // import { useRouter } from "next/router";
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 const LoginPage = () => {
   const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleHomePage = () => {
     router.push('/');
@@ -12,6 +16,25 @@ const LoginPage = () => {
   const handleSignUpPage = () => {
     router.push('/SignUp');
   };
+
+  const handleLogin = async (e: React.FormEven) => {
+    e.preventDefault();
+    await axios.post('http://localhost:5000/Login', {
+      email,
+      password,
+    })
+    .then((response) => {
+      console.log(response.data);
+      alert('Login successful');
+      localStorage.setItem('token', response.data.token);
+      router.push('/');
+    })
+    .catch((error) => {
+      console.error('There was an error!', error);
+      alert('Login failed');
+    });
+    // router.push('/Home');
+  }
 
 
   return (
@@ -27,6 +50,8 @@ const LoginPage = () => {
             type="text"
             id="username"
             name="username"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
@@ -39,6 +64,8 @@ const LoginPage = () => {
             type="password"
             id="password"
             name="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
           <p className="text-red-500 text-xs italic">Please choose a password.</p>
@@ -46,7 +73,7 @@ const LoginPage = () => {
         <div className="flex items-center justify-between flex-col">
           <button
             className="bg-blue-500 hover:bg-blue-700 cursor-pointer text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onClick={handleHomePage}
+            onClick={handleLogin}
           >
             Login
           </button>

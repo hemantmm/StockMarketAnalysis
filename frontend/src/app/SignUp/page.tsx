@@ -1,13 +1,69 @@
 'use client';
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import axios from "axios";
 
 const SignUpPage = () => {
 
     const router = useRouter();
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    // const [confirmPassword, setConfirmPassword] = React.useState('');
+    // const [error, setError] = React.useState('');
+    // const [success, setSuccess] = React.useState('');
+    // const [loading, setLoading] = React.useState(false);
+    // const [isSubmitting, setIsSubmitting] = React.useState(false);
+    // const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
     const handleLoginPage = () => {
         // window.location.href = '/Login';
         router.push('/Login');
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        axios.post('http://localhost:4000/SignUp', {
+            username:name,
+            email,
+            password,
+        },{
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: false,
+        })
+        .then((response) => {
+            console.log(response.data);
+            router.push('/Login');
+        })
+        .catch((error) => {
+            console.error('There was an error!', error);
+        });
+        // setIsSubmitting(true);
+        // setError('');
+        // setSuccess('');
+        // setLoading(true);
+        // try {
+        //     const response = await fetch('/api/signup', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //         },
+        //         body: JSON.stringify({ name, email, password }),
+        //     });
+        //     const data = await response.json();
+        //     if (response.ok) {
+        //         setSuccess('Sign up successful!');
+        //         router.push('/Login');
+        //     } else {
+        //         setError(data.message || 'Something went wrong');
+        //     }
+        // } catch (error) {
+        //     setError('Something went wrong');
+        // } finally {
+        //     setLoading(false);
+        // }
     };
 
   return (
@@ -18,19 +74,26 @@ const SignUpPage = () => {
           type="text"
           placeholder="Username"
           className="border border-gray-300 p-2 rounded"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
         <input
           type="email"
           placeholder="Email"
           className="border border-gray-300 p-2 rounded"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <input
           type="password"
           placeholder="Password"
           className="border border-gray-300 p-2 w-md rounded"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
         <button
           type="submit"
+          onClick={handleSubmit}
           className="bg-purple-600 text-xl font-bold text-white p-2 cursor-pointer rounded-lg hover:bg-white hover:text-purple-600 transition duration-200"
         >
           Sign Up
