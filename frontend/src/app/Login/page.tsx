@@ -8,11 +8,7 @@ const LoginPage = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const handleHomePage = () => {
-    router.push('/');
-  };
-
+  
   const handleSignUpPage = () => {
     router.push('/SignUp');
   };
