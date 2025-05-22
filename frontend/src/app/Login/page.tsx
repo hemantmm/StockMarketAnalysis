@@ -8,12 +8,12 @@ const LoginPage = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
+
   const handleSignUpPage = () => {
     router.push('/SignUp');
   };
 
-  const handleLogin = async (e: React.FormEven) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     await axios.post('http://localhost:5000/Login', {
       email,
