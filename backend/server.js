@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const validator = require('validator');
 
 const app= express();
 
@@ -54,6 +55,10 @@ const User = mongoose.model('User', userSchema);
 
 app.post('/SignUp', async (req, res) => {
     const { username, email, password } = req.body;
+
+    if(!validator.isEmail(email)) {
+        return res.status(400).json({ message: 'Invalid email address' });
+    }
 
     try {
         const existingUser = await User.findOne({$or: [{ username, email }] });
