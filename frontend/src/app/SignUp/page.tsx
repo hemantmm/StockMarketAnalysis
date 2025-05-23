@@ -1,7 +1,7 @@
 'use client';
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import axios,{AxiosError} from "axios";
+import axios from "axios";
 
 const SignUpPage = () => {
 
@@ -9,7 +9,6 @@ const SignUpPage = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const isValidEmail = (email: string) => /^\S+@\S+\.\S+$/.test(email);
     // const [confirmPassword, setConfirmPassword] = React.useState('');
     // const [error, setError] = React.useState('');
     // const [success, setSuccess] = React.useState('');
@@ -24,48 +23,23 @@ const SignUpPage = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if(!isValidEmail(email)) {
-            alert('Please enter a valid email address');
-            return;
-        }
-
-        try {
-        const response = await axios.post(
-            'https://stockmarketanalysis-2.onrender.com/SignUp',
-            { username: name, email, password },
-            {
-                headers: { 'Content-Type': 'application/json' },
-                withCredentials: false,
-            }
-        );
-        console.log(response.data);
-        router.push('/Login');
-    } catch (error: unknown) {
-        const axiosError = error as AxiosError<{message: string}>;
-        if (axiosError.response?.data?.message) {
-            alert(axiosError.response.data.message);
-        } else {
-            alert("There was an error during signup.");
-        }
-    }
-    
-        // axios.post('https://stockmarketanalysis-2.onrender.com/SignUp', {
-        //     username:name,
-        //     email,
-        //     password,
-        // },{
-        //   headers: {
-        //     'Content-Type': 'application/json',
-        //   },
-        //   withCredentials: false,
-        // })
-        // .then((response) => {
-        //     console.log(response.data);
-        //     router.push('/Login');
-        // })
-        // .catch((error) => {
-        //     console.error('There was an error!', error);
-        // });
+        axios.post('https://stockmarketanalysis-2.onrender.com/SignUp', {
+            username:name,
+            email,
+            password,
+        },{
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: false,
+        })
+        .then((response) => {
+            console.log(response.data);
+            router.push('/Login');
+        })
+        .catch((error) => {
+            console.error('There was an error!', error);
+        });
         // setIsSubmitting(true);
         // setError('');
         // setSuccess('');
