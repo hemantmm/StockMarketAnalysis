@@ -93,10 +93,15 @@ const StockSearch = () => {
 
   };
 
+  const handleStockAlert = () => {
+    router.push('/Notifier');
+  }
+
   return (
     <div>
-      <div className='flex p-4 bg-gray-100 mr-0'>
-          <button className='p-2 ml-auto bg-blue-500 text-white rounded-lg cursor-pointer' onClick={handleLogin}>Login</button>
+      <div className=' p-4 bg-purple-500 mr-0 text-right space-x-4'>
+        <button className="p-2 bg-white text-purple-500 rounded-lg cursor-pointer" onClick={handleStockAlert} disabled={loading}> Stock Alert </button>
+        <button className='p-2 bg-white text-purple-500 rounded-lg cursor-pointer' onClick={handleLogin}>Login</button>
       </div>
     <div className="max-w-lg mx-auto p-4">
       <h1 className="text-3xl font-semibold text-center">Stock Market Search</h1>
