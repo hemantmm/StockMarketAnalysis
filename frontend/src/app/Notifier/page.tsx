@@ -9,7 +9,7 @@ const NotifierPage = () => {
 
   const handleSubmit = async () => {
     try {
-      await axios.post("http://localhost:8000/set-alert", {
+      await axios.post("https://stockmarketanalysis-1.onrender.com/set-alert", {
         stock,
         target_price: parseFloat(target),
         email,
