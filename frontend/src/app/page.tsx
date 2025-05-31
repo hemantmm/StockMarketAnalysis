@@ -35,6 +35,12 @@ interface StockData {
   nsePrice: number;
 }
 
+type ActiveStocks={
+  company: string;
+  price?: number;
+  currentPrice?: number;
+}
+
 const periodWiseOptions = ["1m", "6m", "1yr", "3yr", "5yr", "10yr", "max"];
 
 const StockSearch = () => {
@@ -51,7 +57,7 @@ const StockSearch = () => {
   const [predictedPrice, setPredictedPrice] = useState<number | null>(null);
   const [isPredicted, setIsPredicted] = useState(false);
   const router = useRouter();
-  const [activeStocks, setActiveStocks] = useState<any[]>([]);
+  const [activeStocks, setActiveStocks] = useState<ActiveStocks[]>([]);
 
   const predictPrice = async (pastPrices: number[]): Promise<number | null> => {
     try {
