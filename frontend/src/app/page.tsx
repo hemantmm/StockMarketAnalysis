@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import { useState } from "react";
 import fetchStockDetails from "./stockNameAPI";
 import { FaCircleInfo } from "react-icons/fa6";
@@ -18,7 +18,8 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { useRouter } from "next/navigation";
-import activeTrendingStocks from "./ActiveStockAPI";
+// import activeTrendingStocks from "./ActiveStockAPI";
+import ActiveStocks from "./ActiveStocks/page";
 
 ChartJS.register(
   LineElement,
@@ -35,11 +36,11 @@ interface StockData {
   nsePrice: number;
 }
 
-type ActiveStocks={
-  company: string;
-  price?: number;
-  currentPrice?: number;
-}
+// type ActiveStocks={
+//   company: string;
+//   price?: number;
+//   currentPrice?: number;
+// }
 
 const periodWiseOptions = ["1m", "6m", "1yr", "3yr", "5yr", "10yr", "max"];
 
@@ -57,7 +58,7 @@ const StockSearch = () => {
   const [predictedPrice, setPredictedPrice] = useState<number | null>(null);
   const [isPredicted, setIsPredicted] = useState(false);
   const router = useRouter();
-  const [activeStocks, setActiveStocks] = useState<ActiveStocks[]>([]);
+  // const [activeStocks, setActiveStocks] = useState<ActiveStocks[]>([]);
 
   const predictPrice = async (pastPrices: number[]): Promise<number | null> => {
     try {
@@ -116,18 +117,18 @@ const StockSearch = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchActive = async () => {
-      try {
-        const data = await activeTrendingStocks();
-        setActiveStocks(data);
-      } catch (err) {
-        console.error("Failed to fetch active stocks:", err);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchActive = async () => {
+  //     try {
+  //       const data = await activeTrendingStocks();
+  //       setActiveStocks(data);
+  //     } catch (err) {
+  //       console.error("Failed to fetch active stocks:", err);
+  //     }
+  //   };
 
-    fetchActive();
-  }, []);
+  //   fetchActive();
+  // }, []);
 
   const handleLogin = () => {
     router.push("/Login");
@@ -160,27 +161,7 @@ const StockSearch = () => {
         </nav>
       </div>
 
-      {activeStocks.length > 0 && (
-        <div className="mt-8 px-4 sm:px-8 lg:px-16 xl:px-32">
-          <h2 className="text-xl font-bold mb-4 text-center">
-            Most Active Stocks
-          </h2>
-          <ul className="space-y-2 max-w-screen-xl mx-auto">
-            {activeStocks.map((stock, index) => (
-              <li
-                key={index}
-                className="bg-purple-500 p-3 rounded-lg shadow-md text-white"
-              >
-                <p className="text-lg font-semibold">{stock.company}</p>
-                <p>Price: ₹{stock.price || stock.currentPrice || "N/A"}</p>
-                {/* <p className={`${stock.change > 0 ? 'text-green-500' : 'text-red-500'}`}>
-            Change: {stock.change}%
-          </p> */}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <ActiveStocks />
 
       <div className="max-w-lg mx-auto p-4">
         <div className="mt-4 flex space-x-4">
