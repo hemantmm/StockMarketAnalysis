@@ -18,7 +18,6 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { useRouter } from "next/navigation";
-// import activeTrendingStocks from "./ActiveStockAPI";
 import ActiveStocks from "./ActiveStocks/page";
 
 ChartJS.register(
@@ -36,12 +35,6 @@ interface StockData {
   nsePrice: number;
 }
 
-// type ActiveStocks={
-//   company: string;
-//   price?: number;
-//   currentPrice?: number;
-// }
-
 const periodWiseOptions = ["1m", "6m", "1yr", "3yr", "5yr", "10yr", "max"];
 
 const StockSearch = () => {
@@ -58,7 +51,6 @@ const StockSearch = () => {
   const [predictedPrice, setPredictedPrice] = useState<number | null>(null);
   const [isPredicted, setIsPredicted] = useState(false);
   const router = useRouter();
-  // const [activeStocks, setActiveStocks] = useState<ActiveStocks[]>([]);
 
   const predictPrice = async (pastPrices: number[]): Promise<number | null> => {
     try {
@@ -104,6 +96,7 @@ const StockSearch = () => {
       setLoading(true);
       setError("");
       setPredictedPrice(null);
+      setIsPredicted(false);
       try {
         const data = await fetchStockDetails(stockName);
         const historicalData = await fetchStockData(stockName, periodWise);
@@ -116,19 +109,6 @@ const StockSearch = () => {
       }
     }
   };
-
-  // useEffect(() => {
-  //   const fetchActive = async () => {
-  //     try {
-  //       const data = await activeTrendingStocks();
-  //       setActiveStocks(data);
-  //     } catch (err) {
-  //       console.error("Failed to fetch active stocks:", err);
-  //     }
-  //   };
-
-  //   fetchActive();
-  // }, []);
 
   const handleLogin = () => {
     router.push("/Login");
@@ -182,6 +162,8 @@ const StockSearch = () => {
               if (stockName) {
                 setLoading(true);
                 setError("");
+                setPredictedPrice(null);
+                setIsPredicted(false);
                 try {
                   const historicalData = await fetchStockData(
                     stockName,
@@ -284,53 +266,6 @@ const StockSearch = () => {
           </div>
         )}
 
-        {/* {
-        stockPriceData.length > 0 && !loading && (
-          <div className="mt-4">
-            <h3 className="text-lg font-medium">Stock Price Data:</h3>
-            <Line
-              data={{
-                labels: stockPriceData.map(([date]) => date),
-                datasets: [
-                  {
-                    label: 'Stock Price',
-                    data: stockPriceData.map(([, price]) => parseFloat(price)),
-                    tension: 0.1,
-                    fill: false,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                  },
-                ],
-              }}
-              options={{
-                responsive: true,
-                plugins: {
-                  legend: {
-                    display: true,
-                    position: 'top',
-                  },
-                },
-                scales: {
-                  x: {
-                    title: {
-                      display: true,
-                      text: 'Date',
-                    },
-                  },
-                  y: {
-                    title: {
-                      display: true,
-                      text: 'Price',
-                    },
-                    beginAtZero: false,
-                  },
-                },
-              }}
-            />
-          </div>
-        )
-      } */}
-
         {stockPriceData.length > 0 && !loading && (
           <div className="mt-4">
             <h3 className="text-lg font-medium">Stock Price Data:</h3>
@@ -396,7 +331,6 @@ const StockSearch = () => {
                 }}
                 className="p-2 bg-green-600 text-white rounded-lg hover:bg-green-700 cursor-pointer"
               >
-                {/* Predict Future Price */}
                 {isPredicted ? "Price Predicted" : "Predict Future Price"}
               </button>
             </div>
