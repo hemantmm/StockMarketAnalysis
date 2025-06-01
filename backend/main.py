@@ -30,16 +30,6 @@ async def predict_price(request: Request):
     prediction_price = train_model(prices)
     return {"prediction_price": prediction_price}
 
-
-# @app.post("/set-alert")
-# def set_alert(alert: Alert):
-#     with open("alerts.json", "r+") as f:
-#         alerts=json.load(f)
-#         alerts.append(alert.dict())
-#         f.seek(0)
-#         json.dump(alerts, f, indent=2)
-#     return {"message": "Alert set successfully"}
-
 @app.post("/set-alert")
 def set_alert(alert: Alert):
     try:
@@ -50,7 +40,6 @@ def set_alert(alert: Alert):
             json.dump(alerts, f, indent=2)
             f.truncate()
     except FileNotFoundError:
-        # If file doesn't exist, create and write initial list
         with open("alert_store.json", "w") as f:
             json.dump([alert.dict()], f, indent=2)
     return {"message": "Alert saved!"}
