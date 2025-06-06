@@ -34,6 +34,7 @@ const periodWiseOptions = ["1m", "6m", "1yr", "3yr", "5yr", "10yr", "max"];
 
 const StockSearchs = () => {
   const [stockName, setStockName] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [stockData, setStockData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
