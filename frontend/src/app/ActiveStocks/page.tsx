@@ -32,7 +32,7 @@ const ActiveStocks = () => {
   }, []);
 
   return (
-    <div>
+    <div className="p-8">
       <div className="mt-8 px-4 sm:px-8 lg:px-16 xl:px-32">
         <h2 className="text-xl font-bold mb-4 text-center">
           Most Active Stocks
