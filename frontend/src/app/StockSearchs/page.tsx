@@ -14,6 +14,7 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import { useRouter } from "next/navigation";
 
 ChartJS.register(
   LineElement,
@@ -33,6 +34,7 @@ interface StockData {
 const periodWiseOptions = ["1m", "6m", "1yr", "3yr", "5yr", "10yr", "max"];
 
 const StockSearchs = () => {
+  const router = useRouter();
   const [stockName, setStockName] = useState("");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [stockData, setStockData] = useState<any>(null);
@@ -94,6 +96,16 @@ const StockSearchs = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-950 text-white font-sans">
       <div className="max-w-3xl mx-auto p-4">
+        {/* Hold Stock Button */}
+        <div className="flex justify-end mb-4">
+          <button
+            className="px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition cursor-pointer"
+            onClick={() => router.push("/HoldStock")}
+          >
+            Hold Stock
+          </button>
+        </div>
+
         {/* Search section */}
         <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 mt-6">
           <input

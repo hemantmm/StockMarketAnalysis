@@ -1,4 +1,5 @@
 {
+  "pages": {},
   "app": {
     "[project]/src/app/HoldStock/page": [
       "static/media/or3nQ6H_1_WfwkMZI_qYFrcdmhHkjko-s.p.be19f591.woff2",
@@ -6,6 +7,5 @@
     ]
   },
   "appUsingSizeAdjust": true,
-  "pages": {},
   "pagesUsingSizeAdjust": false
 }
