@@ -9,15 +9,8 @@ const SignUpPage = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    // const [confirmPassword, setConfirmPassword] = React.useState('');
-    // const [error, setError] = React.useState('');
-    // const [success, setSuccess] = React.useState('');
-    // const [loading, setLoading] = React.useState(false);
-    // const [isSubmitting, setIsSubmitting] = React.useState(false);
-    // const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
     const handleLoginPage = () => {
-        // window.location.href = '/Login';
         router.push('/Login');
     };
 
@@ -40,30 +33,6 @@ const SignUpPage = () => {
         .catch((error) => {
             console.error('There was an error!', error);
         });
-        // setIsSubmitting(true);
-        // setError('');
-        // setSuccess('');
-        // setLoading(true);
-        // try {
-        //     const response = await fetch('/api/signup', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //         },
-        //         body: JSON.stringify({ name, email, password }),
-        //     });
-        //     const data = await response.json();
-        //     if (response.ok) {
-        //         setSuccess('Sign up successful!');
-        //         router.push('/Login');
-        //     } else {
-        //         setError(data.message || 'Something went wrong');
-        //     }
-        // } catch (error) {
-        //     setError('Something went wrong');
-        // } finally {
-        //     setLoading(false);
-        // }
     };
 
   return (

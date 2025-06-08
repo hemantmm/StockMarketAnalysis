@@ -94,200 +94,179 @@ const StockSearchs = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-950 text-white font-sans">
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-700 to-white animate-gradient-move text-white font-sans flex flex-col">
       <div className="max-w-3xl mx-auto p-4">
-        {/* Hold Stock Button */}
         <div className="flex justify-end mb-4">
           <button
-            className="px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition cursor-pointer"
-            onClick={() => router.push("/HoldStock")}
+            onClick={() => router.push('/HoldStock')}
+            className="px-6 py-2 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold shadow-lg transition-all duration-300 text-lg"
           >
             Hold Stock
           </button>
         </div>
+        <div className="bg-white/20 backdrop-blur-2xl rounded-3xl shadow-2xl p-10 mb-8 border border-white/30">
+          <h2 className="text-3xl font-extrabold mb-6 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Stock Search</h2>
+          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+            <input
+              type="text"
+              placeholder="Enter stock symbol (e.g., TCS)"
+              value={stockName}
+              onChange={(e) => setStockName(e.target.value)}
+              className="flex-1 px-5 py-3 rounded-xl border border-white/30 bg-white/10 text-white placeholder-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-400 text-lg"
+            />
+            <select
+              value={periodWise}
+              onChange={(e) => setPeriodWise(e.target.value)}
+              className="px-5 py-3 rounded-xl border border-white/30 bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-purple-400 text-lg"
+            >
+              {periodWiseOptions.map((option) => (
+                <option key={option} value={option} className="text-black">{option}</option>
+              ))}
+            </select>
+            <button
+              onClick={handleSearch}
+              className="px-6 py-2 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold shadow-lg transition-all duration-300 text-lg"
+            >
+              Search
+            </button>
+          </div>
+          {/* Feedback */}
+          {loading && <p className="mt-6 text-center">Loading...</p>}
+          {error && <p className="mt-6 text-center text-red-400">{error}</p>}
 
-        {/* Search section */}
-        <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 mt-6">
-          <input
-            type="text"
-            className="px-4 py-2 w-full bg-white/10 text-white border border-purple-400 rounded-xl placeholder-gray-300 focus:outline-none transition-all"
-            placeholder="Enter stock name (e.g., bel)"
-            value={stockName}
-            onChange={(e) => setStockName(e.target.value)}
-          />
-          <select
-            className="p-2 border border-purple-400 rounded-lg bg-white text-purple-900"
-            value={periodWise}
-            onChange={async (e) => {
-              const newPeriod = e.target.value;
-              setPeriodWise(newPeriod);
-              if (stockName) {
-                setLoading(true);
-                setError("");
-                setPredictedPrice(null);
-                setIsPredicted(false);
-                try {
-                  const historicalData = await fetchStockData(stockName, newPeriod);
-                  setStockPriceData(historicalData.datasets[0].values);
-                } catch (err) {
-                  setError("Failed to fetch stock data: " + err);
-                } finally {
-                  setLoading(false);
-                }
-              }
-            }}
-          >
-            {periodWiseOptions.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-          <button
-            className="px-4 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition cursor-pointer"
-            onClick={handleSearch}
-            disabled={loading}
-          >
-            Search
-          </button>
-        </div>
-
-        {/* Feedback */}
-        {loading && <p className="mt-6 text-center">Loading...</p>}
-        {error && <p className="mt-6 text-center text-red-400">{error}</p>}
-
-        {/* Stock Data Card */}
-        {stockData && !loading && (
-          <div className="bg-white text-purple-900 p-6 rounded-xl shadow-lg space-y-4 mt-12 sm:mt-8">
-            {showDetails && (
-              <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
-                <div className="bg-white p-6 rounded-lg w-[90%] md:max-w-lg relative text-purple-900">
-                  <button
-                    className="absolute top-2 right-2 text-purple-900"
-                    onClick={toggleDetails}
-                  >
-                    <IoMdClose size={24} />
-                  </button>
-                  <h2 className="text-xl font-bold mb-2">{stockData.companyName}</h2>
-                  <p className="mb-1"><strong>Industry:</strong> {stockData.industry}</p>
-                  <p className="text-sm">{stockData.companyProfile.companyDescription}</p>
+          {/* Stock Data Card */}
+          {stockData && !loading && (
+            <div className="bg-white text-purple-900 p-6 rounded-xl shadow-lg space-y-4 mt-12 sm:mt-8">
+              {showDetails && (
+                <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+                  <div className="bg-white p-6 rounded-lg w-[90%] md:max-w-lg relative text-purple-900">
+                    <button
+                      className="absolute top-2 right-2 text-purple-900"
+                      onClick={toggleDetails}
+                    >
+                      <IoMdClose size={24} />
+                    </button>
+                    <h2 className="text-xl font-bold mb-2">{stockData.companyName}</h2>
+                    <p className="mb-1"><strong>Industry:</strong> {stockData.industry}</p>
+                    <p className="text-sm">{stockData.companyProfile.companyDescription}</p>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            <div className="bg-purple-100 p-6 rounded-xl">
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg font-semibold">Current Price:</h3>
-                <button onClick={toggleDetails} className="p-2 rounded-lg cursor-pointer">
-                  <FaCircleInfo size={20} title="info" />
+              <div className="bg-purple-100 p-6 rounded-xl">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-lg font-semibold">Current Price:</h3>
+                  <button onClick={toggleDetails} className="p-2 rounded-lg cursor-pointer">
+                    <FaCircleInfo size={20} title="info" />
+                  </button>
+                </div>
+                <p className="text-2xl font-bold mt-2">
+                  NSE: {stockData.currentPrice.NSE}
+                  <span
+                    className={`ml-4 inline-flex items-center ${
+                      stockData.percentChange > 0 ? "text-green-500" : "text-red-500"
+                    }`}
+                  >
+                    {stockData.percentChange > 0 ? (
+                      <FaArrowTrendUp />
+                    ) : (
+                      <FaArrowTrendDown />
+                    )}
+                    &nbsp;{stockData.percentChange} %
+                  </span>
+                </p>
+              </div>
+
+              <div className="mt-4">
+                <h3 className="text-md font-medium">Stock Technical Data:</h3>
+                <ul className="text-sm mt-2 space-y-1">
+                  {stockData.stockTechnicalData.map((item: StockData, index: number) => (
+                    <li key={index}>
+                      <span>{item.days} Days: </span>
+                      <span>BSE: {item.bsePrice}</span> | <span>NSE: {item.nsePrice}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+
+          {/* Chart and Prediction */}
+          {stockPriceData.length > 0 && !loading && (
+            <div className="mt-10 bg-white text-purple-900 p-6 rounded-xl shadow-md">
+              <h3 className="text-lg font-semibold mb-4">Stock Price Data:</h3>
+              <Line
+                data={{
+                  labels: stockPriceData.map(([date]) => date),
+                  datasets: [
+                    {
+                      label: "Stock Price",
+                      data: stockPriceData.map(([, price]) => parseFloat(price)),
+                      tension: 0.1,
+                      fill: false,
+                      borderColor: "rgba(147, 51, 234, 1)", // purple-600
+                      backgroundColor: "rgba(147, 51, 234, 0.2)",
+                    },
+                  ],
+                }}
+                options={{
+                  responsive: true,
+                  plugins: {
+                    legend: {
+                      display: true,
+                      position: "top",
+                    },
+                  },
+                  scales: {
+                    x: {
+                      title: {
+                        display: true,
+                        text: "Date",
+                      },
+                    },
+                    y: {
+                      title: {
+                        display: true,
+                        text: "Price",
+                      },
+                      beginAtZero: false,
+                    },
+                  },
+                }}
+              />
+
+              <div className="mt-6 text-center">
+                <button
+                  disabled={isPredicted}
+                  onClick={async () => {
+                    const priceArray = stockPriceData.map(([, price]) => parseFloat(price));
+                    const prediction = await predictPrice(priceArray);
+
+                    if (typeof prediction === "number" && !isNaN(prediction)) {
+                      setPredictedPrice(prediction);
+                      setIsPredicted(true);
+                    } else {
+                      console.error("Prediction failed or returned invalid value:", prediction);
+                      setPredictedPrice(null);
+                    }
+                  }}
+                  className={`p-2 ${
+                    isPredicted ? "bg-purple-400" : "bg-purple-600 hover:bg-purple-700"
+                  } text-white rounded-lg cursor-pointer`}
+                >
+                  {isPredicted ? "Price Predicted" : "Predict Future Price"}
                 </button>
               </div>
-              <p className="text-2xl font-bold mt-2">
-                NSE: {stockData.currentPrice.NSE}
-                <span
-                  className={`ml-4 inline-flex items-center ${
-                    stockData.percentChange > 0 ? "text-green-500" : "text-red-500"
-                  }`}
-                >
-                  {stockData.percentChange > 0 ? (
-                    <FaArrowTrendUp />
-                  ) : (
-                    <FaArrowTrendDown />
-                  )}
-                  &nbsp;{stockData.percentChange} %
-                </span>
-              </p>
+
+              {typeof predictedPrice === "number" && !isNaN(predictedPrice) && (
+                <div className="mt-6 text-center text-xl font-semibold text-purple-700">
+                  <h3>Predicted Future Price:</h3>
+                  <p>₹ {predictedPrice.toFixed(2)}</p>
+                </div>
+              )}
             </div>
-
-            <div className="mt-4">
-              <h3 className="text-md font-medium">Stock Technical Data:</h3>
-              <ul className="text-sm mt-2 space-y-1">
-                {stockData.stockTechnicalData.map((item: StockData, index: number) => (
-                  <li key={index}>
-                    <span>{item.days} Days: </span>
-                    <span>BSE: {item.bsePrice}</span> | <span>NSE: {item.nsePrice}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        )}
-
-        {/* Chart and Prediction */}
-        {stockPriceData.length > 0 && !loading && (
-          <div className="mt-10 bg-white text-purple-900 p-6 rounded-xl shadow-md">
-            <h3 className="text-lg font-semibold mb-4">Stock Price Data:</h3>
-            <Line
-              data={{
-                labels: stockPriceData.map(([date]) => date),
-                datasets: [
-                  {
-                    label: "Stock Price",
-                    data: stockPriceData.map(([, price]) => parseFloat(price)),
-                    tension: 0.1,
-                    fill: false,
-                    borderColor: "rgba(147, 51, 234, 1)", // purple-600
-                    backgroundColor: "rgba(147, 51, 234, 0.2)",
-                  },
-                ],
-              }}
-              options={{
-                responsive: true,
-                plugins: {
-                  legend: {
-                    display: true,
-                    position: "top",
-                  },
-                },
-                scales: {
-                  x: {
-                    title: {
-                      display: true,
-                      text: "Date",
-                    },
-                  },
-                  y: {
-                    title: {
-                      display: true,
-                      text: "Price",
-                    },
-                    beginAtZero: false,
-                  },
-                },
-              }}
-            />
-
-            <div className="mt-6 text-center">
-              <button
-                disabled={isPredicted}
-                onClick={async () => {
-                  const priceArray = stockPriceData.map(([, price]) => parseFloat(price));
-                  const prediction = await predictPrice(priceArray);
-
-                  if (typeof prediction === "number" && !isNaN(prediction)) {
-                    setPredictedPrice(prediction);
-                    setIsPredicted(true);
-                  } else {
-                    console.error("Prediction failed or returned invalid value:", prediction);
-                    setPredictedPrice(null);
-                  }
-                }}
-                className={`p-2 ${
-                  isPredicted ? "bg-purple-400" : "bg-purple-600 hover:bg-purple-700"
-                } text-white rounded-lg cursor-pointer`}
-              >
-                {isPredicted ? "Price Predicted" : "Predict Future Price"}
-              </button>
-            </div>
-
-            {typeof predictedPrice === "number" && !isNaN(predictedPrice) && (
-              <div className="mt-6 text-center text-xl font-semibold text-purple-700">
-                <h3>Predicted Future Price:</h3>
-                <p>₹ {predictedPrice.toFixed(2)}</p>
-              </div>
-            )}
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

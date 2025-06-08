@@ -1,6 +1,6 @@
 'use client';
 import axios from 'axios';
-// import { useRouter } from "next/router";
+// import { useRouter } from "next/router
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -34,15 +34,15 @@ const LoginPage = () => {
 
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-2xl font-bold mb-4">Login Page</h1>
-      <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-            Username:
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-purple-900 via-purple-700 to-white animate-gradient-move">
+      <h1 className="text-4xl font-extrabold mb-6 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent drop-shadow-lg">Login</h1>
+      <form className="bg-white/20 backdrop-blur-2xl shadow-2xl rounded-2xl px-10 pt-8 pb-10 mb-4 w-full max-w-md">
+        <div className="mb-6">
+          <label className="block text-purple-700 text-sm font-bold mb-2" htmlFor="username">
+            Email
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border border-white/30 rounded-xl w-full py-3 px-4 text-purple-900 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-400 bg-white/60 placeholder-purple-400"
             type="text"
             id="username"
             name="username"
@@ -51,12 +51,12 @@ const LoginPage = () => {
             required
           />
         </div>
-        <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-            Password:
+        <div className="mb-8">
+          <label className="block text-purple-700 text-sm font-bold mb-2" htmlFor="password">
+            Password
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border border-white/30 rounded-xl w-full py-3 px-4 text-purple-900 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-400 bg-white/60 placeholder-purple-400"
             type="password"
             id="password"
             name="password"
@@ -64,57 +64,23 @@ const LoginPage = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <p className="text-red-500 text-xs italic">Please choose a password.</p>
         </div>
-        <div className="flex items-center justify-between flex-col">
+        <button
+          className="w-full py-3 rounded-2xl bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold shadow-lg transition-all duration-300 mb-4 text-lg"
+          onClick={handleLogin}
+        >
+          Login
+        </button>
+        <div className="flex flex-col items-center space-y-2 mt-4">
+          <span className="text-purple-700 text-sm">Don&apos;t have an account?</span>
           <button
-            className="bg-blue-500 hover:bg-blue-700 cursor-pointer text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onClick={handleLogin}
-          >
-            Login
-          </button>
-          {/* <a className=" align-baseline font-bold text-sm text-blue-500 hover:text-blue-800 mt-4" href="#">
-            Forgot Password?
-          </a> */}
-        </div>
-        <div className="flex items-center justify-between flex-col space-y-4">
-          <a className=" align-baseline font-bold text-sm text-blue-500 hover:text-blue-800 mt-4" href="#">
-            Don&apos;t have an account?
-          </a>
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 cursor-pointer rounded focus:outline-none focus:shadow-outline"
+            className="w-full py-2 rounded-2xl bg-white/80 text-purple-700 font-bold hover:bg-purple-100 shadow-md transition-all duration-300"
             onClick={handleSignUpPage}
           >
             Sign Up
           </button>
-          
         </div>
-        {/* <div className="flex items-center justify-between flex-col">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onClick={handleHomePage}
-          >
-            Login with Google
-          </button>
-          <a className=" align-baseline font-bold text-sm text-blue-500 hover:text-blue-800 mt-4" href="#">
-            Login with Facebook
-          </a>
-        </div> */}
-        {/* <div className="flex items-center justify-between flex-col">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onClick={handleHomePage}
-          >
-            Login with Twitter
-          </button>
-          <a className=" align-baseline font-bold text-sm text-blue-500 hover:text-blue-800 mt-4" href="#">
-            Login with LinkedIn
-          </a>
-        </div> */}
       </form>
-      <p className="text-center text-gray-500 text-xs">
-        &copy;2025 HMM. All rights reserved.
-      </p>
     </div>
      
   );
