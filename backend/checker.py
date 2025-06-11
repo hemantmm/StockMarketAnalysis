@@ -16,18 +16,44 @@ EMAIL_USER = os.getenv("EMAIL_USER")
 EMAIL_PASS = os.getenv("EMAIL_PASS")
 
 def fetch_price(stock):
-    url = f"https://stock.indianapi.in/{stock}"
+    endpoints = [
+        f"https://stock.indianapi.in/stock/{stock}",
+        f"https://stock.indianapi.in/{stock}",
+        f"https://api.stock.indianapi.in/{stock}"
+    ]
+    
     headers = {
         "X-Api-Key": API_KEY
     }
-    try:
-        response = requests.get(url, headers=headers)
-        response.raise_for_status()
-        data = response.json()
-        return float(data["data"]["price"])
-    except Exception as e:
-        print(f"Error fetching price for {stock}: {e}")
-        raise
+    
+    for url in endpoints:
+        try:
+            print(f"Trying endpoint: {url}")
+            response = requests.get(url, headers=headers)
+            response.raise_for_status()
+            data = response.json()
+            
+            if "data" in data and "price" in data["data"]:
+                return float(data["data"]["price"])
+            elif "price" in data:
+                return float(data["price"])
+            elif "last_price" in data:
+                return float(data["last_price"])
+            elif "close" in data:
+                return float(data["close"])
+            else:
+                print(f"Unexpected response format: {data}")
+                continue
+                
+        except requests.exceptions.HTTPError as e:
+            print(f"HTTP Error for {url}: {e}")
+            continue
+        except Exception as e:
+            print(f"Error with {url}: {e}")
+            continue
+    
+    print(f"❌ All APIs failed for {stock}. Cannot fetch price.")
+    raise Exception(f"Unable to fetch price for {stock}")
 
 def send_email(to, subject, body):
     try:
