@@ -32,7 +32,6 @@ const Portfolio = () => {
   const [editingStock, setEditingStock] = useState<PortfolioStock | null>(null);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [quickAddMode] = useState(true);
 
   const [formData, setFormData] = useState({
     symbol: "",
@@ -300,18 +299,20 @@ const Portfolio = () => {
 
     setLoading(true);
     try {
-      let currentPrice = parseFloat(formData.buyPrice);
+      let currentPrice: number;
       let companyName = formData.name || formData.symbol.toUpperCase();
 
-      if (!quickAddMode) {
-        try {
-          currentPrice = await fetchCurrentPrice(formData.symbol, 3000);
-          if (!formData.name) {
-            companyName = await fetchCompanyName(formData.symbol, 2000);
-          }
-        } catch (error) {
-          console.warn('API call failed, using offline values:', error);
+      // Always try to fetch current price and company name
+      try {
+        currentPrice = await fetchCurrentPrice(formData.symbol, 5000);
+        if (!formData.name) {
+          companyName = await fetchCompanyName(formData.symbol, 3000);
         }
+      } catch (error) {
+        console.error('Failed to fetch current price:', error);
+        alert(`❌ Could not fetch current price for ${formData.symbol}. Please check if the stock symbol is correct.`);
+        setLoading(false);
+        return;
       }
 
       const quantity = parseFloat(formData.quantity);
@@ -341,11 +342,7 @@ const Portfolio = () => {
       setFormData({ symbol: "", name: "", quantity: "", buyPrice: "", buyDate: "" });
       setShowAddModal(false);
       
-      if (quickAddMode) {
-        alert(`✅ ${formData.symbol} added to portfolio successfully! (Prices will be updated when you refresh)`);
-      } else {
-        alert(`✅ ${formData.symbol} added to portfolio successfully!`);
-      }
+      alert(`✅ ${formData.symbol} added to portfolio successfully! Current price: ₹${currentPrice.toFixed(2)}`);
     } catch (error) {
       console.error('Error adding stock:', error);
       alert(`❌ ${error || 'Error adding stock to portfolio. Please check the stock symbol and try again.'}`);
@@ -374,8 +371,22 @@ const Portfolio = () => {
 
     setLoading(true);
     try {
-      const currentPrice = await fetchCurrentPrice(formData.symbol);
-      const companyName = formData.name || await fetchCompanyName(formData.symbol);
+      let currentPrice: number;
+      let companyName = formData.name || formData.symbol.toUpperCase();
+
+      // Always try to fetch current price and company name
+      try {
+        currentPrice = await fetchCurrentPrice(formData.symbol, 5000);
+        if (!formData.name) {
+          companyName = await fetchCompanyName(formData.symbol, 3000);
+        }
+      } catch (error) {
+        console.error('Failed to fetch current price:', error);
+        alert(`❌ Could not fetch current price for ${formData.symbol}. Please check if the stock symbol is correct.`);
+        setLoading(false);
+        return;
+      }
+
       const quantity = parseFloat(formData.quantity);
       const buyPrice = parseFloat(formData.buyPrice);
       const totalInvestment = quantity * buyPrice;
@@ -658,9 +669,12 @@ const Portfolio = () => {
       {showAddModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-8 max-w-md w-full">
-            <h3 className="text-2xl font-bold mb-6 text-white">
+            <h3 className="text-2xl font-bold mb-2 text-white">
               {editingStock ? 'Edit Stock' : 'Add New Stock'}
             </h3>
+            <p className="text-sm text-gray-400 mb-6">
+              💡 Current market price will be fetched automatically when you add the stock
+            </p>
             
             <div className="space-y-4">
               <div>
@@ -738,7 +752,7 @@ const Portfolio = () => {
                 {loading ? (
                   <>
                     <FaSpinner className="animate-spin" />
-                    <span>{editingStock ? 'Updating...' : 'Adding...'}</span>
+                    <span>{editingStock ? 'Fetching prices & updating...' : 'Fetching current price...'}</span>
                   </>
                 ) : (
                   <>
