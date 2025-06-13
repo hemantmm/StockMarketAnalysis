@@ -32,7 +32,7 @@ const Portfolio = () => {
   const [editingStock, setEditingStock] = useState<PortfolioStock | null>(null);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [quickAddMode, setQuickAddMode] = useState(true);
+  const [quickAddMode] = useState(true);
 
   const [formData, setFormData] = useState({
     symbol: "",
