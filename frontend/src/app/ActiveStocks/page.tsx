@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { FaChartLine, FaHome, FaSearch, FaRocket, FaSyncAlt, FaFire, FaTrophy, FaSpinner } from "react-icons/fa";
+import { FaChartLine, FaHome, FaSearch, FaRocket, FaSyncAlt, FaFire, FaTrophy, FaSpinner, FaChartPie } from "react-icons/fa";
 import activeTrendingStocks from "../ActiveStockAPI";
 
 type ActiveStocks = {
@@ -280,6 +280,13 @@ const ActiveStocks = () => {
             >
               <FaSearch className="text-purple-400" />
               <span className="hidden sm:inline text-sm">Search</span>
+            </button>
+            <button
+              onClick={() => router.push("/Portfolio")}
+              className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-300"
+            >
+              <FaChartPie className="text-emerald-400" />
+              <span className="hidden sm:inline text-sm">Portfolio</span>
             </button>
             <div className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/30">
               <FaRocket className="text-orange-400" />

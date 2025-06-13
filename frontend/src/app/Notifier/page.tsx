@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { FaBell, FaHome, FaSearch, FaRocket, FaEnvelope, FaChartLine, FaSpinner, FaPaperPlane, FaShieldAlt } from "react-icons/fa";
+import { FaBell, FaHome, FaSearch, FaRocket, FaEnvelope, FaChartLine, FaSpinner, FaPaperPlane, FaShieldAlt, FaChartPie } from "react-icons/fa";
 import axios from "axios";
 
 const NotifierPage = () => {
@@ -379,7 +379,7 @@ const NotifierPage = () => {
           </div>
 
           {/* Navigation Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
             <div 
               onClick={() => router.push("/StockSearchs")}
               className="backdrop-blur-xl bg-white/5 rounded-2xl border border-white/10 p-6 cursor-pointer hover:bg-white/10 transition-all duration-300 transform hover:scale-[1.02] group"
@@ -406,6 +406,21 @@ const NotifierPage = () => {
                 <div>
                   <h3 className="text-lg font-semibold text-orange-300">Active Stocks</h3>
                   <p className="text-gray-400 text-sm">Monitor trending and active stocks</p>
+                </div>
+              </div>
+            </div>
+
+            <div 
+              onClick={() => router.push("/Portfolio")}
+              className="backdrop-blur-xl bg-white/5 rounded-2xl border border-white/10 p-6 cursor-pointer hover:bg-white/10 transition-all duration-300 transform hover:scale-[1.02] group"
+            >
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-green-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <FaChartPie className="text-white text-xl" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-emerald-300">Portfolio</h3>
+                  <p className="text-gray-400 text-sm">Manage your investment portfolio</p>
                 </div>
               </div>
             </div>

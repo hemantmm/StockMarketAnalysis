@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import fetchStockData from "../stockDataAPI";
 import fetchStockDetails from "../stockNameAPI";
-import { FaChartLine, FaThLarge, FaClock, FaRupeeSign, FaHome, FaSearch, FaHeart, FaTrophy, FaSpinner, FaBullseye, FaArrowUp, FaArrowDown } from "react-icons/fa";
+import { FaChartLine, FaThLarge, FaClock, FaRupeeSign, FaHome, FaSearch, FaHeart, FaTrophy, FaSpinner, FaBullseye, FaArrowUp, FaArrowDown, FaChartPie } from "react-icons/fa";
 
 const HoldStock = () => {
   const router = useRouter();
@@ -304,6 +304,13 @@ const HoldStock = () => {
             >
               <FaChartLine className="text-orange-400" />
               <span className="hidden sm:inline text-sm">Active Stocks</span>
+            </button>
+            <button
+              onClick={() => router.push("/Portfolio")}
+              className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-300"
+            >
+              <FaChartPie className="text-emerald-400" />
+              <span className="hidden sm:inline text-sm">Portfolio</span>
             </button>
           </div>
         </div>

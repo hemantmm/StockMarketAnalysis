@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import fetchStockDetails from "../stockNameAPI";
-import { FaInfoCircle, FaArrowUp, FaArrowDown, FaRocket, FaSearch, FaChartLine, FaHome } from "react-icons/fa";
+import { FaInfoCircle, FaArrowUp, FaArrowDown, FaRocket, FaSearch, FaChartLine, FaHome, FaChartPie } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import fetchStockData from "../stockDataAPI";
 import {
@@ -352,6 +352,13 @@ const StockSearchs = () => {
             >
               <FaHome className="text-xs sm:text-sm" />
               <span className="hidden sm:inline">Home</span>
+            </button>
+            <button
+              onClick={() => router.push('/Portfolio')}
+              className="flex-1 sm:flex-initial px-4 sm:px-6 py-2 bg-gradient-to-r from-emerald-500 to-green-600 rounded-full font-semibold hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 text-sm sm:text-base"
+            >
+              <FaChartPie className="text-xs sm:text-sm" />
+              <span className="hidden sm:inline">Portfolio</span>
             </button>
             <button
               onClick={() => router.push('/HoldStock')}
