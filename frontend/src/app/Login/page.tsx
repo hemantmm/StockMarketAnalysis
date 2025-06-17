@@ -1,6 +1,5 @@
 'use client';
 import axios from 'axios';
-// import { useRouter } from "next/router
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -15,21 +14,21 @@ const LoginPage = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    await axios.post('http://localhost:5000/Login', {
+    await axios.post('http://localhost:4000/Login', {
       email,
       password,
     })
     .then((response) => {
       console.log(response.data);
-      alert('Login successful');
+      // alert('Login successful');
       localStorage.setItem('token', response.data.token);
+      localStorage.setItem('email', email);
       router.push('/');
     })
     .catch((error) => {
       console.error('There was an error!', error);
       alert('Login failed');
     });
-    // router.push('/Home');
   }
 
 
@@ -38,14 +37,14 @@ const LoginPage = () => {
       <h1 className="text-4xl font-extrabold mb-6 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent drop-shadow-lg">Login</h1>
       <form className="bg-white/20 backdrop-blur-2xl shadow-2xl rounded-2xl px-10 pt-8 pb-10 mb-4 w-full max-w-md">
         <div className="mb-6">
-          <label className="block text-purple-700 text-sm font-bold mb-2" htmlFor="username">
+          <label className="block text-purple-700 text-sm font-bold mb-2" htmlFor="email">
             Email
           </label>
           <input
             className="shadow appearance-none border border-white/30 rounded-xl w-full py-3 px-4 text-purple-900 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-400 bg-white/60 placeholder-purple-400"
             type="text"
-            id="username"
-            name="username"
+            id="email"
+            name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
