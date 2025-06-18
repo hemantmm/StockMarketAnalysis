@@ -14,7 +14,7 @@ const LoginPage = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    await axios.post('http://localhost:4000/Login', {
+    await axios.post('https://stockmarketanalysis-2.onrender.com/Login', {
       email,
       password,
     })
