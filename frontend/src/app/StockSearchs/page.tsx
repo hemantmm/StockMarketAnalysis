@@ -1,9 +1,10 @@
 "use client";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import fetchStockDetails from "../stockNameAPI";
-import { FaInfoCircle, FaArrowUp, FaArrowDown, FaRocket, FaSearch, FaChartLine, FaHome, FaChartPie } from "react-icons/fa";
+import { FaInfoCircle, FaArrowUp, FaArrowDown, FaRocket, FaSearch, FaChartLine, FaHome, FaChartPie, FaStar } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import fetchStockData from "../stockDataAPI";
+import { addToWatchlist, checkInWatchlist } from "../watchlistAPI";
 import {
   Chart as ChartJS,
   LineElement,
@@ -48,6 +49,9 @@ const StockSearchs = () => {
   const [periodWise, setPeriodWise] = useState("1m");
   const [predictedPrice, setPredictedPrice] = useState<number | null>(null);
   const [isPredicted, setIsPredicted] = useState(false);
+  const [userId, setUserId] = useState<string>("user1");
+  const [isInWatchlist, setIsInWatchlist] = useState<boolean>(false);
+  const [watchlistLoading, setWatchlistLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -248,6 +252,64 @@ const StockSearchs = () => {
     }
   };
 
+  useEffect(() => {
+    const storedUserId = localStorage.getItem("userId");
+    if (storedUserId) {
+      setUserId(storedUserId);
+    }
+  }, []);
+
+  const checkWatchlistStatus = useCallback(async (symbol: string) => {
+    if (!symbol) return;
+    
+    setWatchlistLoading(true);
+    try {
+      const isWatchlisted = await checkInWatchlist(userId, symbol);
+      setIsInWatchlist(isWatchlisted);
+    } catch (error) {
+      console.error("Error checking watchlist status:", error);
+    } finally {
+      setWatchlistLoading(false);
+    }
+  }, [userId]);
+
+  const handleWatchlistToggle = async () => {
+    if (!stockData) return;
+    
+    setWatchlistLoading(true);
+    try {
+      console.log('Watchlist toggle for:', {
+        userId,
+        symbol: stockData.symbol || stockName,
+        name: stockData.companyName || stockName
+      });
+      
+      if (isInWatchlist) {
+        // Remove from watchlist logic would go here if needed
+        // For now we only implement adding to watchlist
+        console.log('Stock already in watchlist');
+      } else {
+        // Add to watchlist
+        const response = await addToWatchlist(
+          userId,
+          stockData.symbol || stockName,
+          stockData.companyName || stockName
+        );
+        console.log('Add to watchlist response:', response);
+        if (response.success) {
+          setIsInWatchlist(true);
+        } else {
+          setError(`Failed to add to watchlist: ${response.message}`);
+        }
+      }
+    } catch (error) {
+      console.error("Error toggling watchlist:", error);
+      setError("Failed to connect to watchlist service. Make sure the backend is running.");
+    } finally {
+      setWatchlistLoading(false);
+    }
+  };
+
   const toggleDetails = () => setShowDetails(!showDetails);
 
   const handleSearch = useCallback(async (searchTerm?: string, period?: string) => {
@@ -273,6 +335,9 @@ const StockSearchs = () => {
         setStockData(data);
         setStockPriceData(historicalData.datasets[0].values);
         initialLoadRef.current = false;
+        
+        // Check if this stock is in the watchlist
+        await checkWatchlistStatus(data.symbol || searchStock);
       } catch (err) {
         console.error('Error in handleSearch:', err);
         setError("Failed to fetch stock data: " + err);
@@ -282,7 +347,7 @@ const StockSearchs = () => {
     } else {
       setError("Please enter a stock symbol");
     }
-  }, [stockName, periodWise]);
+  }, [stockName, periodWise, checkWatchlistStatus]);
 
   const handleSearchClick = () => {
     handleSearch();
@@ -483,12 +548,26 @@ const StockSearchs = () => {
                       </div>
                     </div>
                   </div>
-                  <button 
-                    onClick={toggleDetails} 
-                    className="p-3 rounded-xl bg-white/10 hover:bg-white/20 transition-colors border border-white/20 self-start"
-                  >
-                    <FaInfoCircle size={18} className="text-cyan-400 sm:text-xl" />
-                  </button>
+                  <div className="flex space-x-2">
+                    <button 
+                      onClick={handleWatchlistToggle}
+                      disabled={watchlistLoading}
+                      className={`flex items-center px-3 py-2 rounded-lg transition-all duration-200 ${
+                        isInWatchlist 
+                          ? "bg-yellow-500/80 text-black" 
+                          : "bg-yellow-600/20 hover:bg-yellow-600/40 text-yellow-300"
+                      } border ${isInWatchlist ? "border-yellow-500" : "border-yellow-600/50"}`}
+                    >
+                      <FaStar className="mr-2" />
+                      {watchlistLoading ? "..." : isInWatchlist ? "Added" : "Watchlist"}
+                    </button>
+                    <button 
+                      onClick={toggleDetails} 
+                      className="p-3 rounded-xl bg-white/10 hover:bg-white/20 transition-colors border border-white/20 self-start"
+                    >
+                      <FaInfoCircle size={18} className="text-cyan-400 sm:text-xl" />
+                    </button>
+                  </div>
                 </div>
               </div>
 

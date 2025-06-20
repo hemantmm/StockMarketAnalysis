@@ -1,16 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import {
-  FaRocket,
-  FaBell,
-  FaSearch,
-  FaArrowRight,
-  FaPlay,
-  FaShieldAlt,
-  FaLightbulb,
-  FaTrophy,
-} from "react-icons/fa";
+import { FaRocket, FaBell, FaSearch, FaArrowRight, FaPlay, FaShieldAlt, FaLightbulb, FaTrophy, FaStar } from "react-icons/fa";
 
 const HomePage = () => {
   const router = useRouter();
@@ -22,11 +13,9 @@ const HomePage = () => {
   const [animatedNumbers, setAnimatedNumbers] = useState({
     users: 0,
     predictions: 0,
-    accuracy: 0,
+    accuracy: 0
   });
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userEmail, setUserEmail] = useState("");
-  const [isLogout, setIsLogout] = useState(false);
+
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -41,12 +30,7 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
-    const animateValue = (
-      start: number,
-      end: number,
-      duration: number,
-      callback: (value: number) => void
-    ) => {
+    const animateValue = (start: number, end: number, duration: number, callback: (value: number) => void) => {
       const startTime = Date.now();
       const animate = () => {
         const elapsed = Date.now() - startTime;
@@ -59,15 +43,9 @@ const HomePage = () => {
     };
 
     setTimeout(() => {
-      animateValue(0, 50000, 2000, (value) =>
-        setAnimatedNumbers((prev) => ({ ...prev, users: value }))
-      );
-      animateValue(0, 1200000, 2500, (value) =>
-        setAnimatedNumbers((prev) => ({ ...prev, predictions: value }))
-      );
-      animateValue(0, 94, 3000, (value) =>
-        setAnimatedNumbers((prev) => ({ ...prev, accuracy: value }))
-      );
+      animateValue(0, 50000, 2000, (value) => setAnimatedNumbers(prev => ({ ...prev, users: value })));
+      animateValue(0, 1200000, 2500, (value) => setAnimatedNumbers(prev => ({ ...prev, predictions: value })));
+      animateValue(0, 94, 3000, (value) => setAnimatedNumbers(prev => ({ ...prev, accuracy: value })));
     }, 1000);
   }, []);
 
@@ -75,7 +53,7 @@ const HomePage = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     const particles: Array<{
@@ -86,7 +64,7 @@ const HomePage = () => {
       size: number;
       opacity: number;
       color: string;
-      type: "currency" | "graph" | "dot";
+      type: 'currency' | 'graph' | 'dot';
     }> = [];
 
     const resizeCanvas = () => {
@@ -95,7 +73,7 @@ const HomePage = () => {
     };
 
     resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
+    window.addEventListener('resize', resizeCanvas);
 
     for (let i = 0; i < 100; i++) {
       particles.push({
@@ -105,35 +83,21 @@ const HomePage = () => {
         vy: (Math.random() - 0.5) * 0.3,
         size: Math.random() * 2 + 0.5,
         opacity: Math.random() * 0.4 + 0.1,
-        color: [
-          "#00ffff",
-          "#ff00ff",
-          "#ffff00",
-          "#00ff00",
-          "#8b5cf6",
-          "#06b6d4",
-        ][Math.floor(Math.random() * 6)],
-        type: ["currency", "graph", "dot"][Math.floor(Math.random() * 3)] as
-          | "currency"
-          | "graph"
-          | "dot",
+        color: ['#00ffff', '#ff00ff', '#ffff00', '#00ff00', '#8b5cf6', '#06b6d4'][Math.floor(Math.random() * 6)],
+        type: ['currency', 'graph', 'dot'][Math.floor(Math.random() * 3)] as 'currency' | 'graph' | 'dot'
       });
     }
 
-    const drawParticle = (particle: (typeof particles)[0]) => {
+    const drawParticle = (particle: typeof particles[0]) => {
       ctx.save();
       ctx.globalAlpha = particle.opacity;
       ctx.fillStyle = particle.color;
-
-      if (particle.type === "currency") {
+      
+      if (particle.type === 'currency') {
         ctx.font = `${particle.size * 3}px monospace`;
-        const symbols = ["₹", "$", "€", "¥", "£", "₿"];
-        ctx.fillText(
-          symbols[Math.floor(Math.random() * symbols.length)],
-          particle.x,
-          particle.y
-        );
-      } else if (particle.type === "graph") {
+        const symbols = ['₹', '$', '€', '¥', '£', '₿'];
+        ctx.fillText(symbols[Math.floor(Math.random() * symbols.length)], particle.x, particle.y);
+      } else if (particle.type === 'graph') {
         ctx.strokeStyle = particle.color;
         ctx.lineWidth = 0.8;
         ctx.beginPath();
@@ -158,11 +122,9 @@ const HomePage = () => {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
           const distance = Math.sqrt(dx * dx + dy * dy);
-
+          
           if (distance < 100) {
-            ctx.strokeStyle = `rgba(0, 255, 255, ${
-              0.1 * (1 - distance / 100)
-            })`;
+            ctx.strokeStyle = `rgba(0, 255, 255, ${0.1 * (1 - distance / 100)})`;
             ctx.lineWidth = 0.5;
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
@@ -175,8 +137,8 @@ const HomePage = () => {
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      ctx.strokeStyle = "rgba(0, 255, 255, 0.03)";
+      
+      ctx.strokeStyle = 'rgba(0, 255, 255, 0.03)';
       ctx.lineWidth = 0.5;
       const gridSize = 60;
       for (let x = 0; x < canvas.width; x += gridSize) {
@@ -193,26 +155,22 @@ const HomePage = () => {
       }
 
       const gradient = ctx.createRadialGradient(
-        mouseRef.current.x,
-        mouseRef.current.y,
-        0,
-        mouseRef.current.x,
-        mouseRef.current.y,
-        150
+        mouseRef.current.x, mouseRef.current.y, 0,
+        mouseRef.current.x, mouseRef.current.y, 150 
       );
-      gradient.addColorStop(0, "rgba(0, 255, 255, 0.2)");
-      gradient.addColorStop(0.5, "rgba(255, 0, 255, 0.08)");
-      gradient.addColorStop(1, "rgba(0, 255, 255, 0)");
+      gradient.addColorStop(0, 'rgba(0, 255, 255, 0.2)');
+      gradient.addColorStop(0.5, 'rgba(255, 0, 255, 0.08)');
+      gradient.addColorStop(1, 'rgba(0, 255, 255, 0)');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      particles.forEach((particle) => {
+      particles.forEach(particle => {
         particle.x += particle.vx;
         particle.y += particle.vy;
-
+        
         if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1;
         if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1;
-
+        
         drawParticle(particle);
       });
 
@@ -226,46 +184,20 @@ const HomePage = () => {
       mouseRef.current = { x: e.clientX, y: e.clientY };
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove);
 
     return () => {
-      window.removeEventListener("resize", resizeCanvas);
-      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener('mousemove', handleMouseMove);
     };
   }, []);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const email = localStorage.getItem("email");
-    setIsLoggedIn(!!token);
-    setUserEmail(email || "");
-  }, []);
-
   const navigationItems = [
-    {
-      label: "Stock Search",
-      icon: FaSearch,
-      action: () => router.push("/StockSearchs"),
-      color: "from-cyan-500 to-blue-600",
-    },
-    {
-      label: "Price Alerts",
-      icon: FaBell,
-      action: () => router.push("/Notifier"),
-      color: "from-purple-500 to-pink-600",
-    },
-    {
-      label: "Active Stocks",
-      icon: FaRocket,
-      action: () => router.push("/ActiveStocks"),
-      color: "from-orange-500 to-red-600",
-    },
-    {
-      label: "Portfolio",
-      icon: FaShieldAlt,
-      action: () => router.push("/Portfolio"),
-      color: "from-emerald-500 to-green-600",
-    },
+    { label: "Stock Search", icon: FaSearch, action: () => router.push("/StockSearchs"), color: "from-cyan-500 to-blue-600" },
+    { label: "Watchlist", icon: FaStar, action: () => router.push("/Watchlist"), color: "from-yellow-400 to-amber-600" },
+    { label: "Price Alerts", icon: FaBell, action: () => router.push("/Notifier"), color: "from-purple-500 to-pink-600" },
+    { label: "Active Stocks", icon: FaRocket, action: () => router.push("/ActiveStocks"), color: "from-orange-500 to-red-600" },
+    { label: "Portfolio", icon: FaShieldAlt, action: () => router.push("/Portfolio"), color: "from-emerald-500 to-green-600" }
   ];
 
   return (
@@ -289,66 +221,29 @@ const HomePage = () => {
               <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                 MarketSense
               </h1>
-              <p className="text-xs text-gray-400">
-                Next-Gen Market Intelligence
-              </p>
+              <p className="text-xs text-gray-400">Next-Gen Market Intelligence</p>
             </div>
           </div>
-
+          
           <div className="hidden md:flex items-center space-x-6">
             <div className="flex items-center space-x-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
-              <div
-                className={`w-2 h-2 rounded-full ${
-                  marketStatus === "OPEN"
-                    ? "bg-green-400 animate-pulse"
-                    : "bg-red-400"
-                }`}
-              ></div>
+              <div className={`w-2 h-2 rounded-full ${marketStatus === 'OPEN' ? 'bg-green-400 animate-pulse' : 'bg-red-400'}`}></div>
               <span className="text-sm font-medium">{marketStatus}</span>
             </div>
             <div className="text-sm text-gray-400">
-              {isClient
-                ? currentTime.toLocaleTimeString("en-US", {
-                    hour12: false,
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit",
-                  })
-                : "--:--:--"}
+              {isClient ? currentTime.toLocaleTimeString('en-US', { 
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+              }) : '--:--:--'}
             </div>
-            {isLoggedIn ? (
-              <div className="relative group cursor-pointer">
-                <div
-                  className="w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-bold text-lg uppercase"
-                  onClick={() => setIsLogout(!isLogout)}
-                >
-                  {userEmail ? userEmail[0] : ""}
-                </div>
-                {isLogout && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-md shadow-lg">
-                    <button
-                      className="block w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                      onClick={() => {
-                        localStorage.removeItem("token");
-                        localStorage.removeItem("email");
-                        setIsLoggedIn(false);
-                        setUserEmail("");
-                        router.push("/");
-                      }}
-                    >
-                      Logout
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <button
-                onClick={() => router.push("/Login")}
-                className="px-6 py-2 bg-gradient-to-r cursor-pointer from-cyan-500 to-purple-600 rounded-full font-semibold hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-300 transform hover:scale-105"
-              >
-                Login
-              </button>
-            )}
+            <button
+              onClick={() => router.push("/Login")}
+              className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full font-semibold hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-300 transform hover:scale-105"
+            >
+              Login
+            </button>
           </div>
         </div>
       </header>
@@ -359,11 +254,9 @@ const HomePage = () => {
             <div className="mb-8">
               <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 backdrop-blur-sm mb-6">
                 <FaLightbulb className="text-yellow-400 mr-2 animate-pulse" />
-                <span className="text-sm font-medium">
-                  Powered by Advanced AI & Machine Learning
-                </span>
+                <span className="text-sm font-medium">Powered by Advanced AI & Machine Learning</span>
               </div>
-
+              
               <h1 className="text-6xl md:text-8xl font-bold leading-tight mb-6">
                 <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-pulse">
                   The Future
@@ -375,12 +268,11 @@ const HomePage = () => {
                   is Here
                 </span>
               </h1>
-
+              
               <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                Experience the most advanced stock market analysis platform
-                powered by AI. Get real-time insights, predictive analytics, and
-                intelligent recommendations that give you the edge in
-                today&apos;s dynamic markets.
+                Experience the most advanced stock market analysis platform powered by AI. 
+                Get real-time insights, predictive analytics, and intelligent recommendations 
+                that give you the edge in today&apos;s dynamic markets.
               </p>
             </div>
 
@@ -396,7 +288,7 @@ const HomePage = () => {
                 </span>
                 <div className="absolute inset-0 bg-gradient-to-r from-cyan-600 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </button>
-
+              
               <button
                 onClick={() => router.push("/ActiveStocks")}
                 className="px-8 py-4 border-2 border-white/20 rounded-2xl font-bold text-lg hover:bg-white/5 hover:border-white/40 transition-all duration-300 backdrop-blur-sm"
@@ -413,24 +305,20 @@ const HomePage = () => {
                 <div className="text-gray-400 font-medium">Active Traders</div>
                 <div className="w-full h-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full mt-4 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
               </div>
-
+              
               <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300 group">
                 <div className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent mb-2">
                   {animatedNumbers.predictions.toLocaleString()}+
                 </div>
-                <div className="text-gray-400 font-medium">
-                  AI Predictions Made
-                </div>
+                <div className="text-gray-400 font-medium">AI Predictions Made</div>
                 <div className="w-full h-1 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full mt-4 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
               </div>
-
+              
               <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300 group">
                 <div className="text-4xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent mb-2">
                   {animatedNumbers.accuracy}%
                 </div>
-                <div className="text-gray-400 font-medium">
-                  Prediction Accuracy
-                </div>
+                <div className="text-gray-400 font-medium">Prediction Accuracy</div>
                 <div className="w-full h-1 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full mt-4 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
               </div>
             </div>
@@ -444,34 +332,26 @@ const HomePage = () => {
                 className="group relative overflow-hidden backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-500 cursor-pointer transform hover:scale-105 hover:-translate-y-2"
               >
                 <div className="relative z-10">
-                  <div
-                    className={`w-16 h-16 bg-gradient-to-r ${item.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}
-                  >
+                  <div className={`w-16 h-16 bg-gradient-to-r ${item.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
                     <item.icon className="text-2xl text-white" />
                   </div>
-
+                  
                   <h3 className="text-xl font-bold mb-3 text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-cyan-400 group-hover:to-purple-500 group-hover:bg-clip-text transition-all duration-300">
                     {item.label}
                   </h3>
-
+                  
                   <p className="text-gray-400 text-sm leading-relaxed">
-                    {index === 0 &&
-                      "Advanced AI-powered stock analysis with predictive insights"}
-                    {index === 1 &&
-                      "Smart price alerts with customizable notifications"}
-                    {index === 2 &&
-                      "Real-time market data and live stock tracking"}
+                    {index === 0 && "Advanced AI-powered stock analysis with predictive insights"}
+                    {index === 1 && "Smart price alerts with customizable notifications"}
+                    {index === 2 && "Real-time market data and live stock tracking"}
                   </p>
-
+                  
                   <div className="flex items-center mt-4 text-sm font-medium text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    Explore{" "}
-                    <FaArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+                    Explore <FaArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </div>
-
-                <div
-                  className={`absolute inset-0 bg-gradient-to-r ${item.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}
-                ></div>
+                
+                <div className={`absolute inset-0 bg-gradient-to-r ${item.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>
               </div>
             ))}
           </div>
@@ -481,31 +361,19 @@ const HomePage = () => {
               <FaTrophy className="text-yellow-400 mr-3 animate-bounce" />
               <span className="font-semibold">Award-Winning Platform</span>
             </div>
-
+            
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
               <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl p-6">
-                <div className="text-2xl font-bold text-yellow-400 mb-2">
-                  Best AI Platform 2024
-                </div>
-                <div className="text-sm text-gray-400">
-                  FinTech Innovation Awards
-                </div>
+                <div className="text-2xl font-bold text-yellow-400 mb-2">Best AI Platform 2024</div>
+                <div className="text-sm text-gray-400">FinTech Innovation Awards</div>
               </div>
               <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl p-6">
-                <div className="text-2xl font-bold text-cyan-400 mb-2">
-                  Top Trading Tool
-                </div>
-                <div className="text-sm text-gray-400">
-                  Global Finance Magazine
-                </div>
+                <div className="text-2xl font-bold text-cyan-400 mb-2">Top Trading Tool</div>
+                <div className="text-sm text-gray-400">Global Finance Magazine</div>
               </div>
               <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl p-6">
-                <div className="text-2xl font-bold text-purple-400 mb-2">
-                  Innovation Leader
-                </div>
-                <div className="text-sm text-gray-400">
-                  Tech Excellence Awards
-                </div>
+                <div className="text-2xl font-bold text-purple-400 mb-2">Innovation Leader</div>
+                <div className="text-sm text-gray-400">Tech Excellence Awards</div>
               </div>
             </div>
           </div>
@@ -516,13 +384,10 @@ const HomePage = () => {
         <div className="max-w-7xl mx-auto text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
             <FaShieldAlt className="text-green-400" />
-            <span className="text-sm text-gray-400">
-              Enterprise-grade security & 24/7 monitoring
-            </span>
+            <span className="text-sm text-gray-400">Enterprise-grade security & 24/7 monitoring</span>
           </div>
           <p className="text-gray-500 text-sm">
-            © 2025 MarketSense. All rights reserved. | Terms of Service |
-            Privacy Policy
+            © 2025 MarketSense. All rights reserved. | Terms of Service | Privacy Policy
           </p>
         </div>
       </footer>
