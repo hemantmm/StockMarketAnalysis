@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from model import train_model, get_hold_advice, get_price_at_holding_period, get_target_price
 from pydantic import BaseModel
 import json
+from watchlist import router as watchlist_router
+from indianstock_api import get_stock_info, get_watchlist_data
 
 app = FastAPI()
 
@@ -14,6 +16,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(watchlist_router, prefix="/watchlist", tags=["watchlist"])
+
 class Alert(BaseModel):
     stock: str
     target_price: float
@@ -23,7 +27,7 @@ class HoldAdviceRequest(BaseModel):
     stock: str
     buy_price: float
     current_price: float
-    holding_period: int  # in days
+    holding_period: int
     prices: list[float] = []
 
 @app.post("/predict")
