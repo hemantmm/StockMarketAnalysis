@@ -1,88 +1,115 @@
-from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
 import json
 import os
-from typing import List, Dict, Optional
+from typing import List, Dict, Any, Optional
 
-router = APIRouter()
+# Path to the watchlist JSON file
+WATCHLIST_PATH = "watchlist.json"
 
-WATCHLIST_FILE = "watchlist.json"
-
-class WatchlistItem(BaseModel):
-    user_id: str
-    stock_symbol: str
-    stock_name: str
-
-class WatchlistResponse(BaseModel):
-    success: bool
-    message: str
-    data: Optional[List] = None
-
-def load_watchlist() -> List[Dict]:
-    """Load the watchlist from the JSON file"""
-    if os.path.exists(WATCHLIST_FILE):
-        try:
-            with open(WATCHLIST_FILE, "r") as f:
+def _load_watchlist() -> List[Dict[str, Any]]:
+    """Load the watchlist from the JSON file. Create if it doesn't exist."""
+    try:
+        if os.path.exists(WATCHLIST_PATH):
+            with open(WATCHLIST_PATH, "r") as f:
                 return json.load(f)
-        except json.JSONDecodeError:
+        else:
+            # Create an empty watchlist file
+            with open(WATCHLIST_PATH, "w") as f:
+                json.dump([], f, indent=2)
             return []
-    return []
+    except Exception as e:
+        print(f"Error loading watchlist: {e}")
+        return []
 
-def save_watchlist(watchlist: List[Dict]) -> None:
-    """Save the watchlist to the JSON file"""
-    with open(WATCHLIST_FILE, "w") as f:
-        json.dump(watchlist, f, indent=2)
+def _save_watchlist(watchlist_data: List[Dict[str, Any]]) -> bool:
+    """Save the watchlist data to the JSON file."""
+    try:
+        with open(WATCHLIST_PATH, "w") as f:
+            json.dump(watchlist_data, f, indent=2)
+        return True
+    except Exception as e:
+        print(f"Error saving watchlist: {e}")
+        return False
 
-@router.post("/add")
-async def add_to_watchlist(item: WatchlistItem) -> WatchlistResponse:
-    """Add a stock to the watchlist"""
-    watchlist = load_watchlist()
+def add_to_watchlist(user_id: str, stock_symbol: str, stock_name: str) -> Dict[str, Any]:
+    """Add a stock to a user's watchlist."""
+    watchlist_data = _load_watchlist()
     
-    for existing in watchlist:
-        if existing["user_id"] == item.user_id and existing["stock_symbol"] == item.stock_symbol:
-            return WatchlistResponse(success=True, message="Stock already in watchlist")
+    # Check if this stock is already in the user's watchlist
+    for item in watchlist_data:
+        if item.get("user_id") == user_id and item.get("stock_symbol") == stock_symbol:
+            return {
+                "success": False, 
+                "message": "Stock is already in watchlist"
+            }
     
-    watchlist.append(item.dict())
-    save_watchlist(watchlist)
+    # Add the stock to the watchlist
+    watchlist_data.append({
+        "user_id": user_id,
+        "stock_symbol": stock_symbol,
+        "stock_name": stock_name
+    })
     
-    return WatchlistResponse(success=True, message="Stock added to watchlist")
+    # Save the updated watchlist
+    if _save_watchlist(watchlist_data):
+        return {
+            "success": True,
+            "message": "Stock added to watchlist"
+        }
+    else:
+        return {
+            "success": False,
+            "message": "Failed to save watchlist"
+        }
 
-@router.post("/remove")
-async def remove_from_watchlist(item: WatchlistItem) -> WatchlistResponse:
-    """Remove a stock from the watchlist"""
-    watchlist = load_watchlist()
+def remove_from_watchlist(user_id: str, stock_symbol: str, stock_name: str) -> Dict[str, Any]:
+    """Remove a stock from a user's watchlist."""
+    watchlist_data = _load_watchlist()
     
-    updated_watchlist = [
-        stock for stock in watchlist 
-        if not (stock["user_id"] == item.user_id and stock["stock_symbol"] == item.stock_symbol)
+    original_length = len(watchlist_data)
+    
+    # Filter out the stock to remove
+    watchlist_data = [
+        item for item in watchlist_data 
+        if not (item.get("user_id") == user_id and item.get("stock_symbol") == stock_symbol)
     ]
     
-    if len(updated_watchlist) < len(watchlist):
-        save_watchlist(updated_watchlist)
-        return WatchlistResponse(success=True, message="Stock removed from watchlist")
+    if len(watchlist_data) == original_length:
+        return {
+            "success": False,
+            "message": "Stock not found in watchlist"
+        }
+    
+    # Save the updated watchlist
+    if _save_watchlist(watchlist_data):
+        return {
+            "success": True,
+            "message": "Stock removed from watchlist"
+        }
     else:
-        return WatchlistResponse(success=False, message="Stock not found in watchlist")
+        return {
+            "success": False,
+            "message": "Failed to save watchlist"
+        }
 
-@router.get("/list/{user_id}")
-async def get_user_watchlist(user_id: str) -> WatchlistResponse:
-    """Get the watchlist for a specific user"""
-    watchlist = load_watchlist()
+def get_user_watchlist(user_id: str) -> List[Dict[str, Any]]:
+    """Get all stocks in a user's watchlist."""
+    watchlist_data = _load_watchlist()
     
-    user_watchlist = [stock for stock in watchlist if stock["user_id"] == user_id]
+    # Filter for items belonging to the specified user
+    user_watchlist = [
+        item for item in watchlist_data
+        if item.get("user_id") == user_id
+    ]
     
-    return WatchlistResponse(
-        success=True,
-        message="Watchlist retrieved successfully",
-        data=user_watchlist
-    )
+    return user_watchlist
 
-@router.get("/check/{user_id}/{stock_symbol}")
-async def check_in_watchlist(user_id: str, stock_symbol: str) -> WatchlistResponse:
-    """Check if a stock is in a user's watchlist"""
-    watchlist = load_watchlist()
+def is_in_watchlist(user_id: str, stock_symbol: str) -> bool:
+    """Check if a stock is in a user's watchlist."""
+    watchlist_data = _load_watchlist()
     
-    for item in watchlist:
-        if item["user_id"] == user_id and item["stock_symbol"] == stock_symbol:
-            return WatchlistResponse(success=True, message="Stock is in watchlist", data=True)
+    # Check if the stock exists in the user's watchlist
+    for item in watchlist_data:
+        if item.get("user_id") == user_id and item.get("stock_symbol") == stock_symbol:
+            return True
     
-    return WatchlistResponse(success=True, message="Stock is not in watchlist", data=False)
+    return False

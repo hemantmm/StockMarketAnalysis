@@ -3,8 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from model import train_model, get_hold_advice, get_price_at_holding_period, get_target_price
 from pydantic import BaseModel
 import json
-from watchlist import router as watchlist_router
-from indianstock_api import get_stock_info, get_watchlist_data
+from watchlist import add_to_watchlist, remove_from_watchlist, get_user_watchlist, is_in_watchlist
+from indianstock_api import get_watchlist_data
 
 app = FastAPI()
 
@@ -16,8 +16,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(watchlist_router, prefix="/watchlist", tags=["watchlist"])
-
 class Alert(BaseModel):
     stock: str
     target_price: float
@@ -27,7 +25,7 @@ class HoldAdviceRequest(BaseModel):
     stock: str
     buy_price: float
     current_price: float
-    holding_period: int
+    holding_period: int  # in days
     prices: list[float] = []
 
 @app.post("/predict")
@@ -72,6 +70,45 @@ async def hold_advice(request: HoldAdviceRequest):
         return {"advice": advice, "target_prices": target_prices, "recommendation": recommendation}
     except Exception as e:
         return {"error": str(e), "advice": "Error processing request"}
+
+# Watchlist API endpoints
+class WatchlistItem(BaseModel):
+    user_id: str
+    stock_symbol: str
+    stock_name: str
+
+@app.post("/watchlist/add")
+async def add_to_watchlist_endpoint(item: WatchlistItem):
+    result = add_to_watchlist(item.user_id, item.stock_symbol, item.stock_name)
+    return result
+
+@app.post("/watchlist/remove")
+async def remove_from_watchlist_endpoint(item: WatchlistItem):
+    result = remove_from_watchlist(item.user_id, item.stock_symbol, item.stock_name)
+    return result
+
+@app.get("/watchlist/list/{user_id}")
+async def get_watchlist_endpoint(user_id: str):
+    watchlist = get_user_watchlist(user_id)
+    return {"success": True, "data": watchlist}
+
+@app.get("/watchlist/check/{user_id}/{stock_symbol}")
+async def check_in_watchlist_endpoint(user_id: str, stock_symbol: str):
+    result = is_in_watchlist(user_id, stock_symbol)
+    return {"success": True, "data": result}
+
+@app.get("/watchlist/data/{user_id}")
+async def get_watchlist_data_endpoint(user_id: str):
+    # Get user's watchlist
+    watchlist = get_user_watchlist(user_id)
+    
+    # Extract stock symbols
+    stock_symbols = [item["stock_symbol"] for item in watchlist]
+    
+    # Fetch data for each stock in the watchlist
+    stock_data = get_watchlist_data(stock_symbols)
+    
+    return {"success": True, "data": stock_data}
 
 # source venv/bin/activate
 # uvicorn main:app --reload
