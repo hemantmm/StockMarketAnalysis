@@ -49,7 +49,7 @@ const StockSearchs = () => {
   const [periodWise, setPeriodWise] = useState("1m");
   const [predictedPrice, setPredictedPrice] = useState<number | null>(null);
   const [isPredicted, setIsPredicted] = useState(false);
-  const [userId, setUserId] = useState<string>("user1");
+  const [userId] = useState<string>("user1");
   const [isInWatchlist, setIsInWatchlist] = useState<boolean>(false);
   const [watchlistLoading, setWatchlistLoading] = useState<boolean>(false);
 
@@ -252,64 +252,6 @@ const StockSearchs = () => {
     }
   };
 
-  useEffect(() => {
-    const storedUserId = localStorage.getItem("userId");
-    if (storedUserId) {
-      setUserId(storedUserId);
-    }
-  }, []);
-
-  const checkWatchlistStatus = useCallback(async (symbol: string) => {
-    if (!symbol) return;
-    
-    setWatchlistLoading(true);
-    try {
-      const isWatchlisted = await checkInWatchlist(userId, symbol);
-      setIsInWatchlist(isWatchlisted);
-    } catch (error) {
-      console.error("Error checking watchlist status:", error);
-    } finally {
-      setWatchlistLoading(false);
-    }
-  }, [userId]);
-
-  const handleWatchlistToggle = async () => {
-    if (!stockData) return;
-    
-    setWatchlistLoading(true);
-    try {
-      console.log('Watchlist toggle for:', {
-        userId,
-        symbol: stockData.symbol || stockName,
-        name: stockData.companyName || stockName
-      });
-      
-      if (isInWatchlist) {
-        // Remove from watchlist logic would go here if needed
-        // For now we only implement adding to watchlist
-        console.log('Stock already in watchlist');
-      } else {
-        // Add to watchlist
-        const response = await addToWatchlist(
-          userId,
-          stockData.symbol || stockName,
-          stockData.companyName || stockName
-        );
-        console.log('Add to watchlist response:', response);
-        if (response.success) {
-          setIsInWatchlist(true);
-        } else {
-          setError(`Failed to add to watchlist: ${response.message}`);
-        }
-      }
-    } catch (error) {
-      console.error("Error toggling watchlist:", error);
-      setError("Failed to connect to watchlist service. Make sure the backend is running.");
-    } finally {
-      setWatchlistLoading(false);
-    }
-  };
-
   const toggleDetails = () => setShowDetails(!showDetails);
 
   const handleSearch = useCallback(async (searchTerm?: string, period?: string) => {
@@ -335,9 +277,6 @@ const StockSearchs = () => {
         setStockData(data);
         setStockPriceData(historicalData.datasets[0].values);
         initialLoadRef.current = false;
-        
-        // Check if this stock is in the watchlist
-        await checkWatchlistStatus(data.symbol || searchStock);
       } catch (err) {
         console.error('Error in handleSearch:', err);
         setError("Failed to fetch stock data: " + err);
@@ -347,7 +286,7 @@ const StockSearchs = () => {
     } else {
       setError("Please enter a stock symbol");
     }
-  }, [stockName, periodWise, checkWatchlistStatus]);
+  }, [stockName, periodWise]);
 
   const handleSearchClick = () => {
     handleSearch();
@@ -383,6 +322,63 @@ const StockSearchs = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [periodWise]);
+
+  const checkWatchlistStatus = useCallback(async (symbol: string) => {
+    if (!symbol) return;
+    
+    setWatchlistLoading(true);
+    try {
+      const isWatchlisted = await checkInWatchlist(userId, symbol);
+      setIsInWatchlist(isWatchlisted);
+    } catch (error) {
+      console.error("Error checking watchlist status:", error);
+    } finally {
+      setWatchlistLoading(false);
+    }
+  }, [userId]);
+
+  const handleWatchlistToggle = async () => {
+    if (!stockData) return;
+    
+    setWatchlistLoading(true);
+    try {
+      console.log('Watchlist toggle for:', {
+        userId,
+        symbol: stockData.symbol || stockName,
+        name: stockData.companyName || stockName
+      });
+      
+      if (isInWatchlist) {
+        // Remove from watchlist logic would go here
+        console.log('Stock already in watchlist');
+      } else {
+        // Add to watchlist
+        const response = await addToWatchlist(
+          userId,
+          stockData.symbol || stockName,
+          stockData.companyName || stockName
+        );
+        console.log('Add to watchlist response:', response);
+        if (response.success) {
+          setIsInWatchlist(true);
+        } else {
+          setError(`Failed to add to watchlist: ${response.message}`);
+        }
+      }
+    } catch (error) {
+      console.error("Error toggling watchlist:", error);
+      setError("Failed to connect to watchlist service. Make sure the backend is running.");
+    } finally {
+      setWatchlistLoading(false);
+    }
+  };
+
+  // Effect to check watchlist status when stock data changes
+  useEffect(() => {
+    if (stockData?.symbol) {
+      checkWatchlistStatus(stockData.symbol);
+    }
+  }, [stockData, checkWatchlistStatus]);
 
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
@@ -431,6 +427,13 @@ const StockSearchs = () => {
             >
               <span className="sm:hidden">Hold</span>
               <span className="hidden sm:inline">Hold Stock</span>
+            </button>
+            <button
+              onClick={() => router.push('/Watchlist')}
+              className="flex-1 sm:flex-initial px-4 sm:px-6 py-2 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-full font-semibold hover:shadow-lg hover:shadow-yellow-500/25 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 text-sm sm:text-base"
+            >
+              <FaStar className="text-xs sm:text-sm" />
+              <span className="hidden sm:inline">Watchlist</span>
             </button>
           </div>
         </div>
@@ -550,16 +553,17 @@ const StockSearchs = () => {
                   </div>
                   <div className="flex space-x-2">
                     <button 
-                      onClick={handleWatchlistToggle}
+                      onClick={handleWatchlistToggle} 
                       disabled={watchlistLoading}
-                      className={`flex items-center px-3 py-2 rounded-lg transition-all duration-200 ${
-                        isInWatchlist 
-                          ? "bg-yellow-500/80 text-black" 
-                          : "bg-yellow-600/20 hover:bg-yellow-600/40 text-yellow-300"
-                      } border ${isInWatchlist ? "border-yellow-500" : "border-yellow-600/50"}`}
+                      className={`p-3 rounded-xl ${isInWatchlist 
+                        ? "bg-yellow-500/20 hover:bg-yellow-500/30 border-yellow-500/30" 
+                        : "bg-white/10 hover:bg-white/20 border-white/20"} 
+                        transition-colors border self-start flex items-center justify-center`}
                     >
-                      <FaStar className="mr-2" />
-                      {watchlistLoading ? "..." : isInWatchlist ? "Added" : "Watchlist"}
+                      <FaStar size={18} className={`${isInWatchlist ? "text-yellow-400" : "text-gray-400"} sm:text-xl`} />
+                      {watchlistLoading && (
+                        <div className="ml-1 animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                      )}
                     </button>
                     <button 
                       onClick={toggleDetails} 
