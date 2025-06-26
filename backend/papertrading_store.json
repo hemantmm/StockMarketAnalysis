@@ -170,5 +170,43 @@
       "ICICI BANK": 0,
       "DMART": 0
     }
+  },
+  "": {
+    "balance": 26857.949999999997,
+    "trades": [
+      {
+        "symbol": "DMART",
+        "qty": 1,
+        "price": 4309.05,
+        "side": "buy",
+        "timestamp": "2025-06-26T16:50:54.901715"
+      },
+      {
+        "symbol": "TCS",
+        "qty": 20,
+        "price": 3441.65,
+        "side": "buy",
+        "timestamp": "2025-06-26T16:51:14.256798"
+      }
+    ],
+    "positions": {
+      "DMART": 1,
+      "TCS": 20
+    }
+  },
+  "testuser": {
+    "balance": 56909.5,
+    "trades": [
+      {
+        "symbol": "DMART",
+        "qty": 10,
+        "price": 4309.05,
+        "side": "buy",
+        "timestamp": "2025-06-26T16:53:51.655828"
+      }
+    ],
+    "positions": {
+      "DMART": 10
+    }
   }
 }
