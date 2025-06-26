@@ -4,7 +4,6 @@ import React, { useState} from 'react';
 import { placePaperTrade, getPaperTradeHistory, getPaperTradePerformance, backtestPaperStrategy, getCurrentStockPrice } from '../services/paperTradeAPI';
 import type { Trade, Performance, BacktestResult } from '../services/paperTradeAPI';
 
-const userId = 'demo_user';
 const INITIAL_BALANCE = 100000;
 
 export default function PaperTrading() {
@@ -24,6 +23,9 @@ export default function PaperTrading() {
   const [priceError, setPriceError] = useState<string | null>(null);
   // Track if user has manually changed the price
   const [priceManuallyChanged, setPriceManuallyChanged] = useState(false);
+
+  // Temporary default user ID until real auth is implemented
+  const userId = 'testuser';
 
   const fetchCurrentPrice = async (sym: string) => {
     setPriceLoading(true);
