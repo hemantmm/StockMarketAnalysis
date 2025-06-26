@@ -1,0 +1,159 @@
+{
+  "demo_user": {
+    "balance": 127680.5,
+    "trades": [
+      {
+        "symbol": "tcs",
+        "qty": 0,
+        "price": 0.0,
+        "side": "buy",
+        "timestamp": "2025-06-23T17:08:03.875688"
+      },
+      {
+        "symbol": "cdsl",
+        "qty": 30,
+        "price": 400.0,
+        "side": "buy",
+        "timestamp": "2025-06-23T17:09:52.394123"
+      },
+      {
+        "symbol": "cdsl",
+        "qty": 30,
+        "price": 500.0,
+        "side": "sell",
+        "timestamp": "2025-06-23T17:10:41.192942"
+      },
+      {
+        "symbol": "ASIAN PAINTS",
+        "qty": 20,
+        "price": 2300.0,
+        "side": "buy",
+        "timestamp": "2025-06-23T17:22:46.666323"
+      },
+      {
+        "symbol": "JK TYRE",
+        "qty": 30,
+        "price": 90.0,
+        "side": "buy",
+        "timestamp": "2025-06-23T17:26:33.813311"
+      },
+      {
+        "symbol": "JK TYRE",
+        "qty": 30,
+        "price": 400.0,
+        "side": "sell",
+        "timestamp": "2025-06-23T17:29:36.659501"
+      },
+      {
+        "symbol": "ASIAN PAINTS",
+        "qty": 20,
+        "price": 3000.0,
+        "side": "sell",
+        "timestamp": "2025-06-23T17:30:04.891709"
+      },
+      {
+        "symbol": "TCS",
+        "qty": 10,
+        "price": 3500.0,
+        "side": "buy",
+        "timestamp": "2025-06-23T17:30:17.957035"
+      },
+      {
+        "symbol": "WIPRO",
+        "qty": 260,
+        "price": 250.0,
+        "side": "buy",
+        "timestamp": "2025-06-23T17:31:03.256078"
+      },
+      {
+        "symbol": "TCS",
+        "qty": 10,
+        "price": 4000.0,
+        "side": "sell",
+        "timestamp": "2025-06-23T17:31:28.838326"
+      },
+      {
+        "symbol": "WIPRO",
+        "qty": 260,
+        "price": 300.0,
+        "side": "sell",
+        "timestamp": "2025-06-25T14:54:53.945906"
+      },
+      {
+        "symbol": "CDSL",
+        "qty": 20,
+        "price": 1730.0,
+        "side": "buy",
+        "timestamp": "2025-06-25T16:40:15.322449"
+      },
+      {
+        "symbol": "HDFC",
+        "qty": 20,
+        "price": 2021.0,
+        "side": "buy",
+        "timestamp": "2025-06-26T10:50:01.709035"
+      },
+      {
+        "symbol": "AXIS BANK",
+        "qty": 20,
+        "price": 1210.0,
+        "side": "buy",
+        "timestamp": "2025-06-26T10:58:14.985959"
+      },
+      {
+        "symbol": "AXIS BANK",
+        "qty": 15,
+        "price": 1234.35,
+        "side": "buy",
+        "timestamp": "2025-06-26T13:36:43.737889"
+      },
+      {
+        "symbol": "HDFC",
+        "qty": 20,
+        "price": 2100.0,
+        "side": "sell",
+        "timestamp": "2025-06-26T13:37:57.697901"
+      },
+      {
+        "symbol": "ICICI BANK",
+        "qty": 30,
+        "price": 1300.0,
+        "side": "buy",
+        "timestamp": "2025-06-26T14:38:53.884610"
+      },
+      {
+        "symbol": "CDSL",
+        "qty": 20,
+        "price": 1900.0,
+        "side": "sell",
+        "timestamp": "2025-06-26T14:41:30.448519"
+      },
+      {
+        "symbol": "AXIS BANK",
+        "qty": 35,
+        "price": 1234.35,
+        "side": "sell",
+        "timestamp": "2025-06-26T14:41:40.411647"
+      },
+      {
+        "symbol": "ICICI BANK",
+        "qty": 30,
+        "price": 1440.45,
+        "side": "sell",
+        "timestamp": "2025-06-26T14:41:53.945678"
+      }
+    ],
+    "positions": {
+      "tcs": 0,
+      "cdsl": 0,
+      "ASIAN PAINTS": 0,
+      "JK TYRE": 0,
+      "TCS": 0,
+      "WIPRO": 0,
+      "CDSL": 0,
+      "HDFC": 0,
+      "AXIS BANK": 0,
+      "ICICI BANK": 0
+    }
+  }
+}

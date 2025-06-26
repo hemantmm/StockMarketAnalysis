@@ -5,6 +5,7 @@ from pydantic import BaseModel
 import json
 from watchlist import add_to_watchlist, remove_from_watchlist, get_user_watchlist, is_in_watchlist
 from indianstock_api import get_watchlist_data
+from papertrading import place_trade, get_trading_history, get_performance, backtest_strategy
 
 app = FastAPI()
 
@@ -109,6 +110,35 @@ async def get_watchlist_data_endpoint(user_id: str):
     stock_data = get_watchlist_data(stock_symbols)
     
     return {"success": True, "data": stock_data}
+
+# Paper trading endpoints
+class TradeRequest(BaseModel):
+    user_id: str
+    symbol: str
+    qty: int
+    price: float
+    side: str  # 'buy' or 'sell'
+
+@app.post("/papertrade/trade")
+async def paper_trade(request: TradeRequest):
+    result = place_trade(request.user_id, request.symbol, request.qty, request.price, request.side)
+    return result
+
+@app.get("/papertrade/history/{user_id}")
+async def paper_trade_history(user_id: str):
+    return {"history": get_trading_history(user_id)}
+
+@app.get("/papertrade/performance/{user_id}")
+async def paper_trade_performance(user_id: str):
+    return get_performance(user_id)
+
+class BacktestRequest(BaseModel):
+    prices: list[float]
+    initial_balance: float = 1000000
+
+@app.post("/papertrade/backtest")
+async def paper_trade_backtest(request: BacktestRequest):
+    return backtest_strategy(request.prices, request.initial_balance)
 
 # source venv/bin/activate
 # uvicorn main:app --reload
