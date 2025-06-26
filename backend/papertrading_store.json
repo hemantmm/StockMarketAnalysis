@@ -141,6 +141,20 @@
         "price": 1440.45,
         "side": "sell",
         "timestamp": "2025-06-26T14:41:53.945678"
+      },
+      {
+        "symbol": "DMART",
+        "qty": 20,
+        "price": 4309.05,
+        "side": "buy",
+        "timestamp": "2025-06-26T14:48:26.228797"
+      },
+      {
+        "symbol": "DMART",
+        "qty": 20,
+        "price": 4309.05,
+        "side": "sell",
+        "timestamp": "2025-06-26T14:51:45.494833"
       }
     ],
     "positions": {
@@ -153,7 +167,8 @@
       "CDSL": 0,
       "HDFC": 0,
       "AXIS BANK": 0,
-      "ICICI BANK": 0
+      "ICICI BANK": 0,
+      "DMART": 0
     }
   }
 }
