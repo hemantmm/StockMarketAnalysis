@@ -2,7 +2,7 @@ import axios from 'axios';
 // import { get_stock_info } from '../../backend/indianstock_api';
 import fetchStockDetails from '../stockNameAPI';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8000';
+const API_BASE = 'https://stockmarketanalysis-1.onrender.com';
 
 export async function placePaperTrade({ user_id, symbol, qty, price, side }: { user_id: string, symbol: string, qty: number, price: number, side: string }) {
   const res = await axios.post(`${API_BASE}/papertrade/trade`, {
