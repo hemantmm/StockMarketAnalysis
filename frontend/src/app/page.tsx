@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { FaRocket, FaBell, FaSearch, FaArrowRight, FaPlay, FaShieldAlt, FaLightbulb, FaTrophy, FaStar } from "react-icons/fa";
+import { FaRocket, FaBell, FaSearch, FaArrowRight, FaPlay, FaShieldAlt, FaLightbulb, FaTrophy, FaStar, FaChartLine } from "react-icons/fa";
 
 const HomePage = () => {
   const router = useRouter();
@@ -197,7 +197,8 @@ const HomePage = () => {
     { label: "Watchlist", icon: FaStar, action: () => router.push("/Watchlist"), color: "from-yellow-400 to-amber-600" },
     { label: "Price Alerts", icon: FaBell, action: () => router.push("/Notifier"), color: "from-purple-500 to-pink-600" },
     { label: "Active Stocks", icon: FaRocket, action: () => router.push("/ActiveStocks"), color: "from-orange-500 to-red-600" },
-    { label: "Portfolio", icon: FaShieldAlt, action: () => router.push("/Portfolio"), color: "from-emerald-500 to-green-600" }
+    { label: "Portfolio", icon: FaShieldAlt, action: () => router.push("/Portfolio"), color: "from-emerald-500 to-green-600" },
+    { label: "Trading Simulator", icon: FaChartLine, action: () => router.push("/PaperTrading"), color: "from-pink-500 to-yellow-500" }
   ];
 
   return (
