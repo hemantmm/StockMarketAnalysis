@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { get_stock_info } from '../../backend/indianstock_api';
+// import { get_stock_info } from '../../backend/indianstock_api';
 import fetchStockDetails from '../stockNameAPI';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8000';

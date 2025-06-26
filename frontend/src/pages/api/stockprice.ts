@@ -16,6 +16,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const price = response.data?.price || response.data?.data?.price || null;
     res.status(200).json({ price });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch price' });
+    res.status(500).json({ error: 'Failed to fetch price', details: error });
   }
 }

@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
-import React, { useState, useRef } from 'react';
+import React, { useState} from 'react';
 import { placePaperTrade, getPaperTradeHistory, getPaperTradePerformance, backtestPaperStrategy, getCurrentStockPrice } from '../services/paperTradeAPI';
 import type { Trade, Performance, BacktestResult } from '../services/paperTradeAPI';
 
-const userId = 'demo_user'; // Replace with real user auth
+const userId = 'demo_user';
 const INITIAL_BALANCE = 100000;
 
 export default function PaperTrading() {
@@ -41,6 +42,7 @@ export default function PaperTrading() {
         if (!priceManuallyChanged && price !== null) {
           setPrice(Number(price));
         }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (err) {
         setCurrentPrice(null);
         setPriceError('Price unavailable or API limit reached.');
