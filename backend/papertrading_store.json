@@ -36,7 +36,7 @@
     "TCS": 10
   },
   "default_trader": {
-    "balance": 59300.5,
+    "balance": 101300.5,
     "trades": [
       {
         "symbol": "R R KABEL",
@@ -44,10 +44,17 @@
         "price": 1356.65,
         "side": "buy",
         "timestamp": "2025-06-27T16:38:42.930937"
+      },
+      {
+        "symbol": "R R KABEL",
+        "qty": 30,
+        "price": 1400.0,
+        "side": "sell",
+        "timestamp": "2025-06-27T16:44:12.770914"
       }
     ],
     "positions": {
-      "R R KABEL": 30
+      "R R KABEL": 0
     }
   }
 }
