@@ -108,7 +108,7 @@ export default function PaperTrading() {
         return;
       }
     }
-    const res = await placePaperTrade({ user_id: userId, symbol, qty: Number(qty), price: Number(price), side });
+    const res = await placePaperTrade({ symbol, qty: Number(qty), price: Number(price), side });
     setTradeResult(res);
     setSymbol("");
     setQty(0);
@@ -121,13 +121,12 @@ export default function PaperTrading() {
   };
 
   const fetchHistory = async () => {
-    const h = await getPaperTradeHistory(userId);
+    const h = await getPaperTradeHistory();
     setHistory(h);
   };
 
   const fetchPerformance = async () => {
-    const p = await getPaperTradePerformance(userId);
-    // If user is new or balance is not set, set to INITIAL_BALANCE
+    const p = await getPaperTradePerformance();
     if (p && (typeof p.balance !== 'number' || p.balance > 1_000_000 || p.balance === 1_000_000)) {
       p.balance = INITIAL_BALANCE;
     }
