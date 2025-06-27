@@ -2,30 +2,56 @@ import axios from 'axios';
 // import { get_stock_info } from '../../backend/indianstock_api';
 import fetchStockDetails from '../stockNameAPI';
 
-const API_BASE = 'https://stockmarketanalysis-1.onrender.com';
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8000';
+const DEFAULT_USER_ID = 'default_trader';
 
-export async function placePaperTrade({ user_id, symbol, qty, price, side }: { user_id: string, symbol: string, qty: number, price: number, side: string }) {
-  const res = await axios.post(`${API_BASE}/papertrade/trade`, {
-    user_id, symbol, qty, price, side
-  });
-  return res.data;
+export async function placePaperTrade({ symbol, qty, price, side }: { symbol: string, qty: number, price: number, side: string }) {
+  try {
+    const res = await axios.post(`${API_BASE}/papertrade/trade`, {
+      user_id: DEFAULT_USER_ID, symbol, qty, price, side
+    });
+    return res.data;
+  } catch (error) {
+    console.error('Paper trade error:', error);
+    throw error;
+  }
 }
 
-export async function getPaperTradeHistory(user_id: string): Promise<Trade[]> {
-  const res = await axios.get(`${API_BASE}/papertrade/history/${user_id}`);
-  return res.data.history;
+export async function getPaperTradeHistory(): Promise<Trade[]> {
+  try {
+    const res = await axios.get(`${API_BASE}/papertrade/history/${DEFAULT_USER_ID}`);
+    return res.data.history;
+  } catch (error) {
+    console.error('Error fetching trade history:', error);
+    return [];
+  }
 }
 
-export async function getPaperTradePerformance(user_id: string): Promise<Performance> {
-  const res = await axios.get(`${API_BASE}/papertrade/performance/${user_id}`);
-  return res.data;
+export async function getPaperTradePerformance(): Promise<Performance> {
+  try {
+    const res = await axios.get(`${API_BASE}/papertrade/performance/${DEFAULT_USER_ID}`);
+    return res.data;
+  } catch (error) {
+    console.error('Error fetching performance:', error);
+    return { balance: 100000, positions: {} };
+  }
 }
 
 export async function backtestPaperStrategy(prices: number[], initial_balance = 1000000): Promise<BacktestResult> {
-  const res = await axios.post(`${API_BASE}/papertrade/backtest`, {
-    prices, initial_balance
-  });
-  return res.data;
+  try {
+    const res = await axios.post(`${API_BASE}/papertrade/backtest`, {
+      prices, initial_balance
+    });
+    return res.data;
+  } catch (error) {
+    console.error('Error in backtest:', error);
+    return {
+      initial_balance,
+      final_balance: initial_balance,
+      profit: 0,
+      error: 'Failed to connect to server'
+    };
+  }
 }
 
 export async function getCurrentStockPrice(symbol: string): Promise<number | null> {
