@@ -2,14 +2,17 @@ import axios from 'axios';
 // import { get_stock_info } from '../../backend/indianstock_api';
 import fetchStockDetails from '../stockNameAPI';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:8000';
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://stockmarketanalysis-4.onrender.com';
 const DEFAULT_USER_ID = 'default_trader';
 
 export async function placePaperTrade({ symbol, qty, price, side }: { symbol: string, qty: number, price: number, side: string }) {
   try {
+    console.log('Making trade request to:', `${API_BASE}/papertrade/trade`);
+    console.log('Trade data:', { user_id: DEFAULT_USER_ID, symbol, qty, price, side });
     const res = await axios.post(`${API_BASE}/papertrade/trade`, {
       user_id: DEFAULT_USER_ID, symbol, qty, price, side
     });
+    console.log('Trade response:', res.data);
     return res.data;
   } catch (error) {
     console.error('Paper trade error:', error);
