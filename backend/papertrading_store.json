@@ -1,60 +1,32 @@
 {
-  "balance": 51500.0,
-  "trades": [
-    {
-      "symbol": "AAPL",
-      "qty": 10,
-      "price": 150.0,
-      "side": "buy",
-      "timestamp": "2025-06-27T10:59:03.866580"
-    },
-    {
-      "symbol": "RELIANCE",
-      "qty": 5,
-      "price": 2500.0,
-      "side": "buy",
-      "timestamp": "2025-06-27T13:17:52.857783"
-    },
-    {
-      "symbol": "TCS",
-      "qty": 10,
-      "price": 3200.0,
-      "side": "buy",
-      "timestamp": "2025-06-27T13:17:52.858069"
-    },
-    {
-      "symbol": "RELIANCE",
-      "qty": 1,
-      "price": 2500.0,
-      "side": "buy",
-      "timestamp": "2025-06-27T13:18:30.362125"
-    }
-  ],
-  "positions": {
-    "AAPL": 10,
-    "RELIANCE": 6,
-    "TCS": 10
-  },
   "default_trader": {
-    "balance": 101300.5,
+    "balance": 54334.0,
     "trades": [
       {
-        "symbol": "R R KABEL",
-        "qty": 30,
-        "price": 1356.65,
+        "symbol": "RCF",
+        "qty": 300,
+        "price": 157.9,
         "side": "buy",
-        "timestamp": "2025-06-27T16:38:42.930937"
+        "timestamp": "2025-06-28T08:44:47.038120"
       },
       {
-        "symbol": "R R KABEL",
-        "qty": 30,
-        "price": 1400.0,
+        "symbol": "CEAT",
+        "qty": 10,
+        "price": 3629.6,
+        "side": "buy",
+        "timestamp": "2025-06-28T08:47:03.969126"
+      },
+      {
+        "symbol": "CEAT",
+        "qty": 10,
+        "price": 3800.0,
         "side": "sell",
-        "timestamp": "2025-06-27T16:44:12.770914"
+        "timestamp": "2025-06-28T08:47:25.220410"
       }
     ],
     "positions": {
-      "R R KABEL": 0
+      "RCF": 300,
+      "CEAT": 0
     }
   }
 }
