@@ -29,6 +29,18 @@ class HoldAdviceRequest(BaseModel):
     holding_period: int  # in days
     prices: list[float] = []
 
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+class SignUpRequest(BaseModel):
+    name: str
+    email: str
+    password: str
+
+# User storage (in production, use a proper database)
+users_db = {}
+
 @app.post("/predict")
 async def predict_price(request: Request):
     data = await request.json()
@@ -139,6 +151,67 @@ class BacktestRequest(BaseModel):
 @app.post("/papertrade/backtest")
 async def paper_trade_backtest(request: BacktestRequest):
     return backtest_strategy(request.prices, request.initial_balance)
+
+@app.post("/Login")
+async def login(request: LoginRequest):
+    try:
+        email = request.email.lower().strip()
+        password = request.password
+        
+        # Check if user exists and password matches
+        if email in users_db and users_db[email]["password"] == password:
+            return {
+                "success": True,
+                "message": "Login successful",
+                "user": {
+                    "name": users_db[email]["name"],
+                    "email": email
+                }
+            }
+        else:
+            return {
+                "success": False,
+                "message": "Invalid email or password"
+            }
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Login failed: {str(e)}"
+        }
+
+@app.post("/SignUp")
+async def signup(request: SignUpRequest):
+    try:
+        name = request.name.strip()
+        email = request.email.lower().strip()
+        password = request.password
+        
+        # Check if user already exists
+        if email in users_db:
+            return {
+                "success": False,
+                "message": "User with this email already exists"
+            }
+        
+        # Create new user
+        users_db[email] = {
+            "name": name,
+            "password": password
+        }
+        
+        return {
+            "success": True,
+            "message": "Account created successfully",
+            "user": {
+                "name": name,
+                "email": email
+            }
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"SignUp failed: {str(e)}"
+        }
 
 # source venv/bin/activate
 # uvicorn main:app --reload

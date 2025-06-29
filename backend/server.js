@@ -82,26 +82,26 @@ app.post('/SignUp', async (req, res) => {
     }
 });
 
-// app.post('/Login', async (req, res) => {
-//     const { username, password } = req.body;
+app.post('/Login', async (req, res) => {
+    const { username, password } = req.body;
     
-//     try {
-//         const user = await User.findOne({username});
-//         if (!user) {
-//             return res.status(400).json({ message: 'Invalid username or password' });
-//         }
-//         const isMatch = await bcrypt.compare(password, user.password);
-//         if(!isMatch) {
-//             return res.status(400).json({ message: 'Invalid username or password' });
-//         }
+    try {
+        const user = await User.findOne({username});
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid username or password' });
+        }
+        const isMatch = await bcrypt.compare(password, user.password);
+        if(!isMatch) {
+            return res.status(400).json({ message: 'Invalid username or password' });
+        }
 
-//         const token = jwt.sign({ userId: user._id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-//         res.json({token,username:user.username});
-//     } catch (error) {
-//         res.status(500).json({ message: 'Internal server error' });
-//     }
-// })
+        res.json({token,username:user.username});
+    } catch (error) {
+        res.status(500).json({ message: 'Internal server error' });
+    }
+})
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
