@@ -55,50 +55,81 @@ const User = mongoose.model('User', userSchema);
 
 app.post('/SignUp', async (req, res) => {
     const { username, email, password } = req.body;
+    console.log('SignUp attempt with:', { username, email, hasPassword: !!password });
 
     if(!validator.isEmail(email)) {
+        console.log('Invalid email format:', email);
         return res.status(400).json({ message: 'Invalid email address' });
     }
 
     try {
-        const existingUser = await User.findOne({$or: [{ username, email }] });
+        const existingUser = await User.findOne({$or: [{ username }, { email }] });
         if(existingUser) {
+            console.log('User already exists:', { username, email });
             return res.status(400).json({ message: 'User already exists' });
         }
 
+        console.log('Hashing password...');
         const hashedPassword = await bcrypt.hash(password, 10);
+        console.log('Password hashed successfully, length:', hashedPassword.length);
 
         const user=new User({
             username,
             email,
             password: hashedPassword
         });
+        
         await user.save();
+        console.log('User created successfully:', { id: user._id, username, email });
 
         res.status(201).json({ message: 'User created successfully' });
     } catch (error) {
-        // console.error('Error creating user:', error);
+        console.error('Error creating user:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 });
 
 app.post('/Login', async (req, res) => {
-    const { username, password } = req.body;
+    const { username, email, password } = req.body;
+    console.log('Login attempt with:', { username, email, hasPassword: !!password });
     
     try {
-        const user = await User.findOne({username});
+        // Build query dynamically based on what's provided
+        let query = {};
+        if (username) {
+            query.username = username;
+        } else if (email) {
+            query.email = email;
+        } else {
+            console.log('No username or email provided');
+            return res.status(400).json({ message: 'Username or email is required' });
+        }
+
+        console.log('Searching for user with query:', query);
+        const user = await User.findOne(query);
+        
         if (!user) {
-            return res.status(400).json({ message: 'Invalid username or password' });
+            console.log('User not found with query:', query);
+            return res.status(400).json({ message: 'Invalid username/email or password' });
         }
+        
+        console.log('User found:', { id: user._id, username: user.username, email: user.email });
+        console.log('Stored password hash:', user.password);
+        console.log('Provided password:', password);
+        
         const isMatch = await bcrypt.compare(password, user.password);
+        console.log('Password match result:', isMatch);
+        
         if(!isMatch) {
-            return res.status(400).json({ message: 'Invalid username or password' });
+            console.log('Password does not match');
+            return res.status(400).json({ message: 'Invalid username/email or password' });
         }
-
+        
         const token = jwt.sign({ userId: user._id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
+        console.log('Login successful for user:', user.username);
         res.json({token,username:user.username});
     } catch (error) {
+        console.error('Login error:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 })
