@@ -16,7 +16,7 @@ const SignUpPage = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        axios.post('https://stockmarketanalysis-2.onrender.com/SignUp', {
+        axios.post('http://localhost:4000/SignUp', {
             username:name,
             email,
             password,
