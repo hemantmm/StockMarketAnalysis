@@ -27,7 +27,7 @@ starlette<0.27.0,>=0.26.1
 sympy==1.14.0
 threadpoolctl==3.6.0
 torch==2.7.0
-typing-inspection==0.4.02
+typing-inspection==0.4.1
 typing_extensions==4.13.2
 tzdata==2025.21
 uvicorn>=0.21.1
