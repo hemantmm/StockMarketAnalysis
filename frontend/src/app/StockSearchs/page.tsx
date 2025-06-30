@@ -228,7 +228,7 @@ const StockSearchs = () => {
 
   const predictPrice = async (pastPrices: number[]): Promise<number | null> => {
     try {
-      const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://stockmarketanalysis-4.onrender.com';
+      const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://stockmarketanalysis-node.onrender.com';
       const res = await fetch(`${API_BASE}/predict`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
