@@ -8,5 +8,10 @@
     "user_id": "user1",
     "stock_symbol": "kei",
     "stock_name": "KEI Industries Ltd"
+  },
+  {
+    "user_id": "user1",
+    "stock_symbol": "jsw holding",
+    "stock_name": "JSW Holdings Ltd"
   }
 ]

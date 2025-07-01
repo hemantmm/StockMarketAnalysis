@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from model import train_model, get_hold_advice, get_price_at_holding_period, get_target_price
 from pydantic import BaseModel
@@ -8,19 +8,13 @@ from indianstock_api import get_watchlist_data
 
 app = FastAPI()
 
-# Fix CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://stock-market-analysis-five-lake.vercel.app"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Add health check endpoint
-@app.get("/health")
-def health_check():
-    return {"status": "healthy"}
 
 class Alert(BaseModel):
     stock: str
@@ -35,18 +29,15 @@ class HoldAdviceRequest(BaseModel):
     prices: list[float] = []
 
 @app.post("/predict")
-async def predict_prices(request: Request):
-    try:
-        data = await request.json()
-        prices = data.get("prices", [])
-        
-        if not prices or len(prices) < 2:
-            return {"error": "Insufficient price data provided"}
-            
-        # Your prediction logic here
-        # ...existing code...
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+async def predict_price(request: Request):
+    data = await request.json()
+    prices = data.get("prices", [])
+    
+    if not prices or len(prices) < 2:
+        return {"error": "No prices provided"}
+    
+    prediction_price = train_model(prices)
+    return {"prediction_price": prediction_price}
 
 @app.post("/set-alert")
 def set_alert(alert: Alert):
