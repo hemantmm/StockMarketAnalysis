@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import fetchStockDetails from "../stockNameAPI";
-import { FaInfoCircle, FaArrowUp, FaArrowDown, FaRocket, FaSearch, FaChartLine, FaHome, FaChartPie, FaStar } from "react-icons/fa";
+import { FaInfoCircle, FaArrowUp, FaArrowDown, FaSearch, FaChartLine, FaHome, FaChartPie, FaStar } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import fetchStockData from "../stockDataAPI";
 import { addToWatchlist, checkInWatchlist } from "../watchlistAPI";
@@ -47,8 +47,6 @@ const StockSearchs = () => {
   const [showDetails, setShowDetails] = useState(false);
   const [stockPriceData, setStockPriceData] = useState<Array<[string, string]>>([]);
   const [periodWise, setPeriodWise] = useState("1m");
-  const [predictedPrice, setPredictedPrice] = useState<number | null>(null);
-  const [isPredicted, setIsPredicted] = useState(false);
   const [userId] = useState<string>("user1");
   const [isInWatchlist, setIsInWatchlist] = useState<boolean>(false);
   const [watchlistLoading, setWatchlistLoading] = useState<boolean>(false);
@@ -226,32 +224,31 @@ const StockSearchs = () => {
     };
   }, []);
 
-  const predictPrice = async (pastPrices: number[]): Promise<number | null> => {
-    try {
-      const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://stockmarketanalysis-node.onrender.com';
-      const res = await fetch(`${API_BASE}/predict`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prices: pastPrices }),
-      });
+  //   try {
+  //     const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://stockmarketanalysis-node.onrender.com';
+  //     const res = await fetch(`${API_BASE}/predict`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ prices: pastPrices }),
+  //     });
 
-      if (!res.ok) {
-        console.error("Server error:", res.statusText);
-        return null;
-      }
+  //     if (!res.ok) {
+  //       console.error("Server error:", res.statusText);
+  //       return null;
+  //     }
 
-      const data = await res.json();
-      if (data.prediction_price && typeof data.prediction_price === "number") {
-        return data.prediction_price;
-      } else {
-        console.error("Invalid prediction format:", data);
-        return null;
-      }
-    } catch (error) {
-      console.error("Prediction error:", error);
-      return null;
-    }
-  };
+  //     const data = await res.json();
+  //     if (data.prediction_price && typeof data.prediction_price === "number") {
+  //       return data.prediction_price;
+  //     } else {
+  //       console.error("Invalid prediction format:", data);
+  //       return null;
+  //     }
+  //   } catch (error) {
+  //     console.error("Prediction error:", error);
+  //     return null;
+  //   }
+  // };
 
   const toggleDetails = () => setShowDetails(!showDetails);
 
@@ -264,8 +261,6 @@ const StockSearchs = () => {
     if (searchStock) {
       setLoading(true);
       setError("");
-      setPredictedPrice(null);
-      setIsPredicted(false);
       try {
         console.log('Fetching stock details...');
         const data = await fetchStockDetails(searchStock);
@@ -299,8 +294,6 @@ const StockSearchs = () => {
       const fetchNewData = async () => {
         setLoading(true);
         setError("");
-        setPredictedPrice(null);
-        setIsPredicted(false);
         try {
           console.log('Fetching stock details...');
           const data = await fetchStockDetails(stockName);
@@ -350,10 +343,8 @@ const StockSearchs = () => {
       });
       
       if (isInWatchlist) {
-        // Remove from watchlist logic would go here
         console.log('Stock already in watchlist');
       } else {
-        // Add to watchlist
         const response = await addToWatchlist(
           userId,
           stockData.symbol || stockName,
@@ -374,7 +365,6 @@ const StockSearchs = () => {
     }
   };
 
-  // Effect to check watchlist status when stock data changes
   useEffect(() => {
     if (stockData?.symbol) {
       checkWatchlistStatus(stockData.symbol);
@@ -673,47 +663,6 @@ const StockSearchs = () => {
                     }}
                   />
                 </div>
-              </div>
-
-              <div className="flex flex-col items-center space-y-4 sm:space-y-6">
-                <button
-                  disabled={isPredicted}
-                  onClick={async () => {
-                    const priceArray = stockPriceData.map(([, price]) => parseFloat(price));
-                    const prediction = await predictPrice(priceArray);
-
-                    if (typeof prediction === "number" && !isNaN(prediction)) {
-                      setPredictedPrice(prediction);
-                      setIsPredicted(true);
-                    } else {
-                      console.error("Prediction failed or returned invalid value:", prediction);
-                      setPredictedPrice(null);
-                    }
-                  }}
-                  className={`group px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all duration-500 transform hover:scale-105 relative overflow-hidden w-full sm:w-auto ${
-                    isPredicted 
-                      ? "bg-green-600 cursor-default" 
-                      : "bg-gradient-to-r from-purple-500 to-pink-600 hover:shadow-2xl hover:shadow-purple-500/25"
-                  }`}
-                >
-                  <span className="relative z-10 flex items-center justify-center">
-                    <FaRocket className="mr-2 sm:mr-3" />
-                    {isPredicted ? "Prediction Complete" : "Generate Prediction"}
-                  </span>
-                  {!isPredicted && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  )}
-                </button>
-
-                {typeof predictedPrice === "number" && !isNaN(predictedPrice) && (
-                  <div className="backdrop-blur-sm bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 rounded-2xl p-6 sm:p-8 text-center w-full">
-                    <h3 className="text-base sm:text-lg font-medium text-gray-300 mb-2">Predicted Future Price</h3>
-                    <p className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
-                      ₹{predictedPrice.toFixed(2)}
-                    </p>
-                    <p className="text-xs sm:text-sm text-gray-400 mt-2">Based on historical data analysis</p>
-                  </div>
-                )}
               </div>
             </div>
           )}
