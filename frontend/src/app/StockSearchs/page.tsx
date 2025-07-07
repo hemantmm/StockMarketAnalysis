@@ -50,6 +50,18 @@ const StockSearchs = () => {
   const [userId] = useState<string>("user1");
   const [isInWatchlist, setIsInWatchlist] = useState<boolean>(false);
   const [watchlistLoading, setWatchlistLoading] = useState<boolean>(false);
+  const [stockRecommendation, setStockRecommendation] = useState<{
+    recommendation: string;
+    confidence: string;
+    reason: string;
+    period?: string;
+    targetPrice?: number;
+    supportLevel?: number;
+    resistanceLevel?: number;
+    riskRating?: string;
+    trendStrength?: string;
+  } | null>(null);
+  const [recommendationLoading, setRecommendationLoading] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -252,6 +264,111 @@ const StockSearchs = () => {
 
   const toggleDetails = () => setShowDetails(!showDetails);
 
+  const fetchStockRecommendation = async (symbol: string, prices: number[], period: string) => {
+    if (!prices.length) return;
+    
+    setRecommendationLoading(true);
+    try {
+      console.log(`Sending recommendation request for ${symbol} with ${prices.length} price points, period: ${period}`);
+      
+      const res = await fetch('http://127.0.0.1:5000/api/stock-recommendation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ symbol, prices, period }),
+      });
+      
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`Failed to get recommendation: ${res.status} ${res.statusText} - ${errorText}`);
+      }
+      
+      const data = await res.json();
+      console.log("Received recommendation:", data);
+      
+      const lastPrice = prices[prices.length - 1];
+      let targetPrice;
+      
+      if (!data.targetPrice) {
+        if (data.recommendation === 'Buy') {
+          targetPrice = Math.round((lastPrice * 1.05) * 100) / 100;
+        } else if (data.recommendation === 'Sell') {
+          targetPrice = Math.round((lastPrice * 0.95) * 100) / 100;
+        } else {
+          targetPrice = Math.round(lastPrice * 100) / 100;
+        }
+      } else {
+        targetPrice = data.targetPrice;
+      }
+      
+      // Enhanced reasoning if not provided
+      let enhancedReason = data.reason || '';
+      if (data.recommendation === 'Buy' && !enhancedReason) {
+        enhancedReason = `Technical indicators suggest an upward trend. Consider buying with a target price of ₹${targetPrice}.`;
+      } else if (data.recommendation === 'Sell' && !enhancedReason) {
+        enhancedReason = `Technical indicators suggest a downward trend. Consider selling with a target price of ₹${targetPrice}.`;
+      } else if (data.recommendation === 'Hold' && !enhancedReason) {
+        enhancedReason = `The stock is currently in a neutral trend. Hold with a price target around ₹${targetPrice}.`;
+      }
+      
+      setStockRecommendation({
+        recommendation: data.recommendation,
+        confidence: data.confidence,
+        reason: enhancedReason,
+        period: data.period,
+        targetPrice: targetPrice
+      });
+    } catch (error) {
+      console.error('Recommendation error:', error);
+      
+      const lastPrice = prices[prices.length - 1];
+      const recentPrices = prices.slice(-20);
+      
+      const avgFirst = recentPrices.slice(0, 5).reduce((a, b) => a + b, 0) / 5;
+      const avgLast = recentPrices.slice(-5).reduce((a, b) => a + b, 0) / 5;
+      const pctChange = ((avgLast - avgFirst) / avgFirst) * 100;
+      
+      let recommendation, reason, targetPrice, supportLevel, resistanceLevel, riskRating;
+      
+      const minPrice = Math.min(...prices);
+      const maxPrice = Math.max(...prices);
+      supportLevel = Math.round((lastPrice - (lastPrice - minPrice) * 0.3) * 100) / 100;
+      resistanceLevel = Math.round((lastPrice + (maxPrice - lastPrice) * 0.3) * 100) / 100;
+      
+      const priceChanges = prices.slice(1).map((price, i) => 
+        Math.abs((price - prices[i]) / prices[i]) * 100);
+      const avgVolatility = priceChanges.reduce((a, b) => a + b, 0) / priceChanges.length;
+      riskRating = avgVolatility < 1 ? "Low" : avgVolatility < 2.5 ? "Medium" : "High";
+      
+      if (pctChange > 3) {
+        recommendation = "Buy";
+        targetPrice = Math.round((lastPrice * 1.05) * 100) / 100;
+        reason = `The stock shows a positive trend of ${pctChange.toFixed(2)}% recently. Technical analysis indicates potential upside momentum. Consider buying with a target price of ₹${targetPrice}. Support level: ₹${supportLevel}. Current volatility: ${riskRating} risk.`;
+      } else if (pctChange < -3) {
+        recommendation = "Sell";
+        targetPrice = Math.round((lastPrice * 0.95) * 100) / 100;
+        reason = `The stock shows a negative trend of ${pctChange.toFixed(2)}% recently. Technical indicators suggest continued downward pressure. Consider selling with a target price of ₹${targetPrice}. Resistance level: ₹${resistanceLevel}. Current volatility: ${riskRating} risk.`;
+      } else {
+        recommendation = "Hold";
+        targetPrice = Math.round(lastPrice * 100) / 100;
+        reason = `The stock is showing a neutral trend with ${Math.abs(pctChange).toFixed(2)}% change recently. Price movement appears to be consolidating. Hold with a price target around ₹${targetPrice}. Support: ₹${supportLevel}, Resistance: ₹${resistanceLevel}. Current volatility: ${riskRating} risk.`;
+      }
+      
+      setStockRecommendation({
+        recommendation,
+        confidence: "Medium",
+        reason,
+        period,
+        targetPrice,
+        supportLevel,
+        resistanceLevel,
+        riskRating,
+        trendStrength: Math.abs(pctChange).toFixed(1)
+      });
+    } finally {
+      setRecommendationLoading(false);
+    }
+  };
+
   const handleSearch = useCallback(async (searchTerm?: string, period?: string) => {
     const searchStock = searchTerm || stockName;
     const searchPeriod = period || periodWise;
@@ -272,6 +389,15 @@ const StockSearchs = () => {
         
         setStockData(data);
         setStockPriceData(historicalData.datasets[0].values);
+        
+        const prices = historicalData.datasets[0].values.map(
+          (item: [string, string]) => parseFloat(item[1])
+        );
+        console.log("Extracted prices:", prices.length);
+        
+        // Pass the period to the recommendation function
+        await fetchStockRecommendation(searchStock, prices, searchPeriod);
+        
         initialLoadRef.current = false;
       } catch (err) {
         console.error('Error in handleSearch:', err);
@@ -620,15 +746,54 @@ const StockSearchs = () => {
                     options={{
                       responsive: true,
                       maintainAspectRatio: false,
+                      interaction: {
+                        mode: 'index',
+                        intersect: false,
+                      },
                       plugins: {
                         legend: {
                           display: true,
                           position: "top",
                           labels: {
                             color: "rgba(255, 255, 255, 0.8)",
-                            font: { size: 14 }
+                            font: { size: 14, weight: 'bold' }
                           }
                         },
+                        tooltip: {
+                          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                          titleFont: { size: 16, weight: 'bold' },
+                          bodyFont: { size: 14 },
+                          padding: 12,
+                          cornerRadius: 6,
+                          displayColors: false,
+                          callbacks: {
+                            label: function(context) {
+                              let label = context.dataset.label || '';
+                              if (label) {
+                                label += ': ';
+                              }
+                              if (context.parsed.y !== null) {
+                                label += '₹' + context.parsed.y.toFixed(2);
+                              }
+                              return label;
+                            },
+                            afterLabel: function(context) {
+                              const dataIndex = context.dataIndex;
+                              const datasetIndex = context.datasetIndex;
+                              const data = context.chart.data.datasets[datasetIndex].data;
+                              
+                              if (dataIndex > 0) {
+                                const currentValue = data[dataIndex];
+                                const previousValue = data[dataIndex - 1];
+                                const change = currentValue - previousValue;
+                                const pctChange = ((change / previousValue) * 100).toFixed(2);
+                                const sign = change >= 0 ? '+' : '';
+                                return `${sign}${change.toFixed(2)} (${sign}${pctChange}% from previous)`;
+                              }
+                              return '';
+                            }
+                          }
+                        }
                       },
                       scales: {
                         x: {
@@ -663,6 +828,151 @@ const StockSearchs = () => {
                     }}
                   />
                 </div>
+              </div>
+            </div>
+          )}
+
+          {stockData && !loading && (
+            <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8 shadow-2xl">
+              <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
+                AI-Powered Recommendation
+              </h3>
+              
+              <div className="backdrop-blur-sm bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-6">
+                {recommendationLoading ? (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-400"></div>
+                    <p className="ml-3 text-cyan-400">Analyzing stock trends...</p>
+                  </div>
+                ) : stockRecommendation ? (
+                  <div className="space-y-6">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                      <div className={`px-4 py-2 rounded-lg text-lg font-bold ${
+                        stockRecommendation.recommendation === 'Buy' 
+                          ? 'bg-green-500/30 text-green-400 border border-green-500/30' 
+                          : stockRecommendation.recommendation === 'Sell'
+                          ? 'bg-red-500/30 text-red-400 border border-red-500/30'
+                          : 'bg-yellow-500/30 text-yellow-400 border border-yellow-500/30'
+                      }`}>
+                        Recommendation: {stockRecommendation.recommendation}
+                      </div>
+                      <div className="text-gray-400 text-sm">
+                        Confidence: <span className="text-white">{stockRecommendation.confidence}</span>
+                        {stockRecommendation.period && <span className="ml-2">({stockRecommendation.period} period)</span>}
+                      </div>
+                      {stockRecommendation.targetPrice && (
+                        <div className="text-white text-sm bg-white/10 px-3 py-1 rounded-lg">
+                          Target price: ₹{stockRecommendation.targetPrice}
+                        </div>
+                      )}
+                    </div>
+
+                    {stockRecommendation.supportLevel && stockRecommendation.resistanceLevel && (
+                      <div className="my-4 px-2">
+                        <div className="text-sm text-white mb-2">Price Range Analysis:</div>
+                        <div className="relative h-10 bg-gray-800/50 rounded-lg">
+                          <div 
+                            className="absolute top-0 h-full border-r-2 border-red-400" 
+                            style={{
+                              left: `${Math.min(100, Math.max(0, ((stockRecommendation.resistanceLevel - stockRecommendation.supportLevel) / 
+                                (stockRecommendation.resistanceLevel - stockRecommendation.supportLevel) * 100)))}%`
+                            }}
+                          >
+                            <div className="absolute top-0 right-0 transform translate-x-2 -translate-y-6 text-xs text-red-400">
+                              Resistance: ₹{stockRecommendation.resistanceLevel}
+                            </div>
+                          </div>
+                          
+                          <div 
+                            className="absolute top-0 h-full border-r-2 border-white" 
+                            style={{
+                              left: `${Math.min(100, Math.max(0, ((stockData.currentPrice.NSE - stockRecommendation.supportLevel) / 
+                                (stockRecommendation.resistanceLevel - stockRecommendation.supportLevel) * 100)))}%`
+                            }}
+                          >
+                            <div className="absolute top-0 right-0 transform translate-x-2 -translate-y-1 text-xs text-white">
+                              Current: ₹{stockData.currentPrice.NSE}
+                            </div>
+                          </div>
+                          
+                          <div 
+                            className="absolute top-0 h-full border-r-2 border-green-400" 
+                            style={{left: '0%'}}
+                          >
+                            <div className="absolute top-0 left-0 transform -translate-x-2 -translate-y-6 text-xs text-green-400">
+                              Support: ₹{stockRecommendation.supportLevel}
+                            </div>
+                          </div>
+                          
+                          <div 
+                            className="absolute top-0 h-full border-r-2 border-cyan-400" 
+                            style={{
+                              left: `${Math.min(100, Math.max(0, ((stockRecommendation.targetPrice - stockRecommendation.supportLevel) / 
+                                (stockRecommendation.resistanceLevel - stockRecommendation.supportLevel) * 100)))}%`
+                            }}
+                          >
+                            <div className="absolute bottom-0 right-0 transform translate-x-2 translate-y-6 text-xs text-cyan-400">
+                              Target: ₹{stockRecommendation.targetPrice}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {stockRecommendation.riskRating && (
+                      <div className="bg-white/5 rounded-lg p-3">
+                        <div className="text-sm text-white mb-2">Risk Assessment:</div>
+                        <div className="flex items-center">
+                          <div className="w-full bg-gray-800/50 rounded-full h-2.5">
+                            <div 
+                              className={`h-2.5 rounded-full ${
+                                stockRecommendation.riskRating === 'Low' ? 'bg-green-500 w-1/3' : 
+                                stockRecommendation.riskRating === 'Medium' ? 'bg-yellow-500 w-2/3' : 
+                                'bg-red-500 w-full'
+                              }`}
+                            ></div>
+                          </div>
+                          <span className={`ml-2 text-sm font-medium ${
+                            stockRecommendation.riskRating === 'Low' ? 'text-green-400' : 
+                            stockRecommendation.riskRating === 'Medium' ? 'text-yellow-400' : 
+                            'text-red-400'
+                          }`}>
+                            {stockRecommendation.riskRating}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+
+                    {stockRecommendation.trendStrength && (
+                      <div className="bg-white/5 rounded-lg p-3">
+                        <div className="text-sm text-white mb-2">Trend Strength:</div>
+                        <div className="flex items-center">
+                          <div className="w-full bg-gray-800/50 rounded-full h-2.5">
+                            <div 
+                              className={`h-2.5 rounded-full ${
+                                parseFloat(stockRecommendation.trendStrength) < 3 ? 'bg-gray-500' : 
+                                stockRecommendation.recommendation === 'Buy' ? 'bg-green-500' : 
+                                stockRecommendation.recommendation === 'Sell' ? 'bg-red-500' : 
+                                'bg-yellow-500'
+                              }`}
+                              style={{width: `${Math.min(100, parseFloat(stockRecommendation.trendStrength) * 10)}%`}}
+                            ></div>
+                          </div>
+                          <span className="ml-2 text-sm font-medium text-white">
+                            {stockRecommendation.trendStrength}%
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                    
+                    <p className="text-gray-300 mt-4">{stockRecommendation.reason}</p>
+                    <div className="text-sm text-gray-400 mt-2">
+                      This recommendation is based on technical analysis of recent price movements and trends.
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-gray-400">No recommendation available for this stock.</p>
+                )}
               </div>
             </div>
           )}
