@@ -327,17 +327,17 @@ const StockSearchs = () => {
       const avgLast = recentPrices.slice(-5).reduce((a, b) => a + b, 0) / 5;
       const pctChange = ((avgLast - avgFirst) / avgFirst) * 100;
       
-      let recommendation, reason, targetPrice, supportLevel, resistanceLevel, riskRating;
+      let recommendation, reason, targetPrice;
       
       const minPrice = Math.min(...prices);
       const maxPrice = Math.max(...prices);
-      supportLevel = Math.round((lastPrice - (lastPrice - minPrice) * 0.3) * 100) / 100;
-      resistanceLevel = Math.round((lastPrice + (maxPrice - lastPrice) * 0.3) * 100) / 100;
+      const supportLevel = Math.round((lastPrice - (lastPrice - minPrice) * 0.3) * 100) / 100;
+      const resistanceLevel = Math.round((lastPrice + (maxPrice - lastPrice) * 0.3) * 100) / 100;
       
       const priceChanges = prices.slice(1).map((price, i) => 
         Math.abs((price - prices[i]) / prices[i]) * 100);
       const avgVolatility = priceChanges.reduce((a, b) => a + b, 0) / priceChanges.length;
-      riskRating = avgVolatility < 1 ? "Low" : avgVolatility < 2.5 ? "Medium" : "High";
+      const riskRating = avgVolatility < 1 ? "Low" : avgVolatility < 2.5 ? "Medium" : "High";
       
       if (pctChange > 3) {
         recommendation = "Buy";
