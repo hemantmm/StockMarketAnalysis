@@ -13,5 +13,10 @@
     "user_id": "user1",
     "stock_symbol": "jsw holding",
     "stock_name": "JSW Holdings Ltd"
+  },
+  {
+    "user_id": "user1",
+    "stock_symbol": "wockhardt",
+    "stock_name": "Wockhardt Ltd"
   }
 ]

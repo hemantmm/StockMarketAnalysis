@@ -65,3 +65,59 @@ def get_target_price(current_price, holding_period, price_trend, recommendation)
     target_prices["long_term"] = round(current_price * long_term_multiplier, 2)
     
     return target_prices
+
+def get_stock_recommendation(prices):
+    """
+    Analyze stock prices and recommend buy/sell/hold
+    
+    Args:
+        prices (list): List of historical prices
+        
+    Returns:
+        dict: Recommendation information with action and confidence
+    """
+    if len(prices) < 5:
+        return {"action": "Hold", "confidence": "Low", "reason": "Not enough historical data"}
+    
+    # Prepare data for linear regression
+    X = np.arange(len(prices)).reshape(-1, 1)
+    y = np.array(prices)
+    
+    # Train model
+    model = LinearRegression()
+    model.fit(X, y)
+    
+    # Predict future price (next period)
+    next_period = len(prices)
+    predicted_price = model.predict(np.array([[next_period]]))[0]
+    
+    # Calculate percent change from last price
+    last_price = prices[-1]
+    pct_change = ((predicted_price - last_price) / last_price) * 100
+    
+    # Determine trend strength
+    slope = model.coef_[0]
+    abs_slope = abs(slope)
+    
+    # Generate recommendation
+    confidence = "Medium"
+    if abs_slope > np.std(prices) / 10:
+        confidence = "High" 
+    elif abs_slope < np.std(prices) / 20:
+        confidence = "Low"
+        
+    if pct_change > 3:
+        action = "Buy"
+        reason = f"Upward trend detected with {pct_change:.2f}% expected gain"
+    elif pct_change < -3:
+        action = "Sell"
+        reason = f"Downward trend detected with {abs(pct_change):.2f}% expected loss"
+    else:
+        action = "Hold"
+        reason = "No significant trend detected"
+        
+    return {
+        "action": action,
+        "confidence": confidence,
+        "reason": reason
+    }

@@ -1,10 +1,11 @@
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from model import train_model, get_hold_advice, get_price_at_holding_period, get_target_price
+from model import train_model, get_hold_advice, get_price_at_holding_period, get_target_price, get_stock_recommendation
 from pydantic import BaseModel
 import json
 from watchlist import add_to_watchlist, remove_from_watchlist, get_user_watchlist, is_in_watchlist
 from indianstock_api import get_watchlist_data
+from fastapi.responses import JSONResponse
 
 app = FastAPI()
 
@@ -118,6 +119,57 @@ async def get_watchlist_data_endpoint(user_id: str):
     stock_data = get_watchlist_data(stock_symbols)
     
     return {"success": True, "data": stock_data}
+
+@app.post("/api/stock-recommendation")
+async def recommend_stock(request: Request):
+    try:
+        data = await request.json()
+        symbol = data.get('symbol', '').upper()
+        prices = data.get('prices', [])
+        period = data.get('period', '1m')  # Get the selected period
+        
+        print(f"Received request for {symbol} with {len(prices)} price points, period: {period}")
+        
+        if not prices or len(prices) < 2:
+            return JSONResponse(
+                status_code=400,
+                content={"error": "Insufficient price data"}
+            )
+        
+        recommendation = get_stock_recommendation(prices)
+        
+        # Adjust confidence based on the period
+        if period == "max":
+            confidence_boost = "High"
+        elif period in ["3yr", "5yr", "10yr"]:
+            confidence_boost = "Medium-High"
+        elif period in ["1yr"]:
+            confidence_boost = "Medium"
+        else:  # Short periods like 1m, 3m, 6m
+            confidence_boost = "Medium-Low"
+            
+        # Only override if the confidence is lower than the boost
+        confidence_levels = {"Low": 1, "Medium-Low": 2, "Medium": 3, "Medium-High": 4, "High": 5}
+        if confidence_levels.get(recommendation['confidence'], 0) < confidence_levels.get(confidence_boost, 0):
+            recommendation['confidence'] = confidence_boost
+            
+        response = {
+            'symbol': symbol,
+            'recommendation': recommendation['action'],
+            'confidence': recommendation['confidence'],
+            'reason': recommendation['reason'],
+            'period': period
+        }
+        print(f"Recommendation for {symbol} ({period}): {response}")
+        return response
+    except Exception as e:
+        import traceback
+        print(f"Error generating recommendation: {str(e)}")
+        print(traceback.format_exc())
+        return JSONResponse(
+            status_code=500,
+            content={"error": f"Analysis failed: {str(e)}"}
+        )
 
 # source venv/bin/activate
 # uvicorn main:app --reload
