@@ -789,12 +789,17 @@ const StockSearchs = () => {
                               const data = context.chart.data.datasets[datasetIndex].data;
                               
                               if (dataIndex > 0) {
-                                const currentValue = data[dataIndex];
-                                const previousValue = data[dataIndex - 1];
-                                const change = currentValue - previousValue;
-                                const pctChange = ((change / previousValue) * 100).toFixed(2);
-                                const sign = change >= 0 ? '+' : '';
-                                return `${sign}${change.toFixed(2)} (${sign}${pctChange}% from previous)`;
+                                // Ensure we're working with numbers
+                                const currentValue = Number(data[dataIndex]);
+                                const previousValue = Number(data[dataIndex - 1]);
+                                
+                                // Only proceed if both values are valid numbers
+                                if (!isNaN(currentValue) && !isNaN(previousValue) && previousValue !== 0) {
+                                  const change = currentValue - previousValue;
+                                  const pctChange = ((change / previousValue) * 100).toFixed(2);
+                                  const sign = change >= 0 ? '+' : '';
+                                  return `${sign}${change.toFixed(2)} (${sign}${pctChange}% from previous)`;
+                                }
                               }
                               return '';
                             }
