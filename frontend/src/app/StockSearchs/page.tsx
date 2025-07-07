@@ -431,6 +431,12 @@ const StockSearchs = () => {
           
           setStockData(data);
           setStockPriceData(historicalData.datasets[0].values);
+          
+          // Also update the recommendation when period changes
+          const prices = historicalData.datasets[0].values.map(
+            (item: [string, string]) => parseFloat(item[1])
+          );
+          await fetchStockRecommendation(stockName, prices, periodWise);
         } catch (err) {
           console.error('Error in period change fetch:', err);
           setError("Failed to fetch stock data: " + err);
@@ -871,50 +877,59 @@ const StockSearchs = () => {
                       <div className="my-4 px-2">
                         <div className="text-sm text-white mb-2">Price Range Analysis:</div>
                         <div className="relative h-10 bg-gray-800/50 rounded-lg">
+                          {/* Resistance Level - Fixed to right edge (100%) */}
                           <div 
                             className="absolute top-0 h-full border-r-2 border-red-400" 
-                            style={{
-                              left: `${Math.min(100, Math.max(0, ((stockRecommendation.resistanceLevel - stockRecommendation.supportLevel) / 
-                                (stockRecommendation.resistanceLevel - stockRecommendation.supportLevel) * 100)))}%`
-                            }}
+                            style={{ left: '100%' }}
                           >
                             <div className="absolute top-0 right-0 transform translate-x-2 -translate-y-6 text-xs text-red-400">
-                              Resistance: ₹{stockRecommendation.resistanceLevel}
+                              Resistance: ₹{stockRecommendation.resistanceLevel.toFixed(2)}
                             </div>
                           </div>
                           
-                          <div 
-                            className="absolute top-0 h-full border-r-2 border-white" 
-                            style={{
-                              left: `${Math.min(100, Math.max(0, ((stockData.currentPrice.NSE - stockRecommendation.supportLevel) / 
-                                (stockRecommendation.resistanceLevel - stockRecommendation.supportLevel) * 100)))}%`
-                            }}
-                          >
-                            <div className="absolute top-0 right-0 transform translate-x-2 -translate-y-1 text-xs text-white">
-                              Current: ₹{stockData.currentPrice.NSE}
+                          {/* Current Price */}
+                          {stockData?.currentPrice?.NSE && (
+                            <div 
+                              className="absolute top-0 h-full border-r-2 border-white" 
+                              style={{
+                                left: `${Math.min(100, Math.max(0, 
+                                  ((stockData.currentPrice.NSE - (stockRecommendation.supportLevel || 0)) / 
+                                  ((stockRecommendation.resistanceLevel || 1) - (stockRecommendation.supportLevel || 0)) * 100) || 0
+                                ))}%`
+                              }}
+                            >
+                              <div className="absolute top-0 right-0 transform translate-x-2 -translate-y-1 text-xs text-white">
+                                Current: ₹{stockData.currentPrice.NSE}
+                              </div>
                             </div>
-                          </div>
+                          )}
                           
+                          {/* Support Level - Fixed to left edge (0%) */}
                           <div 
                             className="absolute top-0 h-full border-r-2 border-green-400" 
                             style={{left: '0%'}}
                           >
                             <div className="absolute top-0 left-0 transform -translate-x-2 -translate-y-6 text-xs text-green-400">
-                              Support: ₹{stockRecommendation.supportLevel}
+                              Support: ₹{stockRecommendation.supportLevel.toFixed(2)}
                             </div>
                           </div>
                           
-                          <div 
-                            className="absolute top-0 h-full border-r-2 border-cyan-400" 
-                            style={{
-                              left: `${Math.min(100, Math.max(0, ((stockRecommendation.targetPrice - stockRecommendation.supportLevel) / 
-                                (stockRecommendation.resistanceLevel - stockRecommendation.supportLevel) * 100)))}%`
-                            }}
-                          >
-                            <div className="absolute bottom-0 right-0 transform translate-x-2 translate-y-6 text-xs text-cyan-400">
-                              Target: ₹{stockRecommendation.targetPrice}
+                          {/* Target Price */}
+                          {stockRecommendation?.targetPrice && (
+                            <div 
+                              className="absolute top-0 h-full border-r-2 border-cyan-400" 
+                              style={{
+                                left: `${Math.min(100, Math.max(0, 
+                                  ((stockRecommendation.targetPrice - (stockRecommendation.supportLevel || 0)) / 
+                                  ((stockRecommendation.resistanceLevel || 1) - (stockRecommendation.supportLevel || 0)) * 100) || 0
+                                ))}%`
+                              }}
+                            >
+                              <div className="absolute bottom-0 right-0 transform translate-x-2 translate-y-6 text-xs text-cyan-400">
+                                Target: ₹{stockRecommendation.targetPrice.toFixed(2)}
+                              </div>
                             </div>
-                          </div>
+                          )}
                         </div>
                       </div>
                     )}
