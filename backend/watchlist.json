@@ -18,5 +18,15 @@
     "user_id": "user1",
     "stock_symbol": "wockhardt",
     "stock_name": "Wockhardt Ltd"
+  },
+  {
+    "user_id": "user1",
+    "stock_symbol": "apollo micro",
+    "stock_name": "Apollo Micro Systems Ltd"
+  },
+  {
+    "user_id": "user1",
+    "stock_symbol": "axis bank",
+    "stock_name": "Axis Bank Ltd"
   }
 ]
