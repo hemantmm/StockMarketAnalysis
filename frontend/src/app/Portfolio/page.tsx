@@ -6,7 +6,6 @@ import {
   FaRocket, FaTrophy, FaSpinner, FaSync
 } from "react-icons/fa";
 import { getPaperTradePerformance, getCurrentStockPrice, getPaperTradeHistory } from "../services/paperTradeAPI";
-import { useAuth } from "../context/AuthContext";
 
 interface PortfolioHolding {
   symbol: string;
@@ -42,7 +41,6 @@ const Portfolio = () => {
   const [holdings, setHoldings] = useState<PortfolioHolding[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const { isAuthenticated, isLoading } = useAuth();
 
   useEffect(() => {
     setIsClient(true);
@@ -250,32 +248,8 @@ const Portfolio = () => {
     return `${percentage >= 0 ? '+' : ''}${percentage.toFixed(2)}%`;
   };
 
-  // Add login redirect for unauthenticated users
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.push('/Login?redirect=/Portfolio');
-    }
-  }, [isAuthenticated, isLoading, router]);
 
   if (!isClient) return null;
-
-  // Show login required message if not authenticated
-  if (!isLoading && !isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold mb-4">Login Required</h2>
-          <p className="mb-4">Please login to view your portfolio</p>
-          <button 
-            onClick={() => router.push('/Login')}
-            className="px-4 py-2 bg-blue-600 rounded-md"
-          >
-            Login
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
