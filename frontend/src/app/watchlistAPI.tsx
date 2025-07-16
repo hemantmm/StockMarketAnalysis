@@ -286,6 +286,7 @@ export const addToWatchlistWithFallback = async (
     
     // If main API failed, try fallback
     return await addToWatchlistFallback(userId, stockSymbol, stockName);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     return await addToWatchlistFallback(userId, stockSymbol, stockName);
   }

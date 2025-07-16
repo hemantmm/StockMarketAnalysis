@@ -4,7 +4,7 @@ import fetchStockDetails from "../stockNameAPI";
 import { FaInfoCircle, FaArrowUp, FaArrowDown, FaSearch, FaChartLine, FaHome, FaChartPie, FaStar } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import fetchStockData from "../stockDataAPI";
-import { addToWatchlist, checkInWatchlist, removeFromWatchlist, addToWatchlistWithFallback } from "../watchlistAPI";
+import {checkInWatchlist, addToWatchlistWithFallback } from "../watchlistAPI";
 import {
   Chart as ChartJS,
   LineElement,
@@ -523,6 +523,7 @@ const StockSearchs = () => {
           setIsInWatchlist(true);
           setError(`${stockData.companyName || stockName} added to watchlist (offline mode)`);
         }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
         setError("Could not add to watchlist even in offline mode.");
       }
