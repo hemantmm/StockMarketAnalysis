@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, SetStateAction } from 'react';
 import { useRouter } from 'next/navigation';
 import { placePaperTrade, getPaperTradeHistory, getPaperTradePerformance, getCurrentStockPrice, Trade, Performance } from '../services/paperTradeAPI';
 import { useAuth } from '../context/AuthContext';
@@ -39,7 +39,7 @@ export default function TradingPage() {
       console.log('Loading trade data...');
       
       // Add separate try/catch blocks to handle individual failures
-      let history = [];
+      let history: SetStateAction<Trade[]> = [];
       let perf = { balance: 100000, positions: {} };
       
       try {
