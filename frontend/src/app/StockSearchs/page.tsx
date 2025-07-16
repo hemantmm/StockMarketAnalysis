@@ -4,7 +4,7 @@ import fetchStockDetails from "../stockNameAPI";
 import { FaInfoCircle, FaArrowUp, FaArrowDown, FaSearch, FaChartLine, FaHome, FaChartPie, FaStar } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import fetchStockData from "../stockDataAPI";
-import {checkInWatchlist, addToWatchlistWithFallback } from "../watchlistAPI";
+import {checkInWatchlist, addToWatchlistWithFallback, addToWatchlistFallback } from "../watchlistAPI";
 import {
   Chart as ChartJS,
   LineElement,
