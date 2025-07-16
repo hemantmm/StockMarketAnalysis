@@ -1,28 +1,136 @@
 import axios from 'axios';
-// import { get_stock_info } from '../../backend/indianstock_api';
 import fetchStockDetails from '../stockNameAPI';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://stockmarketanalysis-4.onrender.com';
-const DEFAULT_USER_ID = 'default_trader';
+const API_BASE =
+  process.env.NODE_ENV === 'production'
+    ? 'https://stockmarketanalysis-4.onrender.com'
+    : 'http://localhost:4000';
+
+// Create API instance with the base URL
+const api = axios.create({
+  baseURL: API_BASE,
+  timeout: 30000,
+});
+
+// Add auth token to requests if available
+api.interceptors.request.use(config => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+  
+  console.log(`Making ${config.method?.toUpperCase()} request to: ${config.baseURL}${config.url}`, config.data);
+  return config;
+});
+
+// Add response/error handling
+api.interceptors.response.use(
+  response => {
+    console.log('API Response:', response.data);
+    return response;
+  },
+  error => {
+    console.error('API Error:', error.response?.data || error.message);
+    return Promise.reject(error);
+  }
+);
+
+// Get current user ID from localStorage with better fallback handling
+const getUserId = (): string => {
+  const userId = localStorage.getItem('userId') || localStorage.getItem('username');
+  if (!userId) {
+    console.warn('No user ID found in localStorage, using default');
+    return 'default_trader';
+  }
+  return userId;
+};
 
 export async function placePaperTrade({ symbol, qty, price, side }: { symbol: string, qty: number, price: number, side: string }) {
   try {
-    console.log('Making trade request to:', `${API_BASE}/papertrade/trade`);
-    console.log('Trade data:', { user_id: DEFAULT_USER_ID, symbol, qty, price, side });
-    const res = await axios.post(`${API_BASE}/papertrade/trade`, {
-      user_id: DEFAULT_USER_ID, symbol, qty, price, side
-    });
-    console.log('Trade response:', res.data);
-    return res.data;
+    const userId = getUserId();
+    console.log('Making trade request:', { user_id: userId, symbol, qty, price, side });
+    
+    // Check if user is authenticated
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Cannot place trade: User not authenticated');
+      return {
+        success: false,
+        error: 'Authentication required. Please login first.'
+      };
+    }
+    
+    // Validate inputs
+    if (!symbol || qty <= 0 || price <= 0) {
+      console.error('Invalid trade parameters:', { symbol, qty, price });
+      return {
+        success: false,
+        error: 'Invalid trade parameters. All fields are required.'
+      };
+    }
+    
+    // FIXED: Use correct URL path - Don't include API_BASE twice
+    let attempts = 0;
+    const maxAttempts = 2;
+    
+    while (attempts <= maxAttempts) {
+      try {
+        const res = await api.post(`/papertrade/trade`, {
+          user_id: userId, 
+          symbol, 
+          qty, 
+          price, 
+          side
+        });
+        
+        console.log('Trade executed successfully:', res.data);
+        return res.data;
+      } catch (err) {
+        attempts++;
+        if (attempts > maxAttempts) throw err;
+        console.log(`Attempt ${attempts} failed, retrying...`);
+        await new Promise(r => setTimeout(r, 1000)); // Wait 1 second before retry
+      }
+    }
+    
+    throw new Error('Failed after maximum retry attempts');
   } catch (error) {
     console.error('Paper trade error:', error);
-    throw error;
+    
+    // Handle specific error cases
+    if (axios.isAxiosError(error)) {
+      if (error.code === 'ECONNABORTED') {
+        return {
+          success: false,
+          error: 'Request timed out. The server might be busy or unreachable.'
+        };
+      }
+      
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        return {
+          success: false,
+          error: 'Authentication failed. Please login again.'
+        };
+      }
+      
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message || 'Failed to place trade'
+      };
+    }
+    
+    return {
+      success: false,
+      error: 'Failed to place trade. Please try again later.'
+    };
   }
 }
 
 export async function getPaperTradeHistory(): Promise<Trade[]> {
   try {
-    const res = await axios.get(`${API_BASE}/papertrade/history/${DEFAULT_USER_ID}`);
+    const userId = getUserId();
+    // FIXED: Use correct URL path - Don't include API_BASE twice
+    const res = await api.get(`/papertrade/history/${userId}`);
     return res.data.history;
   } catch (error) {
     console.error('Error fetching trade history:', error);
@@ -32,7 +140,9 @@ export async function getPaperTradeHistory(): Promise<Trade[]> {
 
 export async function getPaperTradePerformance(): Promise<Performance> {
   try {
-    const res = await axios.get(`${API_BASE}/papertrade/performance/${DEFAULT_USER_ID}`);
+    const userId = getUserId();
+    // FIXED: Use correct URL path - Don't include API_BASE twice
+    const res = await api.get(`/papertrade/performance/${userId}`);
     return res.data;
   } catch (error) {
     console.error('Error fetching performance:', error);
@@ -42,7 +152,7 @@ export async function getPaperTradePerformance(): Promise<Performance> {
 
 export async function backtestPaperStrategy(prices: number[], initial_balance = 1000000): Promise<BacktestResult> {
   try {
-    const res = await axios.post(`${API_BASE}/papertrade/backtest`, {
+    const res = await api.post(`${API_BASE}/papertrade/backtest`, {
       prices, initial_balance
     });
     return res.data;

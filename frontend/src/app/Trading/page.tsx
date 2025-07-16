@@ -1,9 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { placePaperTrade, getPaperTradeHistory, getPaperTradePerformance, getCurrentStockPrice, Trade, Performance } from '../services/paperTradeAPI';
+import { useAuth } from '../context/AuthContext';
 
 export default function TradingPage() {
+  const router = useRouter();
+  const { isAuthenticated, isLoading, user } = useAuth();
+  
   const [symbol, setSymbol] = useState('');
   const [qty, setQty] = useState(1);
   const [price, setPrice] = useState(0);
@@ -15,27 +20,62 @@ export default function TradingPage() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    loadTradeData();
-  }, []);
+    if (!isLoading && !isAuthenticated) {
+      router.push('/Login?redirect=/Trading');
+      return;
+    }
+    
+    if (isAuthenticated && user) {
+      // Set userId from auth context
+      console.log('Setting user ID from auth context:', user.id);
+      localStorage.setItem('userId', user.id);
+      loadTradeData();
+    }
+  }, [isAuthenticated, isLoading, user, router]);
 
   const loadTradeData = async () => {
+    setLoading(true);
     try {
-      const [history, perf] = await Promise.all([
-        getPaperTradeHistory(),
-        getPaperTradePerformance()
-      ]);
+      console.log('Loading trade data...');
+      
+      // Add separate try/catch blocks to handle individual failures
+      let history = [];
+      let perf = { balance: 100000, positions: {} };
+      
+      try {
+        history = await getPaperTradeHistory();
+        console.log('Trade history loaded:', history);
+      } catch (historyError) {
+        console.error('Failed to load trade history:', historyError);
+        setMessage(prev => prev + ' History loading failed.');
+      }
+      
+      try {
+        perf = await getPaperTradePerformance();
+        console.log('Performance data loaded:', perf);
+      } catch (perfError) {
+        console.error('Failed to load performance data:', perfError);
+        setMessage(prev => prev + ' Performance data loading failed.');
+      }
+      
       setTradeHistory(history);
       setPerformance(perf);
     } catch (error) {
       console.error('Error loading trade data:', error);
       setMessage('Unable to connect to trading server. Working in offline mode.');
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchCurrentPrice = async () => {
-    if (!symbol) return;
+    if (!symbol) {
+      setMessage('Please enter a stock symbol');
+      return;
+    }
     setLoading(true);
     try {
+      console.log(`Fetching current price for ${symbol}...`);
       const fetchedPrice = await getCurrentStockPrice(symbol);
       if (fetchedPrice) {
         setCurrentPrice(fetchedPrice);
@@ -52,28 +92,52 @@ export default function TradingPage() {
   };
 
   const handleTrade = async () => {
-    if (!symbol || qty <= 0 || price <= 0) {
-      setMessage('Please fill all fields with valid values');
+    if (!isAuthenticated) {
+      setMessage('Please login to place trades');
+      router.push('/Login?redirect=/Trading');
+      return;
+    }
+
+    if (!symbol) {
+      setMessage('Please enter a stock symbol');
+      return;
+    }
+    
+    if (qty <= 0) {
+      setMessage('Quantity must be greater than zero');
+      return;
+    }
+    
+    if (price <= 0) {
+      setMessage('Price must be greater than zero');
       return;
     }
 
     setLoading(true);
+    setMessage('Processing trade...');
+    
     try {
+      console.log('Placing trade:', { symbol, qty, price, side });
       const result = await placePaperTrade({ symbol, qty, price, side });
+      console.log('Trade result:', result);
+      
       if (result.success) {
-        setMessage(`${side.toUpperCase()} order placed successfully!`);
-        loadTradeData(); // Refresh data
-        // Reset form
-        setSymbol('');
-        setQty(1);
-        setPrice(0);
-        setCurrentPrice(null);
+        setMessage(`${side.toUpperCase()} order for ${qty} shares of ${symbol} at ₹${price} placed successfully!`);
+        // Wait a moment before reloading data to ensure backend has processed the trade
+        setTimeout(() => {
+          loadTradeData();
+          // Reset form
+          setSymbol('');
+          setQty(1);
+          setPrice(0);
+          setCurrentPrice(null);
+        }, 1000);
       } else {
-        setMessage(result.error || 'Trade failed');
+        setMessage(`Trade failed: ${result.error || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('Trade error:', error);
-      setMessage('Unable to place trade. Server may be down.');
+      setMessage('Unable to place trade. Server may be down or unreachable.');
     }
     setLoading(false);
   };
@@ -85,6 +149,24 @@ export default function TradingPage() {
       minimumFractionDigits: 2
     }).format(amount);
   };
+
+  // Show login required message if not authenticated
+  if (!isLoading && !isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 flex items-center justify-center p-4">
+        <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20 text-center max-w-md">
+          <h2 className="text-2xl font-semibold text-white mb-4">Login Required</h2>
+          <p className="text-gray-300 mb-6">You need to be logged in to access the trading platform.</p>
+          <button 
+            onClick={() => router.push('/Login')}
+            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+          >
+            Login to Continue
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 p-4">

@@ -4,7 +4,7 @@ import fetchStockDetails from "../stockNameAPI";
 import { FaInfoCircle, FaArrowUp, FaArrowDown, FaSearch, FaChartLine, FaHome, FaChartPie, FaStar } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import fetchStockData from "../stockDataAPI";
-import { addToWatchlist, checkInWatchlist } from "../watchlistAPI";
+import { addToWatchlist, checkInWatchlist, removeFromWatchlist, addToWatchlistWithFallback } from "../watchlistAPI";
 import {
   Chart as ChartJS,
   LineElement,
@@ -16,6 +16,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { useRouter } from "next/navigation";
+import { useAuth } from "../context/AuthContext";
 
 ChartJS.register(
   LineElement,
@@ -47,7 +48,8 @@ const StockSearchs = () => {
   const [showDetails, setShowDetails] = useState(false);
   const [stockPriceData, setStockPriceData] = useState<Array<[string, string]>>([]);
   const [periodWise, setPeriodWise] = useState("1m");
-  const [userId] = useState<string>("user1");
+  const { user, isAuthenticated } = useAuth();
+  const [userId, setUserId] = useState<string>("");
   const [isInWatchlist, setIsInWatchlist] = useState<boolean>(false);
   const [watchlistLoading, setWatchlistLoading] = useState<boolean>(false);
   const [stockRecommendation, setStockRecommendation] = useState<{
@@ -466,7 +468,15 @@ const StockSearchs = () => {
   const handleWatchlistToggle = async () => {
     if (!stockData) return;
     
+    if (!isAuthenticated) {
+      // Redirect to login if user is not authenticated
+      router.push('/Login');
+      return;
+    }
+    
     setWatchlistLoading(true);
+    setError(""); // Clear any previous errors
+    
     try {
       console.log('Watchlist toggle for:', {
         userId,
@@ -476,26 +486,59 @@ const StockSearchs = () => {
       
       if (isInWatchlist) {
         console.log('Stock already in watchlist');
+        setError("Stock is already in your watchlist");
+        setWatchlistLoading(false);
+        return;
+      }
+      
+      // Use the fallback method which will try API first, then localStorage
+      const response = await addToWatchlistWithFallback(
+        userId,
+        stockData.symbol || stockName,
+        stockData.companyName || stockName
+      );
+      
+      console.log('Add to watchlist response:', response);
+      
+      if (response.success) {
+        setIsInWatchlist(true);
+        // Show success message
+        setError(`${stockData.companyName || stockName} added to watchlist`);
       } else {
-        const response = await addToWatchlist(
+        setError(`Failed to add to watchlist: ${response.message}`);
+      }
+    } catch (error) {
+      console.error("Error toggling watchlist:", error);
+      setError("Failed to connect to watchlist service. Using local storage instead.");
+      
+      // Fallback to local storage as last resort
+      try {
+        const response = await addToWatchlistFallback(
           userId,
           stockData.symbol || stockName,
           stockData.companyName || stockName
         );
-        console.log('Add to watchlist response:', response);
+        
         if (response.success) {
           setIsInWatchlist(true);
-        } else {
-          setError(`Failed to add to watchlist: ${response.message}`);
+          setError(`${stockData.companyName || stockName} added to watchlist (offline mode)`);
         }
+      } catch (e) {
+        setError("Could not add to watchlist even in offline mode.");
       }
-    } catch (error) {
-      console.error("Error toggling watchlist:", error);
-      setError("Failed to connect to watchlist service. Make sure the backend is running.");
     } finally {
       setWatchlistLoading(false);
     }
   };
+
+  // Update userId when authentication state changes
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      setUserId(user.id);
+    } else {
+      setUserId("");
+    }
+  }, [isAuthenticated, user]);
 
   useEffect(() => {
     if (stockData?.symbol) {

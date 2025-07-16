@@ -1,21 +1,23 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { FaHome, FaSearch, FaRocket, FaChartPie, FaStar, FaSyncAlt, FaTrash, FaInfoCircle } from "react-icons/fa";
+import { FaHome, FaSearch, FaRocket, FaChartPie, FaStar, FaSyncAlt, FaTrash, FaInfoCircle, FaSignInAlt } from "react-icons/fa";
 import { getUserWatchlist, WatchlistItem, removeFromWatchlist } from "../watchlistAPI";
 import fetchStockDetails from "../stockNameAPI";
+import { useAuth } from "../context/AuthContext";
 
 const WatchlistPage = () => {
   const router = useRouter();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef = useRef({ x: 0, y: 0 });
+  const { user, isAuthenticated, isLoading } = useAuth();
   
   const [watchlistItems, setWatchlistItems] = useState<WatchlistItem[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [watchlistData, setWatchlistData] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [userId, setUserId] = useState<string>("user1");
+  const [userId, setUserId] = useState<string>("");
   const [currentTime, setCurrentTime] = useState(new Date());
   const [marketStatus, setMarketStatus] = useState("OPEN");
 
@@ -140,14 +142,25 @@ const WatchlistPage = () => {
     return () => clearInterval(timer);
   }, []);
 
+  // Update userId when authentication state changes
   useEffect(() => {
-    const storedUserId = localStorage.getItem("userId");
-    if (storedUserId) {
-      setUserId(storedUserId);
+    if (!isLoading) {
+      if (isAuthenticated && user) {
+        setUserId(user.id);
+      } else {
+        setUserId("");
+      }
     }
-  }, []);
+  }, [isAuthenticated, isLoading, user]);
 
   const fetchWatchlist = async () => {
+    if (!isAuthenticated) {
+      setWatchlistItems([]);
+      setWatchlistData({});
+      setLoading(false);
+      return;
+    }
+    
     setRefreshing(true);
     try {
       console.log('Fetching watchlist for user:', userId);
@@ -184,8 +197,9 @@ const WatchlistPage = () => {
   };
 
   useEffect(() => {
-    fetchWatchlist();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (userId) {
+      fetchWatchlist();
+    }
   }, [userId]);
 
   const handleRemoveFromWatchlist = async (symbol: string, name: string) => {
@@ -217,6 +231,18 @@ const WatchlistPage = () => {
       day: "numeric",
     });
   };
+
+  const handleLoginRedirect = () => {
+    router.push('/Login');
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white relative overflow-hidden">
@@ -271,23 +297,48 @@ const WatchlistPage = () => {
           <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500">
             My Watchlist
           </h1>
-          <button
-            onClick={fetchWatchlist}
-            disabled={refreshing}
-            className={`flex items-center gap-2 px-4 py-2 rounded-md transition-colors ${
-              refreshing
-                ? "bg-blue-700/50 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700"
-            }`}
-          >
-            {refreshing ? <FaSyncAlt className="animate-spin" /> : <FaSyncAlt />}
-            <span>Refresh</span>
-          </button>
+          {isAuthenticated ? (
+            <button
+              onClick={fetchWatchlist}
+              disabled={refreshing}
+              className={`flex items-center gap-2 px-4 py-2 rounded-md transition-colors ${
+                refreshing
+                  ? "bg-blue-700/50 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700"
+              }`}
+            >
+              {refreshing ? <FaSyncAlt className="animate-spin" /> : <FaSyncAlt />}
+              <span>Refresh</span>
+            </button>
+          ) : (
+            <button
+              onClick={handleLoginRedirect}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
+            >
+              <FaSignInAlt />
+              <span>Login</span>
+            </button>
+          )}
         </div>
 
         {loading ? (
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
+        ) : !isAuthenticated ? (
+          <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-8 text-center">
+            <FaSignInAlt className="mx-auto text-4xl text-blue-400 mb-4" />
+            <h2 className="text-xl font-semibold mb-2">Login Required</h2>
+            <p className="text-gray-400 mb-4">
+              Please login to view and manage your watchlist
+            </p>
+            <button
+              onClick={handleLoginRedirect}
+              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-md transition-colors inline-flex items-center gap-2"
+            >
+              <FaSignInAlt />
+              <span>Login</span>
+            </button>
           </div>
         ) : watchlistItems.length === 0 ? (
           <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-8 text-center">
