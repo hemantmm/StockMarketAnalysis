@@ -28,5 +28,10 @@
     "user_id": "user1",
     "stock_symbol": "axis bank",
     "stock_name": "Axis Bank Ltd"
+  },
+  {
+    "user_id": "user1",
+    "stock_symbol": "dmart",
+    "stock_name": "Avenue Supermarts Ltd"
   }
 ]
