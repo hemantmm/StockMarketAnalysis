@@ -50,7 +50,6 @@ export const addToWatchlist = async (
       message: 'Failed to add stock to watchlist'
     };
   }
-  
 };
 
 export const removeFromWatchlist = async (
@@ -79,7 +78,7 @@ export const removeFromWatchlist = async (
       message: 'Failed to remove stock from watchlist'
     };
   }
-  };
+};
 
 export const getUserWatchlist = async (userId: string): Promise<WatchlistItem[]> => {
   try {
@@ -100,7 +99,6 @@ export const getUserWatchlist = async (userId: string): Promise<WatchlistItem[]>
 
 export const checkInWatchlist = async (userId: string, stockSymbol: string): Promise<boolean> => {
   try {
-
     const response = await api.get(`/watchlist/check/${userId}/${stockSymbol}`);
     return response.data.data || false;
   } catch (error) {

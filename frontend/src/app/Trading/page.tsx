@@ -1,10 +1,9 @@
 'use client';
 
-import { useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import { placePaperTrade, getPaperTradeHistory, getPaperTradePerformance, getCurrentStockPrice, Trade, Performance } from '../services/paperTradeAPI';
 
 export default function TradingPage() {
-  
   const [symbol, setSymbol] = useState('');
   const [qty, setQty] = useState(1);
   const [price, setPrice] = useState(0);
@@ -34,7 +33,7 @@ export default function TradingPage() {
   };
 
   const fetchCurrentPrice = async () => {
-     if (!symbol) return;
+    if (!symbol) return;
     setLoading(true);
     try {
       const fetchedPrice = await getCurrentStockPrice(symbol);
@@ -61,7 +60,6 @@ export default function TradingPage() {
     setLoading(true);
     try {
       const result = await placePaperTrade({ symbol, qty, price, side });
-      
       if (result.success) {
         setMessage(`${side.toUpperCase()} order placed successfully!`);
         loadTradeData(); // Refresh data

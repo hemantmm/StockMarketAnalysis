@@ -207,7 +207,7 @@ const HoldStock = () => {
       const stockDetails = await fetchStockDetails(form.stock);
       const currentPrice = stockDetails?.currentPrice?.NSE || stockDetails?.currentPrice?.BSE || 0;
       
-      const response = await fetch("https://stockmarketanalysis-1.onrender.com/hold-advice", {
+      const response = await fetch("https://stockmarketanalysis-n3ua.onrender.com/hold-advice", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

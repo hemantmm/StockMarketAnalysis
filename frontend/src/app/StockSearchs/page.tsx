@@ -467,7 +467,6 @@ const StockSearchs = () => {
     if (!stockData) return;
     
     setWatchlistLoading(true);
-    
     try {
       console.log('Watchlist toggle for:', {
         userId,
@@ -478,19 +477,21 @@ const StockSearchs = () => {
       if (isInWatchlist) {
         console.log('Stock already in watchlist');
       } else {
-       const response = await addToWatchlist(
+        const response = await addToWatchlist(
           userId,
           stockData.symbol || stockName,
           stockData.companyName || stockName
         );
         console.log('Add to watchlist response:', response);
-        
         if (response.success) {
           setIsInWatchlist(true);
-        } else{
+        } else {
           setError(`Failed to add to watchlist: ${response.message}`);
         }
       }
+    } catch (error) {
+      console.error("Error toggling watchlist:", error);
+      setError("Failed to connect to watchlist service. Make sure the backend is running.");
     } finally {
       setWatchlistLoading(false);
     }

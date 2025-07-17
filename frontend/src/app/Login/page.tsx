@@ -31,6 +31,7 @@ const LoginPage = () => {
     });
   }
 
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-purple-900 via-purple-700 to-white animate-gradient-move">
       <h1 className="text-4xl font-extrabold mb-6 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent drop-shadow-lg">Login</h1>
@@ -80,6 +81,7 @@ const LoginPage = () => {
         </div>
       </form>
     </div>
+     
   );
 }
 export default LoginPage;

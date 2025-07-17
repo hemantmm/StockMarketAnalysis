@@ -248,7 +248,6 @@ const Portfolio = () => {
     return `${percentage >= 0 ? '+' : ''}${percentage.toFixed(2)}%`;
   };
 
-
   if (!isClient) return null;
 
   return (

@@ -180,7 +180,7 @@ const NotifierPage = () => {
 
     setLoading(true);
     try {
-      await axios.post("https://stockmarketanalysis-1.onrender.com/set-alert", {
+      await axios.post("https://stockmarketanalysis-n3ua.onrender.com/set-alert", {
         stock: stock.toUpperCase(),
         target_price: parseFloat(target),
         email,
