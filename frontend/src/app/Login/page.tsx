@@ -14,7 +14,8 @@ const LoginPage = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    await axios.post('https://stockmarketanalysis-node.onrender.com/Login', {
+    const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://stockmarketanalysis-node1.onrender.com';
+    await axios.post(`${API_BASE}/Login`, {
       email,
       password,
     })

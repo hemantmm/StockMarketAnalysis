@@ -1,8 +1,10 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://my-python-backend.onrender.com'
-  : 'http://localhost:8000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE || (
+  process.env.NODE_ENV === 'production'
+    ? 'https://stockmarketanalysis-n3ua.onrender.com'
+    : 'http://localhost:8000'
+);
 
 const api = axios.create({
   baseURL: API_BASE_URL,
