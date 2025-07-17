@@ -12,7 +12,11 @@ app = FastAPI()
 # Fix CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://stock-market-analysis-five-lake.vercel.app"],
+    allow_origins=[
+        "http://localhost:3000",
+        "https://stock-market-analysis-five-lake.vercel.app",
+        "https://stock-market-analysis-five-lake-git-main-hemantmehta.vercel.app"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

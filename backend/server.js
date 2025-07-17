@@ -11,7 +11,11 @@ const app= express();
 const PORT = process.env.PORT || 4000;
 
 app.use(cors({
-    origin: ['http://localhost:3000','https://stock-market-analysis-five-lake.vercel.app'],
+    origin: [
+        'http://localhost:3000',
+        'https://stock-market-analysis-five-lake.vercel.app',
+        'https://stock-market-analysis-five-lake-git-main-hemantmehta.vercel.app'
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true,
 }))
