@@ -32,6 +32,7 @@ app.get('/', (req, res) => {
     res.send('Welcome to the backend API server');
 });
 
+
 // User schema
 const userSchema = new mongoose.Schema({
     username: {
@@ -67,7 +68,7 @@ app.post('/SignUp', async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const user = new User({
+        const user=new User({
             username,
             email,
             password: hashedPassword
@@ -119,14 +120,13 @@ app.post('/Login', async (req, res) => {
         
         const token = jwt.sign({ userId: user._id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
         console.log('Login successful for user:', user.username);
-        res.json({token, username: user.username});
+        res.json({token,username:user.username});
     } catch (error) {
         console.error('Login error:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
-});
+})
 
 app.listen(PORT, () => {
-
     console.log(`Server is running on port ${PORT}`);
-});
+})
