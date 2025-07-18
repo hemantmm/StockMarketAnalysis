@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE || (
   process.env.NODE_ENV === 'production'
-    ? 'https://stockmarketanalysis-n3ua.onrender.com'
+    ? 'https://stockmarketanalysis-1.onrender.com'
     : 'http://localhost:8000'
 );
 

@@ -180,8 +180,7 @@ const NotifierPage = () => {
 
     setLoading(true);
     try {
-      const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "https://stockmarketanalysis-n3ua.onrender.com";
-      await axios.post(`${API_BASE}/set-alert`, {
+        await axios.post("https://stockmarketanalysis-1.onrender.com/set-alert", {
         stock: stock.toUpperCase(),
         target_price: parseFloat(target),
         email,

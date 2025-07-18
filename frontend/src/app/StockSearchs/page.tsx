@@ -271,7 +271,7 @@ const StockSearchs = () => {
     try {
       console.log(`Sending recommendation request for ${symbol} with ${prices.length} price points, period: ${period}`);
       
-      const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://stockmarketanalysis-n3ua.onrender.com';
+      const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://stockmarketanalysis-1.onrender.com';
       const res = await fetch(`${API_BASE}/api/stock-recommendation`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

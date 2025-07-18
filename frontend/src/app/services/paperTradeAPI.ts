@@ -2,7 +2,7 @@ import axios from 'axios';
 // import { get_stock_info } from '../../backend/indianstock_api';
 import fetchStockDetails from '../stockNameAPI';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://stockmarketanalysis-41.onrender.com';
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://stockmarketanalysis-4.onrender.com';
 const DEFAULT_USER_ID = 'default_trader';
 
 export async function placePaperTrade({ symbol, qty, price, side }: { symbol: string, qty: number, price: number, side: string }) {
