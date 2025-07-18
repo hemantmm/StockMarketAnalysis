@@ -15,7 +15,12 @@ const fetchStockDetails = async (stockName: string) => {
   try {
     const response = await axios.request(options);
     return response.data;
-  } catch (error) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (axios.isAxiosError(error) && error.response?.status === 429) {
+      // Rate limit hit
+      return { error: 'Rate limit exceeded. Please try again later.' };
+    }
     console.error('Error fetching stock details:', error);
     throw error;
   }

@@ -382,6 +382,11 @@ const StockSearchs = () => {
       try {
         console.log('Fetching stock details...');
         const data = await fetchStockDetails(searchStock);
+        if (data?.error === 'Rate limit exceeded. Please try again later.') {
+          setError(data.error);
+          setLoading(false);
+          return;
+        }
         console.log('Stock details received:', data);
         
         console.log('Fetching historical data...');
