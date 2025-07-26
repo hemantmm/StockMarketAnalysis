@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { FaChartLine, FaHome, FaSearch, FaRocket, FaSyncAlt, FaFire, FaTrophy, FaSpinner, FaChartPie } from "react-icons/fa";
 import activeTrendingStocks from "../ActiveStockAPI";
+import UserMenu from "../components/UserMenu";
 
 type ActiveStocks = {
   company: string;
@@ -20,6 +22,7 @@ const ActiveStocks = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [marketStatus, setMarketStatus] = useState("OPEN");
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -200,6 +203,19 @@ const ActiveStocks = () => {
     fetchActiveStocks();
   };
 
+  // Add useEffect to check login status
+  useEffect(() => {
+    // Check if user is logged in
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        setUser(JSON.parse(userStr));
+      } catch (e) {
+        console.error('Error parsing user data', e);
+      }
+    }
+  }, []);
+
   if (!isClient) {
     return null;
   }
@@ -242,6 +258,16 @@ const ActiveStocks = () => {
                 second: '2-digit'
               })}
             </div>
+            {user ? (
+              <UserMenu user={user} />
+            ) : (
+              <button
+                onClick={() => router.push('/Login')}
+                className="px-6 py-2 bg-gradient-to-r from-orange-500 to-red-600 rounded-full font-semibold hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-300 transform hover:scale-105"
+              >
+                Login
+              </button>
+            )}
             <button
               onClick={handleRefresh}
               disabled={refreshing}
@@ -399,4 +425,5 @@ const ActiveStocks = () => {
     </div>
   );
 };
+
 export default ActiveStocks;

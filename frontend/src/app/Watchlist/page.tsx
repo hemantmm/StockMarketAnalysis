@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { FaHome, FaSearch, FaRocket, FaChartPie, FaStar, FaSyncAlt, FaTrash, FaInfoCircle } from "react-icons/fa";
 import { getUserWatchlist, WatchlistItem, removeFromWatchlist } from "../watchlistAPI";
 import fetchStockDetails from "../stockNameAPI";
+import UserMenu from "../components/UserMenu";
 
 const WatchlistPage = () => {
   const router = useRouter();
@@ -18,8 +20,8 @@ const WatchlistPage = () => {
   const [userId, setUserId] = useState<string>("user1");
   const [currentTime, setCurrentTime] = useState(new Date());
   const [marketStatus, setMarketStatus] = useState("OPEN");
+  const [user, setUser] = useState<any>(null);
 
-  // Initialize canvas animation
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -147,6 +149,19 @@ const WatchlistPage = () => {
     }
   }, []);
 
+  // Add useEffect to check login status
+  useEffect(() => {
+    // Check if user is logged in
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        setUser(JSON.parse(userStr));
+      } catch (e) {
+        console.error('Error parsing user data', e);
+      }
+    }
+  }, []);
+
   const fetchWatchlist = async () => {
     setRefreshing(true);
     try {
@@ -256,12 +271,24 @@ const WatchlistPage = () => {
           <div className="text-sm text-gray-400">
             {formatDate(currentTime)} | {formatTime(currentTime)}
           </div>
-          <div
-            className={`text-xs font-bold ${
-              marketStatus === "OPEN" ? "text-green-400" : "text-red-400"
-            } text-right`}
-          >
-            Market {marketStatus}
+          <div className="flex items-center justify-end">
+            <div
+              className={`text-xs font-bold ${
+                marketStatus === "OPEN" ? "text-green-400" : "text-red-400"
+              } mr-3`}
+            >
+              Market {marketStatus}
+            </div>
+            {user ? (
+              <UserMenu user={user} />
+            ) : (
+              <button 
+                onClick={() => router.push('/Login')}
+                className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-full"
+              >
+                Login
+              </button>
+            )}
           </div>
         </div>
       </div>

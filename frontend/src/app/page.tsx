@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { FaRocket, FaBell, FaSearch, FaArrowRight, FaPlay, FaShieldAlt, FaLightbulb, FaTrophy, FaStar, FaChartLine } from "react-icons/fa";
+import UserMenu from "./components/UserMenu";
 
 const HomePage = () => {
   const router = useRouter();
@@ -10,6 +11,8 @@ const HomePage = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [marketStatus, setMarketStatus] = useState("OPEN");
   const [isClient, setIsClient] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [user, setUser] = useState<any>(null);
   const [animatedNumbers, setAnimatedNumbers] = useState({
     users: 0,
     predictions: 0,
@@ -18,6 +21,15 @@ const HomePage = () => {
 
   useEffect(() => {
     setIsClient(true);
+    // Check if user is logged in
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      try {
+        setUser(JSON.parse(userStr));
+      } catch (e) {
+        console.error('Error parsing user data', e);
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -198,7 +210,7 @@ const HomePage = () => {
     { label: "Price Alerts", icon: FaBell, action: () => router.push("/Notifier"), color: "from-purple-500 to-pink-600" },
     { label: "Active Stocks", icon: FaRocket, action: () => router.push("/ActiveStocks"), color: "from-orange-500 to-red-600" },
     { label: "Portfolio", icon: FaShieldAlt, action: () => router.push("/Portfolio"), color: "from-emerald-500 to-green-600" },
-    { label: "Trading Simulator", icon: FaChartLine, action: () => router.push("/PaperTrading"), color: "from-pink-500 to-yellow-500" }
+    { label: "Trading", icon: FaChartLine, action: () => router.push("/Trading"), color: "from-pink-500 to-yellow-500" }
   ];
 
   return (
@@ -239,12 +251,16 @@ const HomePage = () => {
                 second: '2-digit'
               }) : '--:--:--'}
             </div>
-            <button
-              onClick={() => router.push("/Login")}
-              className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full font-semibold hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-300 transform hover:scale-105"
-            >
-              Login
-            </button>
+            {user ? (
+              <UserMenu user={user} />
+            ) : (
+              <button
+                onClick={() => router.push("/Login")}
+                className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full font-semibold hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-300 transform hover:scale-105"
+              >
+                Login
+              </button>
+            )}
           </div>
         </div>
       </header>

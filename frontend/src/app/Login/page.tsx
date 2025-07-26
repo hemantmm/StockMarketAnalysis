@@ -20,9 +20,19 @@ const LoginPage = () => {
     })
     .then((response) => {
       console.log(response.data);
-      // alert('Login successful');
+      // Store individual items for backward compatibility
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('email', email);
+      
+      // Also store as a user object for consistency
+      const user = {
+        email: email,
+        token: response.data.token,
+        username: response.data.username || email.split('@')[0],
+        id: email // Using email as id for now
+      };
+      localStorage.setItem('user', JSON.stringify(user));
+      
       router.push('/');
     })
     .catch((error) => {
