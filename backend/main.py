@@ -6,8 +6,19 @@ import json
 from watchlist import add_to_watchlist, remove_from_watchlist, get_user_watchlist, is_in_watchlist
 from indianstock_api import get_watchlist_data
 from fastapi.responses import JSONResponse
+import os
+import papertrading
 
 app = FastAPI()
+
+# Configure CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "https://stock-market-analysis-five-lake.vercel.app"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Fix CORS configuration
 app.add_middleware(
@@ -170,6 +181,73 @@ async def recommend_stock(request: Request):
             status_code=500,
             content={"error": f"Analysis failed: {str(e)}"}
         )
+
+class TradeRequest(BaseModel):
+    userId: str
+    symbol: str
+    qty: int
+    price: float
+    side: str
+
+class FundsRequest(BaseModel):
+    userId: str
+    amount: float
+
+@app.get("/")
+def read_root():
+    return {"message": "Trading API is running"}
+
+@app.post("/trading/trade")
+def place_trade(trade: TradeRequest):
+    result = papertrading.place_trade(
+        trade.userId, 
+        trade.symbol, 
+        trade.qty, 
+        trade.price, 
+        trade.side
+    )
+    
+    if not result["success"]:
+        raise HTTPException(status_code=400, detail=result["error"])
+    
+    return {
+        "success": True,
+        "message": f"Successfully {'bought' if trade.side == 'buy' else 'sold'} {trade.qty} shares of {trade.symbol}",
+        "trade": {
+            "userId": trade.userId,
+            "symbol": trade.symbol,
+            "qty": trade.qty,
+            "price": trade.price,
+            "side": trade.side
+        }
+    }
+
+@app.get("/trading/history/{user_id}")
+def get_history(user_id: str):
+    history = papertrading.get_trading_history(user_id)
+    return {"history": history}
+
+@app.get("/trading/portfolio/{user_id}")
+def get_portfolio(user_id: str):
+    performance = papertrading.get_performance(user_id)
+    return {
+        "userId": user_id,
+        "balance": performance["balance"],
+        "positions": performance["positions"]
+    }
+
+@app.post("/trading/add-funds")
+def add_funds(request: FundsRequest):
+    data = papertrading.load_data()
+    user = data.setdefault(request.userId, {'balance': 100000, 'trades': [], 'positions': {}})
+    user['balance'] += request.amount
+    papertrading.save_data(data)
+    
+    return {
+        "success": True,
+        "message": f"Successfully added {request.amount} to your account",
+        "newBalance": user['balance']
+    }
 
 # source venv/bin/activate
 # uvicorn main:app --reload

@@ -28,5 +28,35 @@
       "RCF": 300,
       "CEAT": 0
     }
+  },
+  "mh@g.co": {
+    "balance": 82565.0,
+    "trades": [
+      {
+        "symbol": "CESC",
+        "qty": 1,
+        "price": 173.1,
+        "side": "buy",
+        "timestamp": "2025-07-26T09:49:27.410644"
+      },
+      {
+        "symbol": "CDSL",
+        "qty": 17,
+        "price": 1614.7,
+        "side": "buy",
+        "timestamp": "2025-07-26T09:49:53.830782"
+      },
+      {
+        "symbol": "CESC",
+        "qty": 1,
+        "price": 188.0,
+        "side": "sell",
+        "timestamp": "2025-07-26T09:51:53.041164"
+      }
+    ],
+    "positions": {
+      "CESC": 0,
+      "CDSL": 17
+    }
   }
 }

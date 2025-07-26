@@ -32,7 +32,6 @@ app.get('/', (req, res) => {
     res.send('Welcome to the backend API server');
 });
 
-
 // User schema
 const userSchema = new mongoose.Schema({
     username: {
@@ -126,6 +125,9 @@ app.post('/Login', async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 })
+
+// Add this line where you register other routes
+app.use('/trading', require('./routes/tradingRoutes'));
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
