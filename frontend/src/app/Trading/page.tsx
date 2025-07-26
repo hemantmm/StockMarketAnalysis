@@ -343,7 +343,8 @@ export default function TradingPage() {
             <div className="max-h-32 overflow-y-auto">
               {portfolio && Object.entries(portfolio.positions).length > 0 ? (
                 Object.entries(portfolio.positions)
-                  .filter(([_, qty]) => qty > 0)
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                  .filter(([_,qty]) => qty > 0)
                   .map(([stock, quantity]) => (
                     <div key={stock} className="flex justify-between text-white mb-2">
                       <span>{stock}</span>
