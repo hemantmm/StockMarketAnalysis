@@ -2,7 +2,7 @@ import axios from 'axios';
 import fetchStockDetails from '../stockNameAPI';
 
 // Use localhost for local testing
-const API_BASE = 'http://localhost:3001';
+const API_BASE = 'https://stockmarketanalysis-api.onrender.com';
 
 export interface Trade {
   userId: string;
