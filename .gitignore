@@ -13,8 +13,8 @@
 
 # testing
 /coverage
-/backend/test_email.py
-/backend/test_server.py
+/backend/test_email
+/backend/test_server
 
 # next.js
 /.next/
@@ -44,3 +44,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Test files to ignore
+test_email.py
+test-server.js
