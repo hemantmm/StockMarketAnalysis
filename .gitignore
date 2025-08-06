@@ -13,6 +13,8 @@
 
 # testing
 /coverage
+/backend/test_email.py
+/backend/test_server.py
 
 # next.js
 /.next/
