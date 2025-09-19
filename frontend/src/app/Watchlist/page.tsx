@@ -15,9 +15,10 @@ const WatchlistPage = () => {
   const [watchlistItems, setWatchlistItems] = useState<WatchlistItem[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [watchlistData, setWatchlistData] = useState<Record<string, any>>({});
+  const [userId, setUserId] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [userId, setUserId] = useState<string>("user1");
+  const [error, setError] = useState<string>("");
   const [currentTime, setCurrentTime] = useState(new Date());
   const [marketStatus, setMarketStatus] = useState("OPEN");
   const [user, setUser] = useState<any>(null);
@@ -149,20 +150,41 @@ const WatchlistPage = () => {
     }
   }, []);
 
-  // Add useEffect to check login status
+  // Update this useEffect to handle authentication properly
   useEffect(() => {
     // Check if user is logged in
     const userStr = localStorage.getItem('user');
     if (userStr) {
       try {
-        setUser(JSON.parse(userStr));
+        const userData = JSON.parse(userStr);
+        setUser(userData);
+        // Set userId from user data - use the appropriate field from your user object
+        const id = userData.id || userData._id || userData.userId;
+        if (id) {
+          setUserId(id);
+          console.log("User authenticated, ID:", id);
+        } else {
+          console.error("User object missing ID field:", userData);
+          setError("User authentication issue. Please log in again.");
+        }
       } catch (e) {
         console.error('Error parsing user data', e);
+        setError("Authentication error. Please log in again.");
       }
+    } else {
+      console.log("No user logged in");
+      setError("Please log in to view your watchlist");
+      // Optionally redirect to login page
+      // router.push('/Login');
     }
   }, []);
 
   const fetchWatchlist = async () => {
+    if (!userId) {
+      setLoading(false);
+      return;
+    }
+    
     setRefreshing(true);
     try {
       console.log('Fetching watchlist for user:', userId);
@@ -170,28 +192,30 @@ const WatchlistPage = () => {
       console.log('Received watchlist items:', items);
       setWatchlistItems(items);
       
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const stockData: Record<string, any> = {};
-      for (const item of items) {
-        try {
-          console.log(`Fetching details for ${item.stock_symbol}`);
-          const data = await fetchStockDetails(item.stock_symbol);
-          stockData[item.stock_symbol] = data;
-        } catch (error) {
-          console.error(`Error fetching details for ${item.stock_symbol}:`, error);
-          stockData[item.stock_symbol] = {
-            symbol: item.stock_symbol,
-            companyName: item.stock_name,
-            currentPrice: { NSE: 'N/A' }
-          };
+      if (items.length > 0) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const stockData: Record<string, any> = {};
+        for (const item of items) {
+          try {
+            console.log(`Fetching details for ${item.stock_symbol}`);
+            const data = await fetchStockDetails(item.stock_symbol);
+            stockData[item.stock_symbol] = data;
+          } catch (error) {
+            console.error(`Error fetching details for ${item.stock_symbol}:`, error);
+            stockData[item.stock_symbol] = {
+              symbol: item.stock_symbol,
+              companyName: item.stock_name,
+              currentPrice: { NSE: 'N/A' }
+            };
+          }
         }
+        
+        console.log('Stock data fetched:', stockData);
+        setWatchlistData(stockData);
       }
-      
-      console.log('Stock data fetched:', stockData);
-      setWatchlistData(stockData);
     } catch (error) {
       console.error("Error fetching watchlist:", error);
-      alert("Could not connect to watchlist service. Please make sure the backend server is running.");
+      setError("Could not connect to watchlist service. Please make sure the backend server is running.");
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -199,8 +223,9 @@ const WatchlistPage = () => {
   };
 
   useEffect(() => {
-    fetchWatchlist();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (userId) {
+      fetchWatchlist();
+    }
   }, [userId]);
 
   const handleRemoveFromWatchlist = async (symbol: string, name: string) => {
@@ -300,9 +325,9 @@ const WatchlistPage = () => {
           </h1>
           <button
             onClick={fetchWatchlist}
-            disabled={refreshing}
+            disabled={refreshing || !userId}
             className={`flex items-center gap-2 px-4 py-2 rounded-md transition-colors ${
-              refreshing
+              refreshing || !userId
                 ? "bg-blue-700/50 cursor-not-allowed"
                 : "bg-blue-600 hover:bg-blue-700"
             }`}
@@ -312,9 +337,38 @@ const WatchlistPage = () => {
           </button>
         </div>
 
-        {loading ? (
+        {/* Display error message if there's an error or user is not logged in */}
+        {error && (
+          <div className="bg-red-500/30 text-white p-4 rounded-lg mb-6">
+            <p>{error}</p>
+            {!userId && (
+              <button 
+                onClick={() => router.push('/Login')}
+                className="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md"
+              >
+                Log In
+              </button>
+            )}
+          </div>
+        )}
+
+        {loading && !error ? (
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
+        ) : !userId ? (
+          <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-8 text-center">
+            <FaStar className="mx-auto text-4xl text-yellow-400 mb-4" />
+            <h2 className="text-xl font-semibold mb-2">Login Required</h2>
+            <p className="text-gray-400 mb-4">
+              Please log in to view and manage your watchlist
+            </p>
+            <button
+              onClick={() => router.push("/Login")}
+              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
+            >
+              Log In
+            </button>
           </div>
         ) : watchlistItems.length === 0 ? (
           <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-8 text-center">
