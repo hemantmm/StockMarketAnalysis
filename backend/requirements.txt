@@ -31,4 +31,4 @@ typing-inspection==0.4.1
 typing_extensions==4.13.2
 tzdata==2025.2
 uvicorn>=0.15.0
-python-dotenv>=0.19.0l
+python-dotenv>=0.19.0
