@@ -44,7 +44,6 @@ export default function PaperTrading() {
         if (!priceManuallyChanged && price !== null) {
           setPrice(Number(price));
         }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (err) {
         setCurrentPrice(null);
         setPriceError('Price unavailable or API limit reached.');

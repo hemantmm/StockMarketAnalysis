@@ -13,7 +13,6 @@ const WatchlistPage = () => {
   const mouseRef = useRef({ x: 0, y: 0 });
   
   const [watchlistItems, setWatchlistItems] = useState<WatchlistItem[]>([]);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [watchlistData, setWatchlistData] = useState<Record<string, any>>({});
   const [userId, setUserId] = useState<string>("");
   const [loading, setLoading] = useState(true);
@@ -193,7 +192,6 @@ const WatchlistPage = () => {
       setWatchlistItems(items);
       
       if (items.length > 0) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const stockData: Record<string, any> = {};
         for (const item of items) {
           try {

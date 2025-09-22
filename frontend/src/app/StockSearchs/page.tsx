@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import fetchStockDetails from "../stockNameAPI";
@@ -61,8 +62,8 @@ const StockSearchs = () => {
   const [userId, setUserId] = useState<string>("");
   const [isInWatchlist, setIsInWatchlist] = useState<boolean>(false);
   const [watchlistLoading, setWatchlistLoading] = useState<boolean>(false);
-  const [watchlistError, setWatchlistError] = useState<string>("");
-  const [user, setUser] = useState<any>(null);
+  const [, setWatchlistError] = useState<string>("");
+  const [, setUser] = useState<any>(null);
   const [stockRecommendation, setStockRecommendation] = useState<{
     recommendation: string;
     confidence: string;
@@ -607,7 +608,6 @@ const StockSearchs = () => {
 
         if (response.success) {
           setIsInWatchlist(true);
-          // Show success notification
           alert(`${stockData.symbol} added to watchlist successfully!`);
         } else {
           setWatchlistError(response.message || "Failed to add to watchlist");
