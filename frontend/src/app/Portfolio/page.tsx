@@ -5,7 +5,7 @@ import {
   FaHome, FaChartPie, FaArrowUp, FaArrowDown, 
   FaRocket, FaTrophy, FaSpinner, FaSync
 } from "react-icons/fa";
-import { getPaperTradePerformance, getCurrentStockPrice, getPaperTradeHistory } from "../services/paperTradeAPI";
+import { getPortfolio, getTradeHistory, getCurrentStockPrice } from "../services/tradingAPI";
 
 interface PortfolioHolding {
   symbol: string;
@@ -41,13 +41,15 @@ const Portfolio = () => {
   const [holdings, setHoldings] = useState<PortfolioHolding[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
     setIsClient(true);
     setCurrentTime(new Date());
     const hour = new Date().getHours();
     setMarketStatus(hour >= 9 && hour < 16 ? "OPEN" : "CLOSED");
-    fetchPortfolioData();
+    const email = typeof window !== "undefined" ? localStorage.getItem("email") : null;
+    setUserId(email);
   }, []);
 
   useEffect(() => {
@@ -58,6 +60,11 @@ const Portfolio = () => {
     }, 1000);
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    if (userId) fetchPortfolioData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
   useEffect(() => {
     if (!isClient) return;
@@ -161,10 +168,11 @@ const Portfolio = () => {
   const fetchPortfolioData = async () => {
     setLoading(true);
     try {
-      const performance = await getPaperTradePerformance();
-      const trades = await getPaperTradeHistory();
-      
-      if (performance && performance.positions) {
+      if (!userId) return;
+      const portfolio = await getPortfolio(userId);
+      const trades = await getTradeHistory(userId);
+
+      if (portfolio && portfolio.positions) {
         const holdingsData: PortfolioHolding[] = [];
         let totalInvested = 0;
         let totalCurrentValue = 0;
@@ -183,7 +191,7 @@ const Portfolio = () => {
           }
         });
 
-        for (const [symbol, quantity] of Object.entries(performance.positions)) {
+        for (const [symbol, quantity] of Object.entries(portfolio.positions)) {
           if (quantity > 0) {
             try {
               const currentPrice = await getCurrentStockPrice(symbol) || 0;
