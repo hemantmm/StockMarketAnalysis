@@ -27,7 +27,6 @@ export default function TradingPage() {
   const [portfolioValue, setPortfolioValue] = useState<number | null>(null);
   const [portfolioValueLoading, setPortfolioValueLoading] = useState(false);
 
-  // Check authentication
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -118,20 +117,20 @@ export default function TradingPage() {
       return;
     }
 
-    if (!symbol || !qty || price <= 0 || qty <= 0) {
+    if (!symbol || !qty || Number(price) <= 0 || Number(qty) <= 0) {
       setMessage('Please fill all fields with valid values');
       setMessageType('error');
       return;
     }
 
-    if (side === 'sell' && (!portfolio?.positions[symbol] || portfolio.positions[symbol] < qty)) {
+    if (side === 'sell' && (!portfolio?.positions[symbol] || portfolio.positions[symbol] < Number(qty))) {
       setMessage(`You don't own enough ${symbol} shares to sell`);
       setMessageType('error');
       return;
     }
 
-    if (side === 'buy' && portfolio && price * qty > portfolio.balance) {
-      setMessage(`Insufficient funds. You need ₹${(price * qty).toFixed(2)} but have ₹${portfolio.balance.toFixed(2)}`);
+    if (side === 'buy' && portfolio && Number(price) * Number(qty) > portfolio.balance) {
+      setMessage(`Insufficient funds. You need ₹${(Number(price) * Number(qty)).toFixed(2)} but have ₹${portfolio.balance.toFixed(2)}`);
       setMessageType('error');
       return;
     }
@@ -139,7 +138,7 @@ export default function TradingPage() {
     if (currentPrice) {
       const lowerLimit = currentPrice * 0.9;
       const upperLimit = currentPrice * 1.1;
-      if (price < lowerLimit || price > upperLimit) {
+      if (Number(price) < lowerLimit || Number(price) > upperLimit) {
         setMessage(`Price must be within ±10% of current price (₹${lowerLimit.toFixed(2)} - ₹${upperLimit.toFixed(2)})`);
         setMessageType('error');
         return;
