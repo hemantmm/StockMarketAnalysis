@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { getCurrentStockPrice, placeTrade, getTradeHistory, getPortfolio, addFunds, Trade, Portfolio } from '../services/tradingAPI';
 import UserMenu from '../components/UserMenu';
-import { FaHome, FaStar, FaSearch, FaChartPie, FaRocket } from "react-icons/fa";
+import { FaHome, FaStar, FaSearch, FaChartPie, FaRocket, FaSpinner } from "react-icons/fa";
 
 export default function TradingPage() {
   const router = useRouter();
@@ -24,6 +24,8 @@ export default function TradingPage() {
   const [showHistory, setShowHistory] = useState(false);
   const [fundAmount, setFundAmount] = useState<number>(10000);
   const [showAddFunds, setShowAddFunds] = useState(false);
+  const [portfolioValue, setPortfolioValue] = useState<number | null>(null);
+  const [portfolioValueLoading, setPortfolioValueLoading] = useState(false);
 
   // Check authentication
   useEffect(() => {
@@ -116,7 +118,7 @@ export default function TradingPage() {
       return;
     }
 
-    if (!symbol || !qty || !price || price <= 0 || qty <= 0) {
+    if (!symbol || !qty || price <= 0 || qty <= 0) {
       setMessage('Please fill all fields with valid values');
       setMessageType('error');
       return;
@@ -297,6 +299,52 @@ export default function TradingPage() {
     );
   };
 
+  const quickStocks = [
+    { symbol: "RELIANCE", name: "Reliance" },
+    { symbol: "TCS", name: "TCS" },
+    { symbol: "INFY", name: "Infosys" },
+    { symbol: "HDFCBANK", name: "HDFC Bank" }
+  ];
+
+  const handleQuickBuy = async (stockSymbol: string) => {
+    setSymbol(stockSymbol);
+    setQty(1);
+    setSide('buy');
+    setMessage('');
+    setPriceLoading(true);
+    const fetchedPrice = await getCurrentStockPrice(stockSymbol);
+    if (fetchedPrice) {
+      setCurrentPrice(fetchedPrice);
+      setPrice(fetchedPrice);
+      setMessage(`Current price for ${stockSymbol}: ₹${fetchedPrice}`);
+      setMessageType('info');
+    } else {
+      setMessage(`Could not fetch price for ${stockSymbol}`);
+      setMessageType('error');
+    }
+    setPriceLoading(false);
+  };
+
+  useEffect(() => {
+    const fetchPortfolioValue = async () => {
+      if (!portfolio || !portfolio.positions) {
+        setPortfolioValue(null);
+        return;
+      }
+      setPortfolioValueLoading(true);
+      let total = portfolio.balance;
+      for (const [symbol, qty] of Object.entries(portfolio.positions)) {
+        if (qty > 0) {
+          const price = await getCurrentStockPrice(symbol);
+          if (price) total += price * qty;
+        }
+      }
+      setPortfolioValue(total);
+      setPortfolioValueLoading(false);
+    };
+    if (portfolio) fetchPortfolioValue();
+  }, [portfolio]);
+
   if (!userId) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 p-4 flex items-center justify-center">
@@ -320,6 +368,31 @@ export default function TradingPage() {
         {renderHeader()}
         <h1 className="text-4xl font-bold text-white mb-8 text-center">Stock Trading Platform</h1>
         
+        <div className="flex flex-wrap justify-center gap-4 mb-8 animate-fade-in">
+          {quickStocks.map(stock => (
+            <button
+              key={stock.symbol}
+              onClick={() => handleQuickBuy(stock.symbol)}
+              className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-600 text-white rounded-xl font-bold shadow-lg hover:scale-105 transition-transform"
+            >
+              Quick Buy {stock.name}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex justify-end items-center mb-4">
+          <div className="bg-white/10 backdrop-blur-lg rounded-xl px-6 py-3 border border-white/20 flex items-center gap-3">
+            <span className="text-lg text-white font-semibold">Portfolio Value:</span>
+            {portfolioValueLoading ? (
+              <FaSpinner className="animate-spin text-cyan-400" size={22} />
+            ) : (
+              <span className="text-2xl font-bold text-cyan-400">
+                {portfolioValue !== null ? formatCurrency(portfolioValue) : 'Calculating...'}
+              </span>
+            )}
+          </div>
+        </div>
+
         {renderErrorMessage()}
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
