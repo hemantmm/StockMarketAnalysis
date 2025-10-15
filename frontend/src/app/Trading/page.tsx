@@ -344,6 +344,29 @@ export default function TradingPage() {
     if (portfolio) fetchPortfolioValue();
   }, [portfolio]);
 
+  const handleExportTradeHistory = async () => {
+    if (!userId) return;
+    const res = await fetch(`/api/export/tradehistory/${userId}`);
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `tradehistory_${userId}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
+  const handleImportTradeHistory = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!userId || !e.target.files?.[0]) return;
+    const formData = new FormData();
+    formData.append('file', e.target.files[0]);
+    await fetch(`/api/import/tradehistory/${userId}`, {
+      method: 'POST',
+      body: formData
+    });
+    loadUserData();
+  };
+
   if (!userId) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 p-4 flex items-center justify-center">
@@ -531,6 +554,20 @@ export default function TradingPage() {
         </form>
 
         <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20 mb-8">
+          {/* Export/Import buttons */}
+          <div className="flex gap-4 mb-4">
+            <button
+              onClick={handleExportTradeHistory}
+              className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white"
+            >
+              Export Trade History CSV
+            </button>
+            <label className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white cursor-pointer">
+              Import Trade History CSV
+              <input type="file" accept=".csv" style={{ display: 'none' }} onChange={handleImportTradeHistory} />
+            </label>
+          </div>
+          
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold text-white">Trade History</h2>
             <button 
