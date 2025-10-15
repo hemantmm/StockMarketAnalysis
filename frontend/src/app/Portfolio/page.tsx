@@ -244,6 +244,29 @@ const Portfolio = () => {
     setRefreshing(false);
   };
 
+  const handleExportPortfolio = async () => {
+    if (!userId) return;
+    const res = await fetch(`/api/export/portfolio/${userId}`);
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `portfolio_${userId}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
+  const handleImportPortfolio = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!userId || !e.target.files?.[0]) return;
+    const formData = new FormData();
+    formData.append('file', e.target.files[0]);
+    await fetch(`/api/import/portfolio/${userId}`, {
+      method: 'POST',
+      body: formData
+    });
+    fetchPortfolioData();
+  };
+
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
@@ -304,6 +327,20 @@ const Portfolio = () => {
         </div>
 
         <div className="p-6 space-y-6">
+          {/* Export/Import buttons */}
+          <div className="flex gap-4 mb-4">
+            <button
+              onClick={handleExportPortfolio}
+              className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white"
+            >
+              Export Portfolio CSV
+            </button>
+            <label className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white cursor-pointer">
+              Import Portfolio CSV
+              <input type="file" accept=".csv" style={{ display: 'none' }} onChange={handleImportPortfolio} />
+            </label>
+          </div>
+          
           {loading ? (
             <div className="flex justify-center items-center py-20">
               <FaSpinner className="animate-spin text-4xl text-green-400" />
