@@ -256,6 +256,29 @@ const WatchlistPage = () => {
     });
   };
 
+  const handleExportWatchlist = async () => {
+    if (!userId) return;
+    const res = await fetch(`/api/export/watchlist/${userId}`);
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `watchlist_${userId}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
+  const handleImportWatchlist = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!userId || !e.target.files?.[0]) return;
+    const formData = new FormData();
+    formData.append('file', e.target.files[0]);
+    await fetch(`/api/import/watchlist/${userId}`, {
+      method: 'POST',
+      body: formData
+    });
+    fetchWatchlist();
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white relative overflow-hidden">
       <canvas
@@ -317,6 +340,20 @@ const WatchlistPage = () => {
       </div>
 
       <div className="container mx-auto pt-24 pb-10 px-4 relative z-10">
+        {/* Export/Import buttons */}
+        <div className="flex gap-4 mb-4">
+          <button
+            onClick={handleExportWatchlist}
+            className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white"
+          >
+            Export Watchlist CSV
+          </button>
+          <label className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white cursor-pointer">
+            Import Watchlist CSV
+            <input type="file" accept=".csv" style={{ display: 'none' }} onChange={handleImportWatchlist} />
+          </label>
+        </div>
+
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500">
             My Watchlist
