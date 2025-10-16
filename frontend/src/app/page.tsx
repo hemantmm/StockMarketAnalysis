@@ -210,7 +210,8 @@ const HomePage = () => {
     { label: "Price Alerts", icon: FaBell, action: () => router.push("/Notifier"), color: "from-purple-500 to-pink-600" },
     { label: "Active Stocks", icon: FaRocket, action: () => router.push("/ActiveStocks"), color: "from-orange-500 to-red-600" },
     { label: "Portfolio", icon: FaShieldAlt, action: () => router.push("/Portfolio"), color: "from-emerald-500 to-green-600" },
-    { label: "Trading", icon: FaChartLine, action: () => router.push("/Trading"), color: "from-pink-500 to-yellow-500" }
+    { label: "Trading", icon: FaChartLine, action: () => router.push("/Trading"), color: "from-pink-500 to-yellow-500" },
+    { label: "Best AI Platform 2024", icon: FaTrophy, action: () => router.push("/BestAIPlatform"), color: "from-yellow-400 to-purple-500" }
   ];
 
   return (
