@@ -395,6 +395,19 @@ const HomePage = () => {
               </div>
             </div>
           </div>
+
+          {/* Testimonial Section */}
+          <div className="max-w-3xl mx-auto my-16">
+            <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-400/20 rounded-2xl p-8 shadow-xl text-center">
+              <div className="flex items-center justify-center mb-4">
+              </div>
+              <blockquote className="text-xl font-semibold text-white mb-2">
+                “MarketSense has completely transformed my trading experience. The AI-powered insights are spot on and the platform is incredibly easy to use. Highly recommended for anyone serious about investing!”
+              </blockquote>
+              <div className="text-cyan-400 font-bold">— HMM., Chennai</div>
+              <div className="text-gray-400 text-sm mt-2">Active Trader & Investor</div>
+            </div>
+          </div>
         </div>
       </main>
 
