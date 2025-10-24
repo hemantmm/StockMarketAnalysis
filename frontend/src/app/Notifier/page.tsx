@@ -427,6 +427,31 @@ const NotifierPage = () => {
           </div>
         </div>
       </main>
+
+      {/* Testimonial Section */}
+      <div className="max-w-3xl mx-auto my-16">
+        <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-400/20 rounded-2xl p-8 shadow-xl text-center">
+          <div className="flex items-center justify-center mb-4">
+          </div>
+          <blockquote className="text-xl font-semibold text-white mb-2">
+            “The price alerts from MarketSense have helped me catch market moves I would have missed. The notifications are instant and reliable!”
+          </blockquote>
+          <div className="text-purple-400 font-bold">— SMM., USA</div>
+          <div className="text-gray-400 text-sm mt-2">Swing Trader</div>
+        </div>
+      </div>
+
+      <footer className="relative z-10 mt-20 px-6 py-8 border-t border-white/10 backdrop-blur-xl bg-black/20">
+        <div className="max-w-7xl mx-auto text-center">
+          <div className="flex items-center justify-center space-x-2 mb-4">
+            <FaShieldAlt className="text-green-400" />
+            <span className="text-sm text-gray-400">Enterprise-grade security & 24/7 monitoring</span>
+          </div>
+          <p className="text-gray-500 text-sm">
+            © 2025 MarketSense. All rights reserved. | Terms of Service | Privacy Policy
+          </p>
+        </div>
+      </footer>
     </div>
   );
 };
