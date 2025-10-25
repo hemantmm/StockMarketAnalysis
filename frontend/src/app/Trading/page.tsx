@@ -26,6 +26,17 @@ export default function TradingPage() {
   const [showAddFunds, setShowAddFunds] = useState(false);
   const [portfolioValue, setPortfolioValue] = useState<number | null>(null);
   const [portfolioValueLoading, setPortfolioValueLoading] = useState(false);
+  const [tradeAnalysis, setTradeAnalysis] = useState<{
+    totalTrades: number;
+    totalBuy: number;
+    totalSell: number;
+    mostTraded: string | null;
+    profit: number;
+    loss: number;
+    net: number;
+    winRate: number;
+    recommendation: string;
+  } | null>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -367,6 +378,68 @@ export default function TradingPage() {
     loadUserData();
   };
 
+  useEffect(() => {
+    if (!tradeHistory || tradeHistory.length === 0) {
+      setTradeAnalysis(null);
+      return;
+    }
+    let totalBuy = 0, totalSell = 0, profit = 0, loss = 0;
+    const stockCount: Record<string, number> = {};
+    let wins = 0, totalClosed = 0;
+    const buyMap: Record<string, { qty: number, price: number }[]> = {};
+
+    tradeHistory.forEach(trade => {
+      stockCount[trade.symbol] = (stockCount[trade.symbol] || 0) + 1;
+      if (trade.side === 'buy') {
+        totalBuy++;
+        if (!buyMap[trade.symbol]) buyMap[trade.symbol] = [];
+        buyMap[trade.symbol].push({ qty: trade.qty, price: trade.price });
+      } else if (trade.side === 'sell') {
+        totalSell++;
+        let qtyToSell = trade.qty;
+        let pl = 0;
+        if (buyMap[trade.symbol]) {
+          while (qtyToSell > 0 && buyMap[trade.symbol].length > 0) {
+            const buy = buyMap[trade.symbol][0];
+            const matchedQty = Math.min(qtyToSell, buy.qty);
+            pl += matchedQty * (trade.price - buy.price);
+            if (trade.price > buy.price) wins++;
+            totalClosed++;
+            if (matchedQty === buy.qty) {
+              buyMap[trade.symbol].shift();
+            } else {
+              buy.qty -= matchedQty;
+            }
+            qtyToSell -= matchedQty;
+          }
+        }
+        if (pl >= 0) profit += pl;
+        else loss += -pl;
+      }
+    });
+
+    const mostTraded = Object.entries(stockCount).sort((a, b) => b[1] - a[1])[0]?.[0] || null;
+    const net = profit - loss;
+    const winRate = totalClosed > 0 ? Math.round((wins / totalClosed) * 100) : 0;
+
+    let recommendation = "Keep trading and diversify!";
+    if (winRate > 70) recommendation = "Great job! Consider increasing position size on your best stocks.";
+    else if (winRate < 40 && totalClosed > 5) recommendation = "Review your strategy. Consider reducing trade frequency or using stop-loss.";
+    else if (mostTraded) recommendation = `Focus on analyzing ${mostTraded} for better results.`;
+
+    setTradeAnalysis({
+      totalTrades: tradeHistory.length,
+      totalBuy,
+      totalSell,
+      mostTraded,
+      profit,
+      loss,
+      net,
+      winRate,
+      recommendation
+    });
+  }, [tradeHistory]);
+
   if (!userId) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 p-4 flex items-center justify-center">
@@ -390,6 +463,25 @@ export default function TradingPage() {
         {renderHeader()}
         <h1 className="text-4xl font-bold text-white mb-8 text-center">Stock Trading Platform</h1>
         
+        {/* --- Trade Analysis Section --- */}
+        {tradeAnalysis && (
+          <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20 mb-8">
+            <h2 className="text-xl font-semibold text-cyan-300 mb-2">Your Trading Analysis</h2>
+            <div className="flex flex-wrap gap-6 text-white text-base">
+              <div>Total Trades: <span className="font-bold">{tradeAnalysis.totalTrades}</span></div>
+              <div>Buys: <span className="text-green-400 font-bold">{tradeAnalysis.totalBuy}</span></div>
+              <div>Sells: <span className="text-red-400 font-bold">{tradeAnalysis.totalSell}</span></div>
+              <div>Most Traded: <span className="font-bold">{tradeAnalysis.mostTraded || '-'}</span></div>
+              <div>Profit: <span className="text-green-400 font-bold">₹{tradeAnalysis.profit.toFixed(2)}</span></div>
+              <div>Loss: <span className="text-red-400 font-bold">₹{tradeAnalysis.loss.toFixed(2)}</span></div>
+              <div>Net: <span className={tradeAnalysis.net >= 0 ? "text-green-400 font-bold" : "text-red-400 font-bold"}>₹{tradeAnalysis.net.toFixed(2)}</span></div>
+              <div>Win Rate: <span className="font-bold">{tradeAnalysis.winRate}%</span></div>
+            </div>
+            <div className="mt-4 text-cyan-200 font-semibold">{tradeAnalysis.recommendation}</div>
+          </div>
+        )}
+        {/* --- End Trade Analysis Section --- */}
+
         <div className="flex flex-wrap justify-center gap-4 mb-8 animate-fade-in">
           {quickStocks.map(stock => (
             <button
