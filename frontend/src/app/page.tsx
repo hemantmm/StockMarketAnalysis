@@ -214,6 +214,60 @@ const HomePage = () => {
     { label: "Best AI Platform 2024", icon: FaTrophy, action: () => router.push("/BestAIPlatform"), color: "from-yellow-400 to-purple-500" }
   ];
 
+  const exampleWidgets = [
+    {
+      id: "topGainers",
+      title: "Top Gainers",
+      content: (
+        <ul className="text-green-400">
+          <li>RELIANCE +4.2%</li>
+          <li>TCS +3.8%</li>
+          <li>INFY +3.1%</li>
+        </ul>
+      ),
+    },
+    {
+      id: "news",
+      title: "Market News",
+      content: (
+        <ul className="text-blue-300">
+          <li>Sensex hits record high</li>
+          <li>RBI keeps rates unchanged</li>
+          <li>IT sector sees strong inflows</li>
+        </ul>
+      ),
+    },
+    {
+      id: "portfolioSummary",
+      title: "Portfolio Summary",
+      content: (
+        <div>
+          <div className="text-white">Total Value: <span className="text-cyan-400">₹2,50,000</span></div>
+          <div className="text-green-400">P&L: +₹12,500</div>
+        </div>
+      ),
+    },
+  ];
+  
+  const [widgets, setWidgets] = useState(exampleWidgets);
+
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, idx: number) => {
+    e.dataTransfer.setData("widgetIdx", idx.toString());
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>, idx: number) => {
+    const fromIdx = Number(e.dataTransfer.getData("widgetIdx"));
+    if (fromIdx === idx) return;
+    const updated = [...widgets];
+    const [removed] = updated.splice(fromIdx, 1);
+    updated.splice(idx, 0, removed);
+    setWidgets(updated);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
+
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
       <canvas
@@ -409,6 +463,30 @@ const HomePage = () => {
             </div>
           </div>
         </div>
+
+        {/* --- Customizable Dashboard Section --- */}
+        <div className="mb-20">
+          <h2 className="text-2xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
+            Your Dashboard
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {widgets.map((widget, idx) => (
+              <div
+                key={widget.id}
+                className="bg-white/10 border border-white/10 rounded-2xl p-6 shadow-lg cursor-move"
+                draggable
+                onDragStart={e => handleDragStart(e, idx)}
+                onDrop={e => handleDrop(e, idx)}
+                onDragOver={handleDragOver}
+              >
+                <div className="font-semibold text-lg mb-2 text-white">{widget.title}</div>
+                <div>{widget.content}</div>
+              </div>
+            ))}
+          </div>
+          <div className="text-xs text-gray-400 mt-2">Drag and drop widgets to customize your dashboard.</div>
+        </div>
+        {/* --- End Customizable Dashboard Section --- */}
       </main>
 
       <footer className="relative z-10 mt-20 px-6 py-8 border-t border-white/10 backdrop-blur-xl bg-black/20">
