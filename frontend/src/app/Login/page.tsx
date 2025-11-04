@@ -7,6 +7,7 @@ const LoginPage = () => {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
 
   const handleSignUpPage = () => {
     router.push('/SignUp');
@@ -14,6 +15,7 @@ const LoginPage = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMsg('');
     await axios.post(`https://stockmarketanalysis-node.onrender.com/Login`, {
       email,
       password,
@@ -22,18 +24,19 @@ const LoginPage = () => {
       console.log(response.data);
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('email', email);
+      // Use backend _id if available, fallback to email
       const user = {
         email: email,
         token: response.data.token,
         username: response.data.username || email.split('@')[0],
-        id: email
+        id: response.data.id || email
       };
       localStorage.setItem('user', JSON.stringify(user));
       router.push('/');
     })
     .catch((error) => {
       console.error('There was an error!', error);
-      alert('Login failed');
+      setErrorMsg('Login failed: ' + (error?.response?.data?.message || 'Unknown error'));
     });
   }
 
@@ -69,9 +72,15 @@ const LoginPage = () => {
             required
           />
         </div>
+        {errorMsg && (
+          <div className="mb-4 text-red-600 bg-red-100 rounded-lg px-4 py-2 text-center">
+            {errorMsg}
+          </div>
+        )}
         <button
           className="w-full py-3 rounded-2xl bg-orange-500 hover:bg-orange-600 text-white font-bold shadow-lg transition-all duration-300 mb-4 text-lg"
           onClick={handleLogin}
+          aria-label="Login"
         >
           Login
         </button>
@@ -80,6 +89,7 @@ const LoginPage = () => {
           <button
             className="w-full py-2 rounded-2xl bg-teal-100 text-orange-700 font-bold hover:bg-orange-100 hover:text-teal-700 shadow-md transition-all duration-300"
             onClick={handleSignUpPage}
+            aria-label="Sign Up"
           >
             Sign Up
           </button>
