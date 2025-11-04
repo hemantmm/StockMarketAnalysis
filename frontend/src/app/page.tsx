@@ -25,7 +25,10 @@ const HomePage = () => {
     const userStr = localStorage.getItem('user');
     if (userStr) {
       try {
-        setUser(JSON.parse(userStr));
+        const userObj = JSON.parse(userStr);
+        setUser(userObj);
+        // Optionally: set userId for downstream pages
+        // localStorage.setItem('userId', userObj.id || userObj._id || userObj.userId || '');
       } catch (e) {
         console.error('Error parsing user data', e);
       }
@@ -318,7 +321,7 @@ const HomePage = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
               <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300 group">
                 <div className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-2">
-                  {animatedNumbers.users.toLocaleString()}+
+                  {(animatedNumbers.users || 0).toLocaleString()}+
                 </div>
                 <div className="text-gray-400 font-medium">Active Traders</div>
                 <div className="w-full h-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full mt-4 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
@@ -326,7 +329,7 @@ const HomePage = () => {
               
               <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300 group">
                 <div className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent mb-2">
-                  {animatedNumbers.predictions.toLocaleString()}+
+                  {(animatedNumbers.predictions || 0).toLocaleString()}+
                 </div>
                 <div className="text-gray-400 font-medium">AI Predictions Made</div>
                 <div className="w-full h-1 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full mt-4 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
@@ -334,7 +337,7 @@ const HomePage = () => {
               
               <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300 group">
                 <div className="text-4xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent mb-2">
-                  {animatedNumbers.accuracy}%
+                  {animatedNumbers.accuracy || 0}%
                 </div>
                 <div className="text-gray-400 font-medium">Prediction Accuracy</div>
                 <div className="w-full h-1 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full mt-4 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
@@ -347,6 +350,7 @@ const HomePage = () => {
               <div
                 key={index}
                 onClick={item.action}
+                aria-label={item.label}
                 className="group relative overflow-hidden backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-500 cursor-pointer transform hover:scale-105 hover:-translate-y-2"
               >
                 <div className="relative z-10">
@@ -397,17 +401,19 @@ const HomePage = () => {
           </div>
 
           {/* Testimonial Section */}
-          <div className="max-w-3xl mx-auto my-16">
-            <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-400/20 rounded-2xl p-8 shadow-xl text-center">
-              <div className="flex items-center justify-center mb-4">
+          {user == null && (
+            <div className="max-w-3xl mx-auto my-16">
+              <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-400/20 rounded-2xl p-8 shadow-xl text-center">
+                <div className="flex items-center justify-center mb-4">
+                </div>
+                <blockquote className="text-xl font-semibold text-white mb-2">
+                  “MarketSense has completely transformed my trading experience. The AI-powered insights are spot on and the platform is incredibly easy to use. Highly recommended for anyone serious about investing!”
+                </blockquote>
+                <div className="text-cyan-400 font-bold">— HMM., Chennai</div>
+                <div className="text-gray-400 text-sm mt-2">Active Trader & Investor</div>
               </div>
-              <blockquote className="text-xl font-semibold text-white mb-2">
-                “MarketSense has completely transformed my trading experience. The AI-powered insights are spot on and the platform is incredibly easy to use. Highly recommended for anyone serious about investing!”
-              </blockquote>
-              <div className="text-cyan-400 font-bold">— HMM., Chennai</div>
-              <div className="text-gray-400 text-sm mt-2">Active Trader & Investor</div>
             </div>
-          </div>
+          )}
         </div>
       </main>
 
