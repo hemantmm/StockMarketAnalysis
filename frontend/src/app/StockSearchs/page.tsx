@@ -62,7 +62,7 @@ const StockSearchs = () => {
   const [userId, setUserId] = useState<string>("");
   const [isInWatchlist, setIsInWatchlist] = useState<boolean>(false);
   const [watchlistLoading, setWatchlistLoading] = useState<boolean>(false);
-  const [, setWatchlistError] = useState<string>("");
+  const [watchlistErrorMsg, setWatchlistErrorMsg] = useState<string>("");
   const [, setUser] = useState<any>(null);
   const [stockRecommendation, setStockRecommendation] = useState<{
     recommendation: string;
@@ -577,14 +577,13 @@ const StockSearchs = () => {
 
     // Check if user is logged in
     if (!userId) {
-      setWatchlistError("Please log in to add stocks to your watchlist");
-      // You could redirect to login page or show a login modal
+      setWatchlistErrorMsg("Please log in to add stocks to your watchlist");
       alert("Please log in to add stocks to your watchlist");
       return;
     }
 
     setWatchlistLoading(true);
-    setWatchlistError("");
+    setWatchlistErrorMsg("");
 
     try {
       console.log("Watchlist toggle for:", {
@@ -594,29 +593,24 @@ const StockSearchs = () => {
       });
 
       if (isInWatchlist) {
-        console.log("Removing from watchlist");
-        // Implement removal if needed - not shown in the current UI flow
       } else {
-        console.log("Adding to watchlist");
         const response = await addToWatchlist(
           userId,
           stockData.symbol || stockName,
           stockData.companyName || stockName
         );
-
-        console.log("Add to watchlist response:", response);
-
         if (response.success) {
           setIsInWatchlist(true);
+          setWatchlistErrorMsg("");
           alert(`${stockData.symbol} added to watchlist successfully!`);
         } else {
-          setWatchlistError(response.message || "Failed to add to watchlist");
+          setWatchlistErrorMsg(response.message || "Failed to add to watchlist");
           alert(response.message || "Failed to add to watchlist");
         }
       }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      console.error("Error toggling watchlist:", error);
-      setWatchlistError(
+      setWatchlistErrorMsg(
         "Failed to connect to watchlist service. Make sure the backend is running."
       );
       alert(
@@ -829,7 +823,9 @@ const StockSearchs = () => {
                     <div className="flex space-x-2">
                       <button
                         onClick={handleWatchlistToggle}
-                        disabled={watchlistLoading}
+                        disabled={watchlistLoading || !userId}
+                        aria-label={isInWatchlist ? "In Watchlist" : "Add to Watchlist"}
+                        title={!userId ? "Login required" : isInWatchlist ? "Already in Watchlist" : "Add to Watchlist"}
                         className={`p-3 rounded-xl ${
                           isInWatchlist
                             ? "bg-yellow-500/20 hover:bg-yellow-500/30 border-yellow-500/30"
@@ -849,6 +845,7 @@ const StockSearchs = () => {
                       </button>
                       <button
                         onClick={toggleDetails}
+                        aria-label="Show Stock Details"
                         className="p-3 rounded-xl bg-white/10 hover:bg-white/20 transition-colors border border-white/20 self-start"
                       >
                         <FaInfoCircle
@@ -857,6 +854,9 @@ const StockSearchs = () => {
                         />
                       </button>
                     </div>
+                    {watchlistErrorMsg && (
+                      <div className="mt-2 text-red-400 text-sm">{watchlistErrorMsg}</div>
+                    )}
                   </div>
                 </div>
 
