@@ -344,13 +344,16 @@ const WatchlistPage = () => {
         <div className="flex gap-4 mb-4">
           <button
             onClick={handleExportWatchlist}
-            className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white"
+            disabled={!userId}
+            aria-label="Export Watchlist CSV"
+            title={!userId ? "Login required" : "Export Watchlist CSV"}
+            className={`bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white ${!userId ? "opacity-50 cursor-not-allowed" : ""}`}
           >
             Export Watchlist CSV
           </button>
-          <label className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white cursor-pointer">
+          <label className={`bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white cursor-pointer ${!userId ? "opacity-50 cursor-not-allowed" : ""}`}>
             Import Watchlist CSV
-            <input type="file" accept=".csv" style={{ display: 'none' }} onChange={handleImportWatchlist} />
+            <input type="file" accept=".csv" style={{ display: 'none' }} onChange={handleImportWatchlist} disabled={!userId} aria-label="Import Watchlist CSV" />
           </label>
         </div>
 
@@ -440,6 +443,7 @@ const WatchlistPage = () => {
                       <div className="flex space-x-2">
                         <button
                           onClick={() => goToStockDetails(item.stock_symbol)}
+                          aria-label="View Details"
                           className="p-2 text-blue-400 hover:text-blue-300 transition-colors"
                           title="View Details"
                         >
@@ -447,6 +451,7 @@ const WatchlistPage = () => {
                         </button>
                         <button
                           onClick={() => handleRemoveFromWatchlist(item.stock_symbol, item.stock_name)}
+                          aria-label="Remove from Watchlist"
                           className="p-2 text-red-400 hover:text-red-300 transition-colors"
                           title="Remove from Watchlist"
                         >
