@@ -43,12 +43,14 @@ export default function TradingPage() {
       try {
         const token = localStorage.getItem('token');
         const email = localStorage.getItem('email');
-        
-        if (token && email) {
-          const userObj = { email, token };
-          setUserId(email);
+        const userStr = localStorage.getItem('user');
+        let userObj = null;
+        if (userStr) {
+          userObj = JSON.parse(userStr);
+        }
+        if (token && email && userObj) {
+          setUserId(userObj.id || userObj._id || userObj.userId || email);
           setUser(userObj);
-          
           localStorage.setItem('user', JSON.stringify(userObj));
         } else {
           setMessage('Please login to access trading features');
@@ -59,7 +61,6 @@ export default function TradingPage() {
         console.error('Auth check error:', err);
       }
     };
-
     checkAuth();
   }, [router]);
 
@@ -650,13 +651,16 @@ export default function TradingPage() {
           <div className="flex gap-4 mb-4">
             <button
               onClick={handleExportTradeHistory}
-              className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white"
+              disabled={!userId}
+              aria-label="Export Trade History CSV"
+              title={!userId ? "Login required" : "Export Trade History CSV"}
+              className={`bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white ${!userId ? "opacity-50 cursor-not-allowed" : ""}`}
             >
               Export Trade History CSV
             </button>
-            <label className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white cursor-pointer">
+            <label className={`bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white cursor-pointer ${!userId ? "opacity-50 cursor-not-allowed" : ""}`}>
               Import Trade History CSV
-              <input type="file" accept=".csv" style={{ display: 'none' }} onChange={handleImportTradeHistory} />
+              <input type="file" accept=".csv" style={{ display: 'none' }} onChange={handleImportTradeHistory} disabled={!userId} aria-label="Import Trade History CSV" />
             </label>
           </div>
           
