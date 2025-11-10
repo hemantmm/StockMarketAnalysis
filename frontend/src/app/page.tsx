@@ -207,6 +207,11 @@ const HomePage = () => {
     };
   }, []);
 
+  const navGridRef = useRef<HTMLDivElement>(null);
+  const handleGetStarted = () => {
+    navGridRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   const navigationItems = [
     { label: "Stock Search", icon: FaSearch, action: () => router.push("/StockSearchs"), color: "from-cyan-500 to-blue-600" },
     { label: "Watchlist", icon: FaStar, action: () => router.push("/Watchlist"), color: "from-yellow-400 to-amber-600" },
@@ -271,81 +276,84 @@ const HomePage = () => {
 
       <main className="relative z-10 px-6 py-12">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-20">
-            <div className="mb-8">
-              <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 backdrop-blur-sm mb-6">
-                <FaLightbulb className="text-yellow-400 mr-2 animate-pulse" />
-                <span className="text-sm font-medium">Powered by Advanced AI & Machine Learning</span>
-              </div>
-              
-              <h1 className="text-6xl md:text-8xl font-bold leading-tight mb-6">
-                <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-pulse">
-                  The Future
-                </span>
-                <br />
-                <span className="text-white">of Trading</span>
-                <br />
-                <span className="bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
-                  is Here
-                </span>
-              </h1>
-              
-              <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-                Experience the most advanced stock market analysis platform powered by AI. 
-                Get real-time insights, predictive analytics, and intelligent recommendations 
-                that give you the edge in today&apos;s dynamic markets.
-              </p>
+          {/* Hero Section */}
+          <section className="text-center mb-20 relative">
+            <div className="absolute inset-0 pointer-events-none z-0">
+              {/* Subtle animated gradient overlay */}
+              <div className="w-full h-full bg-gradient-to-br from-cyan-500/10 via-purple-500/10 to-pink-500/10 animate-pulse-slow"></div>
             </div>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16">
-              <button
-                onClick={() => router.push("/StockSearchs")}
-                className="group px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-2xl font-bold text-lg hover:shadow-2xl hover:shadow-cyan-500/25 transition-all duration-500 transform hover:scale-105 relative overflow-hidden"
-              >
-                <span className="relative z-10 flex items-center">
-                  <FaPlay className="mr-3" />
-                  Start Analysis
-                  <FaArrowRight className="ml-3 group-hover:translate-x-1 transition-transform" />
-                </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-cyan-600 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </button>
+            <div className="relative z-10">
+              <div className="mb-8">
+                <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 backdrop-blur-sm mb-6">
+                  <FaLightbulb className="text-yellow-400 mr-2 animate-pulse" />
+                  <span className="text-sm font-medium">Powered by Advanced AI & Machine Learning</span>
+                </div>
+                <h1 className="text-6xl md:text-8xl font-bold leading-tight mb-6">
+                  <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-pulse">
+                    The Future
+                  </span>
+                  <br />
+                  <span className="text-white">of Trading</span>
+                  <br />
+                  <span className="bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
+                    is Here
+                  </span>
+                </h1>
+                <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+                  Experience the most advanced stock market analysis platform powered by AI. 
+                  Get real-time insights, predictive analytics, and intelligent recommendations 
+                  that give you the edge in today&apos;s dynamic markets.
+                </p>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-10">
+                  <button
+                    onClick={handleGetStarted}
+                    className="group px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-2xl font-bold text-lg hover:shadow-2xl hover:shadow-cyan-500/25 transition-all duration-500 transform hover:scale-105 relative overflow-hidden"
+                  >
+                    <span className="relative z-10 flex items-center">
+                      <FaPlay className="mr-3" />
+                      Get Started
+                      <FaArrowRight className="ml-3 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-cyan-600 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </button>
+                  <button
+                    onClick={() => router.push("/ActiveStocks")}
+                    className="px-8 py-4 border-2 border-white/20 rounded-2xl font-bold text-lg hover:bg-white/5 hover:border-white/40 transition-all duration-300 backdrop-blur-sm"
+                  >
+                    View Live Markets
+                  </button>
+                </div>
+              </div>
               
-              <button
-                onClick={() => router.push("/ActiveStocks")}
-                className="px-8 py-4 border-2 border-white/20 rounded-2xl font-bold text-lg hover:bg-white/5 hover:border-white/40 transition-all duration-300 backdrop-blur-sm"
-              >
-                View Live Markets
-              </button>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+                <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300 group">
+                  <div className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-2">
+                    {(animatedNumbers.users || 0).toLocaleString()}+
+                  </div>
+                  <div className="text-gray-400 font-medium">Active Traders</div>
+                  <div className="w-full h-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full mt-4 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+                </div>
+                
+                <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300 group">
+                  <div className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent mb-2">
+                    {(animatedNumbers.predictions || 0).toLocaleString()}+
+                  </div>
+                  <div className="text-gray-400 font-medium">AI Predictions Made</div>
+                  <div className="w-full h-1 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full mt-4 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+                </div>
+                
+                <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300 group">
+                  <div className="text-4xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent mb-2">
+                    {animatedNumbers.accuracy || 0}%
+                  </div>
+                  <div className="text-gray-400 font-medium">Prediction Accuracy</div>
+                  <div className="w-full h-1 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full mt-4 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+                </div>
+              </div>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
-              <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300 group">
-                <div className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-2">
-                  {(animatedNumbers.users || 0).toLocaleString()}+
-                </div>
-                <div className="text-gray-400 font-medium">Active Traders</div>
-                <div className="w-full h-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full mt-4 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
-              </div>
-              
-              <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300 group">
-                <div className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent mb-2">
-                  {(animatedNumbers.predictions || 0).toLocaleString()}+
-                </div>
-                <div className="text-gray-400 font-medium">AI Predictions Made</div>
-                <div className="w-full h-1 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full mt-4 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
-              </div>
-              
-              <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300 group">
-                <div className="text-4xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent mb-2">
-                  {animatedNumbers.accuracy || 0}%
-                </div>
-                <div className="text-gray-400 font-medium">Prediction Accuracy</div>
-                <div className="w-full h-1 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full mt-4 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
+          </section>
+          {/* Navigation Grid */}
+          <div ref={navGridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
             {navigationItems.map((item, index) => (
               <div
                 key={index}
