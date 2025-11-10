@@ -1,3 +1,5 @@
+# MarketSense Frontend
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
@@ -19,6 +21,19 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+
+## Authentication & User ID
+
+- After login, your user information (including `id`) is stored in localStorage as `user`.
+- All trading, watchlist, and portfolio actions use this `id` for backend API calls.
+- If you encounter issues with authentication, ensure the backend is running and your browser allows localStorage.
+
+## Troubleshooting
+
+- If you see errors like "Could not connect to watchlist service" or "Authentication error", make sure:
+  - The backend server is running and accessible.
+  - You are logged in (check localStorage for the `user` object).
+  - Your browser is not blocking cookies or localStorage.
 
 ## Learn More
 
