@@ -209,8 +209,9 @@ const ActiveStocks = () => {
     const userStr = localStorage.getItem('user');
     if (userStr) {
       try {
-        setUser(JSON.parse(userStr));
-      } catch (e) {
+        const userObj = JSON.parse(userStr);
+        setUser(userObj);
+       } catch (e) {
         console.error('Error parsing user data', e);
       }
     }
@@ -263,6 +264,7 @@ const ActiveStocks = () => {
             ) : (
               <button
                 onClick={() => router.push('/Login')}
+                aria-label="Login"
                 className="px-6 py-2 bg-gradient-to-r from-orange-500 to-red-600 rounded-full font-semibold hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-300 transform hover:scale-105"
               >
                 Login
@@ -271,6 +273,8 @@ const ActiveStocks = () => {
             <button
               onClick={handleRefresh}
               disabled={refreshing}
+              aria-label="Refresh"
+              title={refreshing ? "Refreshing..." : "Refresh"}
               className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-600 rounded-full font-semibold hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 flex items-center space-x-2"
             >
               <FaSyncAlt className={`${refreshing ? 'animate-spin' : ''}`} />
@@ -282,6 +286,8 @@ const ActiveStocks = () => {
             <button
               onClick={handleRefresh}
               disabled={refreshing}
+              aria-label="Refresh"
+              title={refreshing ? "Refreshing..." : "Refresh"}
               className="p-2 bg-gradient-to-r from-orange-500 to-red-600 rounded-lg"
             >
               <FaSyncAlt className={`${refreshing ? 'animate-spin' : ''}`} />
@@ -295,6 +301,7 @@ const ActiveStocks = () => {
           <div className="flex items-center space-x-6">
             <button
               onClick={() => router.push("/")}
+              aria-label="Home"
               className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-300"
             >
               <FaHome className="text-cyan-400" />
@@ -302,6 +309,7 @@ const ActiveStocks = () => {
             </button>
             <button
               onClick={() => router.push("/StockSearchs")}
+              aria-label="Stock Search"
               className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-300"
             >
               <FaSearch className="text-purple-400" />
@@ -309,6 +317,7 @@ const ActiveStocks = () => {
             </button>
             <button
               onClick={() => router.push("/Portfolio")}
+              aria-label="Portfolio"
               className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-300"
             >
               <FaChartPie className="text-emerald-400" />
@@ -353,6 +362,8 @@ const ActiveStocks = () => {
               <button
                 onClick={handleRefresh}
                 disabled={refreshing}
+                aria-label="Refresh Data"
+                title={refreshing ? "Refreshing..." : "Refresh Data"}
                 className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-600 rounded-lg font-medium hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 flex items-center space-x-2"
               >
                 <FaSyncAlt className={`${refreshing ? 'animate-spin' : ''}`} />
