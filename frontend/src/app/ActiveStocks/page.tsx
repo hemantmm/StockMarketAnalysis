@@ -211,7 +211,8 @@ const ActiveStocks = () => {
       try {
         const userObj = JSON.parse(userStr);
         setUser(userObj);
-       } catch (e) {
+        // Optionally: localStorage.setItem('userId', userObj.id || userObj._id || userObj.userId || '');
+      } catch (e) {
         console.error('Error parsing user data', e);
       }
     }
@@ -398,7 +399,11 @@ const ActiveStocks = () => {
                         </h3>
                         <div className="flex items-center space-x-2">
                           <span className="text-2xl font-bold text-cyan-400">
-                            ₹{(stock.price || stock.currentPrice || 0).toLocaleString()}
+                            ₹{typeof stock.price === "number" && stock.price > 0
+                              ? stock.price.toLocaleString()
+                              : typeof stock.currentPrice === "number" && stock.currentPrice > 0
+                              ? stock.currentPrice.toLocaleString()
+                              : "N/A"}
                           </span>
                         </div>
                       </div>
