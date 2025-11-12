@@ -18,6 +18,7 @@ const HomePage = () => {
     predictions: 0,
     accuracy: 0
   });
+  const [showModal, setShowModal] = useState<{ type: string, open: boolean }>({ type: "", open: false });
 
   useEffect(() => {
     setIsClient(true);
@@ -326,23 +327,36 @@ const HomePage = () => {
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
-                <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300 group">
+                <div
+                  className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300 group cursor-pointer"
+                  aria-label="Active Traders"
+                  onClick={() => setShowModal({ type: "users", open: true })}
+                  title="Click to see more about active traders"
+                >
                   <div className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-2">
                     {(animatedNumbers.users || 0).toLocaleString()}+
                   </div>
                   <div className="text-gray-400 font-medium">Active Traders</div>
                   <div className="w-full h-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full mt-4 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
                 </div>
-                
-                <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300 group">
+                <div
+                  className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300 group cursor-pointer"
+                  aria-label="AI Predictions Made"
+                  onClick={() => setShowModal({ type: "predictions", open: true })}
+                  title="Click to see more about AI predictions"
+                >
                   <div className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent mb-2">
                     {(animatedNumbers.predictions || 0).toLocaleString()}+
                   </div>
                   <div className="text-gray-400 font-medium">AI Predictions Made</div>
                   <div className="w-full h-1 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full mt-4 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
                 </div>
-                
-                <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300 group">
+                <div
+                  className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300 group cursor-pointer"
+                  aria-label="Prediction Accuracy"
+                  onClick={() => setShowModal({ type: "accuracy", open: true })}
+                  title="Click to see more about prediction accuracy"
+                >
                   <div className="text-4xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent mb-2">
                     {animatedNumbers.accuracy || 0}%
                   </div>
@@ -360,6 +374,7 @@ const HomePage = () => {
                 onClick={item.action}
                 aria-label={item.label}
                 className="group relative overflow-hidden backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-500 cursor-pointer transform hover:scale-105 hover:-translate-y-2"
+                title={item.label}
               >
                 <div className="relative z-10">
                   <div className={`w-16 h-16 bg-gradient-to-r ${item.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
@@ -436,6 +451,30 @@ const HomePage = () => {
           </p>
         </div>
       </footer>
+
+      {/* Simple modal for demo purposes */}
+      {showModal.open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+          <div className="bg-white text-black rounded-xl p-8 shadow-xl max-w-sm w-full text-center">
+            <h2 className="text-2xl font-bold mb-4">
+              {showModal.type === "users" && "Active Traders"}
+              {showModal.type === "predictions" && "AI Predictions Made"}
+              {showModal.type === "accuracy" && "Prediction Accuracy"}
+            </h2>
+            <p>
+              {showModal.type === "users" && "Over 50,000 traders use MarketSense daily!"}
+              {showModal.type === "predictions" && "Our AI has made over 1,200,000 predictions!"}
+              {showModal.type === "accuracy" && "Our prediction accuracy is 94% based on backtests."}
+            </p>
+            <button
+              className="mt-6 px-4 py-2 bg-gradient-to-r from-cyan-500 to-purple-600 text-white rounded-full"
+              onClick={() => setShowModal({ type: "", open: false })}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
