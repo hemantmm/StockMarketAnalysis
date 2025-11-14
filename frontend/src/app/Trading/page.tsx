@@ -472,11 +472,11 @@ export default function TradingPage() {
               <div>Total Trades: <span className="font-bold">{tradeAnalysis.totalTrades}</span></div>
               <div>Buys: <span className="text-green-400 font-bold">{tradeAnalysis.totalBuy}</span></div>
               <div>Sells: <span className="text-red-400 font-bold">{tradeAnalysis.totalSell}</span></div>
-              <div>Most Traded: <span className="font-bold">{tradeAnalysis.mostTraded || '-'}</span></div>
+              <div>Most Traded: <span className="font-bold">{tradeAnalysis.mostTraded}</span></div>
               <div>Profit: <span className="text-green-400 font-bold">₹{tradeAnalysis.profit.toFixed(2)}</span></div>
               <div>Loss: <span className="text-red-400 font-bold">₹{tradeAnalysis.loss.toFixed(2)}</span></div>
               <div>Net: <span className={tradeAnalysis.net >= 0 ? "text-green-400 font-bold" : "text-red-400 font-bold"}>₹{tradeAnalysis.net.toFixed(2)}</span></div>
-              <div>Win Rate: <span className="font-bold">{tradeAnalysis.winRate}%</span></div>
+              <div>Win Rate: <span>{tradeAnalysis.winRate}%</span></div>
             </div>
             <div className="mt-4 text-cyan-200 font-semibold">{tradeAnalysis.recommendation}</div>
           </div>
@@ -501,9 +501,7 @@ export default function TradingPage() {
             {portfolioValueLoading ? (
               <FaSpinner className="animate-spin text-cyan-400" size={22} />
             ) : (
-              <span className="text-2xl font-bold text-cyan-400">
-                {portfolioValue !== null ? formatCurrency(portfolioValue) : 'Calculating...'}
-              </span>
+              <span className="text-cyan-400 font-bold">{portfolioValue !== null ? formatCurrency(portfolioValue) : "--"}</span>
             )}
           </div>
         </div>
