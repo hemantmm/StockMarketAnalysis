@@ -390,7 +390,9 @@ const ActiveStocks = () => {
                 {activeStocks.map((stock, index) => (
                   <div
                     key={index}
-                    className="group backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl p-6 hover:bg-white/10 hover:border-orange-500/30 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1"
+                    className="group backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl p-6 hover:bg-white/10 hover:border-orange-500/30 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 cursor-pointer"
+                    title={`View details for ${stock.company}`}
+                    onClick={() => router.push(`/StockSearchs?stock=${encodeURIComponent(stock.company)}`)}
                   >
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
@@ -418,6 +420,18 @@ const ActiveStocks = () => {
                         <span className="text-gray-400">Active</span>
                       </div>
                       <span className="text-gray-500">#{index + 1}</span>
+                    </div>
+                    <div className="mt-4 flex justify-end">
+                      <button
+                        onClick={e => {
+                          e.stopPropagation();
+                          router.push(`/StockSearchs?stock=${encodeURIComponent(stock.company)}`);
+                        }}
+                        className="px-4 py-2 bg-gradient-to-r from-orange-400 to-red-500 rounded-lg text-white font-semibold hover:scale-105 transition-transform"
+                        title={`Analyze ${stock.company}`}
+                      >
+                        View Details
+                      </button>
                     </div>
                   </div>
                 ))}
