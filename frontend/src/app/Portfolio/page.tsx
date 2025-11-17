@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { 
   FaHome, FaChartPie, FaArrowUp, FaArrowDown, 
-  FaRocket, FaTrophy, FaSpinner, FaSync
+  FaRocket, FaSpinner, FaSync
 } from "react-icons/fa";
 import { getPortfolio, getTradeHistory, getCurrentStockPrice } from "../services/tradingAPI";
 
@@ -280,40 +280,39 @@ const Portfolio = () => {
   };
 
   if (!isClient) return null;
-
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
       <canvas
         ref={canvasRef}
         className="absolute inset-0 z-0"
-        style={{ background: 'linear-gradient(135deg, #000000 0%, #111827 50%, #1f2937 100%)' }}
+        style={{
+          background: 'linear-gradient(135deg, #000000 0%, #111827 50%, #1f2937 100%)'
+        }}
       />
-      
       <div className="relative z-10">
+        {/* Header */}
         <div className="bg-gray-900/50 backdrop-blur-md border-b border-gray-700/50 p-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-4">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex items-center gap-4">
               <button
                 onClick={() => router.push('/')}
                 className="flex items-center space-x-2 text-green-400 hover:text-green-300 transition-colors"
               >
                 <FaHome />
-                <span>Home</span>
+                <span className="hidden sm:inline">Home</span>
               </button>
               <div className="flex items-center space-x-2">
                 <FaChartPie className="text-green-400" />
                 <h1 className="text-2xl font-bold">Portfolio</h1>
               </div>
             </div>
-            
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center gap-4">
               <div className="text-right">
                 <div className="text-gray-300">{currentTime.toLocaleTimeString()}</div>
                 <div className={`text-sm ${marketStatus === 'OPEN' ? 'text-green-400' : 'text-red-400'}`}>
                   Market {marketStatus}
                 </div>
               </div>
-              
               <button
                 onClick={refreshPortfolio}
                 disabled={refreshing}
@@ -326,129 +325,96 @@ const Portfolio = () => {
           </div>
         </div>
 
-        <div className="p-6 space-y-6">
-          {/* Export/Import buttons */}
-          <div className="flex gap-4 mb-4">
-            <button
-              onClick={handleExportPortfolio}
-              className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white"
-            >
-              Export Portfolio CSV
-            </button>
-            <label className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white cursor-pointer">
-              Import Portfolio CSV
-              <input type="file" accept=".csv" style={{ display: 'none' }} onChange={handleImportPortfolio} />
-            </label>
+        {/* Export/Import */}
+        <div className="p-6 flex flex-col md:flex-row gap-4 mb-4">
+          <button
+            onClick={handleExportPortfolio}
+            className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white"
+          >
+            Export Portfolio CSV
+          </button>
+          <label className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white cursor-pointer">
+            Import Portfolio CSV
+            <input
+              type="file"
+              accept=".csv"
+              style={{ display: 'none' }}
+              onChange={handleImportPortfolio}
+            />
+          </label>
+        </div>
+
+        {/* Summary Cards */}
+        <div className="px-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-gray-800/50 p-6 rounded-xl flex flex-col items-center">
+              <div className="text-gray-400 text-sm mb-2">Amount Invested</div>
+              <div className="text-2xl font-bold text-white">{formatCurrency(portfolioSummary.totalInvested)}</div>
+            </div>
+            <div className="bg-gray-800/50 p-6 rounded-xl flex flex-col items-center">
+              <div className="text-gray-400 text-sm mb-2">Current Value</div>
+              <div className="text-2xl font-bold text-white">{formatCurrency(portfolioSummary.currentValue)}</div>
+            </div>
+            <div className="bg-gray-800/50 p-6 rounded-xl flex flex-col items-center">
+              <div className="text-gray-400 text-sm mb-2">Total P&L</div>
+              <div className={`text-2xl font-bold flex items-center justify-center ${portfolioSummary.totalProfit >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                {portfolioSummary.totalProfit >= 0 ? <FaArrowUp className="mr-2" /> : <FaArrowDown className="mr-2" />}
+                {formatCurrency(Math.abs(portfolioSummary.totalProfit))}
+              </div>
+              <div className={`text-lg ${portfolioSummary.profitPercentage >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                {formatPercentage(portfolioSummary.profitPercentage)}
+              </div>
+            </div>
           </div>
-          
+        </div>
+
+        {/* Holdings */}
+        <div className="px-6">
+          <h2 className="text-xl font-semibold text-green-400 flex items-center mb-6">
+            <FaRocket className="mr-2" />
+            Holdings
+          </h2>
           {loading ? (
             <div className="flex justify-center items-center py-20">
               <FaSpinner className="animate-spin text-4xl text-green-400" />
               <span className="ml-4 text-xl">Loading portfolio...</span>
             </div>
+          ) : holdings.length === 0 ? (
+            <div className="text-center py-8 text-gray-400">
+              <FaChartPie className="text-6xl mx-auto mb-4 opacity-50" />
+              <p className="text-lg">No stocks</p>
+              <p className="text-sm">When market opens add the stock</p>
+            </div>
           ) : (
-            <>
-              <div className="bg-gray-900/30 backdrop-blur-md border border-gray-700/50 rounded-2xl p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <h2 className="text-xl font-semibold text-green-400 flex items-center">
-                      <FaTrophy className="mr-2" />
-                      Portfolio Summary
-                    </h2>
-                    
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="bg-gray-800/50 p-4 rounded-lg">
-                        <div className="text-gray-400 text-sm">Amount Invested</div>
-                        <div className="text-2xl font-bold text-white">
-                          {formatCurrency(portfolioSummary.totalInvested)}
-                        </div>
-                      </div>
-                      
-                      <div className="bg-gray-800/50 p-4 rounded-lg">
-                        <div className="text-gray-400 text-sm">Current Value</div>
-                        <div className="text-2xl font-bold text-white">
-                          {formatCurrency(portfolioSummary.currentValue)}
-                        </div>
-                      </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {holdings.map((holding, index) => (
+                <div key={index} className="bg-gray-800/50 rounded-xl p-6 border border-gray-700/30 flex flex-col gap-2">
+                  <div className="flex justify-between items-center mb-2">
+                    <div className="text-lg font-semibold text-white">{holding.symbol}</div>
+                    <div className="text-gray-400 text-sm">Qty: {holding.quantity}</div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    <div>
+                      <div className="text-gray-400">Invested</div>
+                      <div className="text-white font-semibold">{formatCurrency(holding.totalInvested)}</div>
+                    </div>
+                    <div>
+                      <div className="text-gray-400">Current Value</div>
+                      <div className="text-white font-semibold">{formatCurrency(holding.currentValue)}</div>
                     </div>
                   </div>
-                  
-                  <div className="flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="text-gray-400 text-sm mb-2">Total P&L</div>
-                      <div className={`text-4xl font-bold flex items-center justify-center ${
-                        portfolioSummary.totalProfit >= 0 ? 'text-green-400' : 'text-red-400'
-                      }`}>
-                        {portfolioSummary.totalProfit >= 0 ? <FaArrowUp className="mr-2" /> : <FaArrowDown className="mr-2" />}
-                        {formatCurrency(Math.abs(portfolioSummary.totalProfit))}
-                      </div>
-                      <div className={`text-lg ${
-                        portfolioSummary.profitPercentage >= 0 ? 'text-green-400' : 'text-red-400'
-                      }`}>
-                        {formatPercentage(portfolioSummary.profitPercentage)}
-                      </div>
+                  <div className="mt-2 flex flex-col items-end">
+                    <div className={`font-semibold flex items-center justify-end ${holding.profit >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                      {holding.profit >= 0 ? <FaArrowUp className="mr-1 text-xs" /> : <FaArrowDown className="mr-1 text-xs" />}
+                      {formatCurrency(Math.abs(holding.profit))}
+                    </div>
+                    <div className={`text-sm ${holding.profitPercentage >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                      {formatPercentage(holding.profitPercentage)}
                     </div>
                   </div>
                 </div>
-              </div>
-
-              <div className="bg-gray-900/30 backdrop-blur-md border border-gray-700/50 rounded-2xl p-6">
-                <h2 className="text-xl font-semibold text-green-400 flex items-center mb-6">
-                  <FaRocket className="mr-2" />
-                  Holdings
-                </h2>
-                
-                {holdings.length === 0 ? (
-                  <div className="text-center py-8 text-gray-400">
-                    <FaChartPie className="text-6xl mx-auto mb-4 opacity-50" />
-                    <p className="text-lg">No stocks</p>
-                    <p className="text-sm">When market opens add the stock</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {holdings.map((holding, index) => (
-                      <div key={index} className="bg-gray-800/50 rounded-lg p-4 border border-gray-700/30">
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
-                          <div>
-                            <div className="text-lg font-semibold text-white">{holding.symbol}</div>
-                            <div className="text-gray-400 text-sm">Qty: {holding.quantity}</div>
-                          </div>
-                          
-                          <div className="text-right md:text-left">
-                            <div className="text-gray-400 text-sm">Invested</div>
-                            <div className="text-white font-semibold">
-                              {formatCurrency(holding.totalInvested)}
-                            </div>
-                          </div>
-                          
-                          <div className="text-right md:text-left">
-                            <div className="text-gray-400 text-sm">Current Value</div>
-                            <div className="text-white font-semibold">
-                              {formatCurrency(holding.currentValue)}
-                            </div>
-                          </div>
-                          
-                          <div className="text-right">
-                            <div className="text-gray-400 text-sm">P&L</div>
-                            <div className={`font-semibold flex items-center justify-end ${
-                              holding.profit >= 0 ? 'text-green-400' : 'text-red-400'
-                            }`}>
-                              {holding.profit >= 0 ? <FaArrowUp className="mr-1 text-xs" /> : <FaArrowDown className="mr-1 text-xs" />}
-                              {formatCurrency(Math.abs(holding.profit))}
-                            </div>
-                            <div className={`text-sm ${
-                              holding.profitPercentage >= 0 ? 'text-green-400' : 'text-red-400'
-                            }`}>
-                              {formatPercentage(holding.profitPercentage)}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </>
+              ))}
+            </div>
           )}
         </div>
       </div>
