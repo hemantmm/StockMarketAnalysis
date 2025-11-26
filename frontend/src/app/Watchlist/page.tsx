@@ -21,6 +21,8 @@ const WatchlistPage = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [marketStatus, setMarketStatus] = useState("OPEN");
   const [user, setUser] = useState<any>(null);
+  const [removingAll, setRemovingAll] = useState(false);
+  const [showRemoveAllConfirm, setShowRemoveAllConfirm] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -231,7 +233,25 @@ const WatchlistPage = () => {
       await removeFromWatchlist(userId, symbol, name);
       fetchWatchlist();
     } catch (error) {
+      setError("Error removing from watchlist.");
       console.error("Error removing from watchlist:", error);
+    }
+  };
+
+  // Remove all stocks from watchlist
+  const handleRemoveAll = async () => {
+    setShowRemoveAllConfirm(false);
+    setRemovingAll(true);
+    try {
+      for (const item of watchlistItems) {
+        await removeFromWatchlist(userId, item.stock_symbol, item.stock_name);
+      }
+      fetchWatchlist();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      setError("Error removing all items from watchlist.");
+    } finally {
+      setRemovingAll(false);
     }
   };
 
@@ -355,7 +375,45 @@ const WatchlistPage = () => {
             Import Watchlist CSV
             <input type="file" accept=".csv" style={{ display: 'none' }} onChange={handleImportWatchlist} disabled={!userId} aria-label="Import Watchlist CSV" />
           </label>
+          {watchlistItems.length > 0 && userId && (
+            <button
+              onClick={() => setShowRemoveAllConfirm(true)}
+              disabled={removingAll}
+              className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-white"
+              title="Remove all stocks from watchlist"
+            >
+              {removingAll ? "Removing..." : "Remove All"}
+            </button>
+          )}
         </div>
+
+        {/* Remove All Confirmation Dialog */}
+        {showRemoveAllConfirm && (
+          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+            <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 max-w-sm w-full text-center">
+              <h2 className="text-lg font-bold mb-2 text-red-400">Remove All?</h2>
+              <p className="mb-4 text-gray-300">
+                Are you sure you want to remove all stocks from your watchlist?
+              </p>
+              <div className="flex justify-center gap-4">
+                <button
+                  onClick={handleRemoveAll}
+                  className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-white"
+                  disabled={removingAll}
+                >
+                  Yes, Remove All
+                </button>
+                <button
+                  onClick={() => setShowRemoveAllConfirm(false)}
+                  className="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded text-white"
+                  disabled={removingAll}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500">
@@ -413,7 +471,9 @@ const WatchlistPage = () => {
             <FaStar className="mx-auto text-4xl text-yellow-400 mb-4" />
             <h2 className="text-xl font-semibold mb-2">Your watchlist is empty</h2>
             <p className="text-gray-400 mb-4">
-              Add stocks from the search page to keep track of them here
+              {removingAll
+                ? "All stocks have been removed from your watchlist."
+                : "Add stocks from the search page to keep track of them here"}
             </p>
             <button
               onClick={() => router.push("/StockSearchs")}
