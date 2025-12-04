@@ -11,6 +11,7 @@ import {
   FaHome,
   FaChartPie,
   FaStar,
+  FaTrash,
 } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import fetchStockData from "../stockDataAPI";
@@ -76,6 +77,7 @@ const StockSearchs = () => {
     trendStrength?: string;
   } | null>(null);
   const [recommendationLoading, setRecommendationLoading] = useState(false);
+  const [showInputError, setShowInputError] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -490,8 +492,24 @@ const StockSearchs = () => {
   );
 
   const handleSearchClick = () => {
+    if (!stockName.trim()) {
+      setShowInputError(true);
+      setError("Please enter a stock symbol");
+      return;
+    }
+    setShowInputError(false);
     handleSearch();
   };
+
+  const handleClearInput = () => {
+    setStockName("");
+    setError("");
+    setShowInputError(false);
+    setStockData(null);
+    setStockPriceData([]);
+    setStockRecommendation(null);
+  };
+
 
   useEffect(() => {
     if (stockName && stockData && !loading && !initialLoadRef.current) {
@@ -710,6 +728,15 @@ const StockSearchs = () => {
                 <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
                   Stock Search & Analysis
                 </h2>
+                <button
+                  onClick={handleClearInput}
+                  className="px-2 py-2 rounded-lg bg-gray-700 text-white hover:bg-gray-800 transition-all duration-200 flex items-center justify-center"
+                  type="button"
+                  title="Clear"
+                  style={{ height: "44px", width: "44px", minWidth: "44px" }}
+                >
+                  <FaTrash size={18} />
+                </button>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4 sm:mb-6">
@@ -717,8 +744,12 @@ const StockSearchs = () => {
                   type="text"
                   placeholder="Enter stock symbol (e.g., TCS, RELIANCE)"
                   value={stockName}
-                  onChange={(e) => setStockName(e.target.value)}
-                  className="lg:col-span-2 px-4 sm:px-6 py-3 sm:py-4 rounded-xl border border-white/20 bg-white/5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm text-base sm:text-lg"
+                  onChange={(e) => {
+                    setStockName(e.target.value);
+                    setShowInputError(false);
+                    setError("");
+                  }}
+                  className={`lg:col-span-2 px-4 sm:px-6 py-3 sm:py-4 rounded-xl border border-white/20 bg-white/5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm text-base sm:text-lg ${showInputError ? "border-red-500" : ""}`}
                 />
                 <select
                   value={periodWise}
@@ -736,7 +767,9 @@ const StockSearchs = () => {
                   ))}
                 </select>
               </div>
-
+              {showInputError && (
+                <div className="mt-2 text-red-400 text-sm">Please enter a stock symbol to search.</div>
+              )}
               <button
                 onClick={handleSearchClick}
                 disabled={loading}
