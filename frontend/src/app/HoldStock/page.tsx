@@ -533,10 +533,10 @@ const HoldStock = () => {
         <div className="max-w-7xl mx-auto text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
             <FaHeart className="text-purple-400" />
-            <span className="text-sm text-gray-400">Enterprise-grade security & 24/7 monitoring</span>
+            <span className="text-sm text-gray-400">Smart investment decisions with some insights</span>
           </div>
           <p className="text-gray-500 text-sm">
-            © 2025 MarketSense. All rights reserved. | Terms of Service | Privacy Policy
+            © 2025 MarketSense. Professional investment advisory powered by advanced analytics.
           </p>
         </div>
       </footer>

@@ -74,17 +74,6 @@ const BestAIPlatformPage = () => {
           <div className="text-gray-400 text-sm mt-2">Professional Trader</div>
         </div>
       </div>
-      <footer className="relative z-10 mt-20 px-6 py-8 border-t border-white/10 backdrop-blur-xl bg-black/20">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <FaTrophy className="text-yellow-400" />
-            <span className="text-sm text-gray-400">Enterprise-grade security & 24/7 monitoring</span>
-          </div>
-          <p className="text-gray-500 text-sm">
-            © 2025 MarketSense. All rights reserved. | Terms of Service | Privacy Policy
-          </p>
-        </div>
-      </footer>
     </div>
   );
 };
