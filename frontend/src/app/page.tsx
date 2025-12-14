@@ -380,22 +380,22 @@ const HomePage = () => {
                   <div className={`w-16 h-16 bg-gradient-to-r ${item.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
                     <item.icon className="text-2xl text-white" />
                   </div>
-                  
                   <h3 className="text-xl font-bold mb-3 text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-cyan-400 group-hover:to-purple-500 group-hover:bg-clip-text transition-all duration-300">
                     {item.label}
                   </h3>
-                  
                   <p className="text-gray-400 text-sm leading-relaxed">
-                    {index === 0 && "Advanced AI-powered stock analysis with predictive insights"}
-                    {index === 1 && "Smart price alerts with customizable notifications"}
-                    {index === 2 && "Real-time market data and live stock tracking"}
+                    {item.label === "Stock Search" && "Advanced AI-powered stock analysis with predictive insights"}
+                    {item.label === "Watchlist" && "Track your favorite stocks and get instant updates"}
+                    {item.label === "Price Alerts" && "Smart price alerts with customizable notifications"}
+                    {item.label === "Active Stocks" && "Real-time market data and live stock tracking"}
+                    {item.label === "Portfolio" && "Manage your investment portfolio securely"}
+                    {item.label === "Trading" && "Trade stocks with AI-powered recommendations"}
+                    {item.label === "Best AI Platform 2024" && "Award-winning AI platform for traders"}
                   </p>
-                  
                   <div className="flex items-center mt-4 text-sm font-medium text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     Explore <FaArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </div>
-                
                 <div className={`absolute inset-0 bg-gradient-to-r ${item.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>
               </div>
             ))}
