@@ -1,15 +1,13 @@
-from fastapi import FastAPI, Request, HTTPException, UploadFile, File
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from model import train_model, get_hold_advice, get_price_at_holding_period, get_target_price, get_stock_recommendation
 from pydantic import BaseModel
 import json
 from watchlist import add_to_watchlist, remove_from_watchlist, get_user_watchlist, is_in_watchlist
 from indianstock_api import get_watchlist_data
-from fastapi.responses import JSONResponse, Response
+from fastapi.responses import JSONResponse
 import os
 import papertrading
-import csv
-import io
 
 app = FastAPI()
 
@@ -250,87 +248,6 @@ def add_funds(request: FundsRequest):
         "message": f"Successfully added {request.amount} to your account",
         "newBalance": user['balance']
     }
-
-@app.get("/export/portfolio/{user_id}")
-def export_portfolio_csv(user_id: str):
-    performance = papertrading.get_performance(user_id)
-    output = io.StringIO()
-    writer = csv.writer(output)
-    writer.writerow(["Symbol", "Quantity"])
-    for symbol, qty in performance["positions"].items():
-        writer.writerow([symbol, qty])
-    csv_data = output.getvalue()
-    return Response(content=csv_data, media_type="text/csv", headers={"Content-Disposition": f"attachment; filename=portfolio_{user_id}.csv"})
-
-@app.get("/export/watchlist/{user_id}")
-def export_watchlist_csv(user_id: str):
-    watchlist = get_user_watchlist(user_id)
-    output = io.StringIO()
-    writer = csv.writer(output)
-    writer.writerow(["Stock Symbol", "Stock Name"])
-    for item in watchlist:
-        writer.writerow([item["stock_symbol"], item["stock_name"]])
-    csv_data = output.getvalue()
-    return Response(content=csv_data, media_type="text/csv", headers={"Content-Disposition": f"attachment; filename=watchlist_{user_id}.csv"})
-
-@app.get("/export/tradehistory/{user_id}")
-def export_tradehistory_csv(user_id: str):
-    history = papertrading.get_trading_history(user_id)
-    output = io.StringIO()
-    writer = csv.writer(output)
-    writer.writerow(["Symbol", "Qty", "Price", "Side", "Timestamp"])
-    for trade in history:
-        writer.writerow([trade["symbol"], trade["qty"], trade["price"], trade["side"], trade["timestamp"]])
-    csv_data = output.getvalue()
-    return Response(content=csv_data, media_type="text/csv", headers={"Content-Disposition": f"attachment; filename=tradehistory_{user_id}.csv"})
-
-@app.post("/import/portfolio/{user_id}")
-async def import_portfolio_csv(user_id: str, file: UploadFile = File(...)):
-    content = await file.read()
-    reader = csv.reader(io.StringIO(content.decode()))
-    next(reader, None)  # skip header
-    data = papertrading.load_data()
-    user = data.setdefault(user_id, {'balance': 100000, 'trades': [], 'positions': {}})
-    for row in reader:
-        if len(row) >= 2:
-            symbol, qty = row[0], int(row[1])
-            user['positions'][symbol] = qty
-    papertrading.save_data(data)
-    return {"success": True, "message": "Portfolio imported"}
-
-@app.post("/import/watchlist/{user_id}")
-async def import_watchlist_csv(user_id: str, file: UploadFile = File(...)):
-    content = await file.read()
-    reader = csv.reader(io.StringIO(content.decode()))
-    next(reader, None)  # skip header
-    from watchlist import _load_watchlist, _save_watchlist
-    watchlist_data = _load_watchlist()
-    for row in reader:
-        if len(row) >= 2:
-            stock_symbol, stock_name = row[0], row[1]
-            watchlist_data.append({"user_id": user_id, "stock_symbol": stock_symbol, "stock_name": stock_name})
-    _save_watchlist(watchlist_data)
-    return {"success": True, "message": "Watchlist imported"}
-
-@app.post("/import/tradehistory/{user_id}")
-async def import_tradehistory_csv(user_id: str, file: UploadFile = File(...)):
-    content = await file.read()
-    reader = csv.reader(io.StringIO(content.decode()))
-    next(reader, None)  # skip header
-    data = papertrading.load_data()
-    user = data.setdefault(user_id, {'balance': 100000, 'trades': [], 'positions': {}})
-    for row in reader:
-        if len(row) >= 5:
-            symbol, qty, price, side, timestamp = row
-            user['trades'].append({
-                'symbol': symbol,
-                'qty': int(qty),
-                'price': float(price),
-                'side': side,
-                'timestamp': timestamp
-            })
-    papertrading.save_data(data)
-    return {"success": True, "message": "Trade history imported"}
 
 # source venv/bin/activate
 # uvicorn main:app --reload

@@ -60,10 +60,12 @@ export const removeFromWatchlist = async (
   stockName: string
 ): Promise<WatchlistResponse> => {
   try {
-    const response = await api.post(`/watchlist/remove`, {
-      user_id: userId,
-      stock_symbol: stockSymbol,
-      stock_name: stockName
+    const response = await api.delete(`/watchlist/remove`, {
+      data: {
+        user_id: userId,
+        stock_symbol: stockSymbol,
+        stock_name: stockName
+      }
     });
     return response.data;
   } catch (error) {
