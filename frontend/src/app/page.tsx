@@ -214,13 +214,14 @@ const HomePage = () => {
   };
 
   const navigationItems = [
-    { label: "Stock Search", icon: FaSearch, action: () => router.push("/StockSearchs"), color: "from-cyan-500 to-blue-600" },
-    { label: "Watchlist", icon: FaStar, action: () => router.push("/Watchlist"), color: "from-yellow-400 to-amber-600" },
-    { label: "Price Alerts", icon: FaBell, action: () => router.push("/Notifier"), color: "from-purple-500 to-pink-600" },
-    { label: "Active Stocks", icon: FaRocket, action: () => router.push("/ActiveStocks"), color: "from-orange-500 to-red-600" },
-    { label: "Portfolio", icon: FaShieldAlt, action: () => router.push("/Portfolio"), color: "from-emerald-500 to-green-600" },
-    { label: "Trading", icon: FaChartLine, action: () => router.push("/Trading"), color: "from-pink-500 to-yellow-500" },
-    { label: "Best AI Platform 2024", icon: FaTrophy, action: () => router.push("/BestAIPlatform"), color: "from-yellow-400 to-purple-500" }
+    { label: "Stock Search", icon: FaSearch, action: () => router.push("/StockSearchs"), color: "from-cyan-500 to-blue-600", description: "Advanced AI-powered stock analysis with predictive insights" },
+    { label: "Watchlist", icon: FaStar, action: () => router.push("/Watchlist"), color: "from-yellow-400 to-amber-600", description: "Track your favorite stocks and get instant updates" },
+    { label: "Price Alerts", icon: FaBell, action: () => router.push("/Notifier"), color: "from-purple-500 to-pink-600", description: "Smart price alerts with customizable notifications" },
+    { label: "Active Stocks", icon: FaRocket, action: () => router.push("/ActiveStocks"), color: "from-orange-500 to-red-600", description: "Real-time market data and live stock tracking" },
+    { label: "Portfolio", icon: FaShieldAlt, action: () => router.push("/Portfolio"), color: "from-emerald-500 to-green-600", description: "Manage your investment portfolio securely" },
+    { label: "Trading", icon: FaChartLine, action: () => router.push("/Trading"), color: "from-pink-500 to-purple-500", description: "Execute trades with AI-powered recommendations" },
+    { label: "Hold Stock Advisor", icon: FaLightbulb, action: () => router.push("/HoldStock"), color: "from-indigo-500 to-purple-600", description: "Get expert advice on holding or selling stocks" },
+    { label: "Best AI Platform 2024", icon: FaTrophy, action: () => router.push("/BestAIPlatform"), color: "from-yellow-400 to-orange-500", description: "Award-winning AI platform for traders" }
   ];
 
   return (
@@ -367,7 +368,7 @@ const HomePage = () => {
             </div>
           </section>
           {/* Navigation Grid */}
-          <div ref={navGridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
+          <div ref={navGridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
             {navigationItems.map((item, index) => (
               <div
                 key={index}
@@ -384,13 +385,7 @@ const HomePage = () => {
                     {item.label}
                   </h3>
                   <p className="text-gray-400 text-sm leading-relaxed">
-                    {item.label === "Stock Search" && "Advanced AI-powered stock analysis with predictive insights"}
-                    {item.label === "Watchlist" && "Track your favorite stocks and get instant updates"}
-                    {item.label === "Price Alerts" && "Smart price alerts with customizable notifications"}
-                    {item.label === "Active Stocks" && "Real-time market data and live stock tracking"}
-                    {item.label === "Portfolio" && "Manage your investment portfolio securely"}
-                    {item.label === "Trading" && "Trade stocks with AI-powered recommendations"}
-                    {item.label === "Best AI Platform 2024" && "Award-winning AI platform for traders"}
+                    {item.description}
                   </p>
                   <div className="flex items-center mt-4 text-sm font-medium text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     Explore <FaArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
@@ -399,6 +394,49 @@ const HomePage = () => {
                 <div className={`absolute inset-0 bg-gradient-to-r ${item.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>
               </div>
             ))}
+          </div>
+          
+          <div className="mb-20">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
+                Why Choose MarketSense?
+              </h2>
+              <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+                Experience the future of trading with our cutting-edge features
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300">
+                <div className="w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center mb-6">
+                  <FaChartLine className="text-3xl text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-4">AI-Powered Analysis</h3>
+                <p className="text-gray-400 leading-relaxed">
+                  Leverage advanced machine learning algorithms for accurate market predictions and insights
+                </p>
+              </div>
+
+              <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300">
+                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl flex items-center justify-center mb-6">
+                  <FaBell className="text-3xl text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-4">Real-Time Alerts</h3>
+                <p className="text-gray-400 leading-relaxed">
+                  Never miss a trading opportunity with instant notifications on price movements
+                </p>
+              </div>
+
+              <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300">
+                <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center mb-6">
+                  <FaShieldAlt className="text-3xl text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-4">Secure Trading</h3>
+                <p className="text-gray-400 leading-relaxed">
+                  Enterprise-grade security to protect your investments and personal data
+                </p>
+              </div>
+            </div>
           </div>
 
           <div className="text-center">
@@ -428,6 +466,11 @@ const HomePage = () => {
             <div className="max-w-3xl mx-auto my-16">
               <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-400/20 rounded-2xl p-8 shadow-xl text-center">
                 <div className="flex items-center justify-center mb-4">
+                  <FaStar className="text-yellow-400 text-2xl" />
+                  <FaStar className="text-yellow-400 text-2xl" />
+                  <FaStar className="text-yellow-400 text-2xl" />
+                  <FaStar className="text-yellow-400 text-2xl" />
+                  <FaStar className="text-yellow-400 text-2xl" />
                 </div>
                 <blockquote className="text-xl font-semibold text-white mb-2">
                   “MarketSense has completely transformed my trading experience. The AI-powered insights are spot on and the platform is incredibly easy to use. Highly recommended for anyone serious about investing!”
