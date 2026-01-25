@@ -76,6 +76,17 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-900 via-purple-900 to-black flex items-center justify-center py-12 px-4">
+      {/* Add Home button in top-left corner */}
+      <div className="absolute top-6 left-6 z-20">
+        <button
+          onClick={() => router.push("/")}
+          className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-white border border-white/20 transition-all duration-300"
+        >
+          <FaHome />
+          <span className="hidden sm:inline">Home</span>
+        </button>
+      </div>
+      
       <div className="relative w-full max-w-xl mx-auto">
         <div className="absolute -top-16 left-1/2 -translate-x-1/2 z-10">
           <div className="relative group">
