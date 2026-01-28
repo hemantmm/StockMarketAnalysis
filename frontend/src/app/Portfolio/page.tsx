@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { 
   FaHome, FaChartPie, FaArrowUp, FaArrowDown, 
-  FaRocket, FaSpinner, FaSync
+  FaRocket, FaSpinner, FaSync, FaChartLine
 } from "react-icons/fa";
 import { getPortfolio, getTradeHistory, getCurrentStockPrice } from "../services/tradingAPI";
 
@@ -300,6 +300,13 @@ const Portfolio = () => {
               >
                 <FaHome />
                 <span className="hidden sm:inline">Home</span>
+              </button>
+              <button
+                onClick={() => router.push('/Trading')}
+                className="flex items-center space-x-2 text-cyan-400 hover:text-cyan-300 transition-colors"
+              >
+                <FaChartLine />
+                <span className="hidden sm:inline">Trading</span>
               </button>
               <div className="flex items-center space-x-2">
                 <FaChartPie className="text-green-400" />
