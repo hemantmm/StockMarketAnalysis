@@ -79,6 +79,14 @@ The frontend will run on [http://localhost:3000](http://localhost:3000).
 - Register or log in to access trading and portfolio features.
 - Explore stock analysis, trading simulator, watchlist, and more.
 
+## Security
+
+This project uses the latest version of Next.js to ensure security. If you encounter any security warnings:
+
+1. Update Next.js: `npm install next@latest`
+2. Update dependencies: `npm update`
+3. Check for vulnerabilities: `npm audit`
+
 ## Contributing
 
 Contributions are welcome! Please open issues or pull requests for bug fixes, features, or improvements.
