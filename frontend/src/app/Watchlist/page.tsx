@@ -2,7 +2,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { FaHome, FaSearch, FaRocket, FaChartPie, FaStar, FaSyncAlt, FaTrash, FaInfoCircle } from "react-icons/fa";
+import { FaHome, FaSearch, FaChartPie, FaStar, FaSyncAlt, FaTrash, FaInfoCircle, FaDownload, FaUpload, FaChartLine } from "react-icons/fa";
 import { getUserWatchlist, WatchlistItem, removeFromWatchlist } from "../watchlistAPI";
 import fetchStockDetails from "../stockNameAPI";
 import UserMenu from "../components/UserMenu";
@@ -18,12 +18,11 @@ const WatchlistPage = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string>("");
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [marketStatus, setMarketStatus] = useState("OPEN");
   const [user, setUser] = useState<any>(null);
   const [removingAll, setRemovingAll] = useState(false);
   const [showRemoveAllConfirm, setShowRemoveAllConfirm] = useState(false);
 
+  // Animated background effect
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -39,6 +38,7 @@ const WatchlistPage = () => {
       size: number;
       opacity: number;
       color: string;
+      type: "currency" | "graph" | "dot";
     }> = [];
 
     const resizeCanvas = () => {
@@ -60,7 +60,8 @@ const WatchlistPage = () => {
           vy: (Math.random() - 0.5) * 0.3,
           size: Math.random() * 2 + 0.5,
           opacity: Math.random() * 0.4 + 0.1,
-          color: ['#00ffff', '#ff00ff', '#ffff00', '#00ff00', '#8b5cf6', '#06b6d4'][Math.floor(Math.random() * 6)]
+          color: ['#00ffff', '#ff00ff', '#ffff00', '#00ff00', '#8b5cf6', '#06b6d4'][Math.floor(Math.random() * 6)],
+          type: ["currency", "graph", "dot"][Math.floor(Math.random() * 3)] as "currency" | "graph" | "dot",
         });
       }
     };
@@ -69,45 +70,80 @@ const WatchlistPage = () => {
     window.addEventListener('resize', resizeCanvas);
 
     const handleMouseMove = (e: MouseEvent) => {
-      mouseRef.current = {
-        x: e.clientX,
-        y: e.clientY
-      };
+      mouseRef.current = { x: e.clientX, y: e.clientY };
     };
     
     window.addEventListener('mousemove', handleMouseMove);
 
+    const drawParticle = (particle: (typeof particles)[0]) => {
+      ctx.save();
+      ctx.globalAlpha = particle.opacity;
+      ctx.fillStyle = particle.color;
+
+      if (particle.type === "currency") {
+        ctx.font = `${particle.size * 3}px monospace`;
+        const symbols = ["₹", "$", "€", "¥", "£", "₿"];
+        ctx.fillText(symbols[Math.floor(Math.random() * symbols.length)], particle.x, particle.y);
+      } else if (particle.type === "graph") {
+        ctx.strokeStyle = particle.color;
+        ctx.lineWidth = 0.8;
+        ctx.beginPath();
+        for (let i = 0; i < 4; i++) {
+          const x = particle.x + i * 1.5;
+          const y = particle.y + Math.sin(Date.now() * 0.001 + i) * 2;
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      } else {
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    };
+
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
+      // Draw grid
+      ctx.strokeStyle = "rgba(0, 255, 255, 0.03)";
+      ctx.lineWidth = 0.5;
+      const gridSize = window.innerWidth < 768 ? 40 : 60;
+      for (let x = 0; x < canvas.width; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+      for (let y = 0; y < canvas.height; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+
+      // Mouse glow effect
+      const gradient = ctx.createRadialGradient(
+        mouseRef.current.x, mouseRef.current.y, 0,
+        mouseRef.current.x, mouseRef.current.y, 150
+      );
+      gradient.addColorStop(0, "rgba(255, 215, 0, 0.15)");
+      gradient.addColorStop(0.5, "rgba(255, 165, 0, 0.05)");
+      gradient.addColorStop(1, "rgba(255, 215, 0, 0)");
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
       particles.forEach((p, index) => {
         p.x += p.vx;
         p.y += p.vy;
         
-        if (p.x < 0) p.x = canvas.width;
-        if (p.x > canvas.width) p.x = 0;
-        if (p.y < 0) p.y = canvas.height;
-        if (p.y > canvas.height) p.y = 0;
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
         
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = p.color + Math.round(p.opacity * 255).toString(16).padStart(2, '0');
-        ctx.fill();
+        drawParticle(p);
         
-        const dx = mouseRef.current.x - p.x;
-        const dy = mouseRef.current.y - p.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        if (distance < 100) {
-          p.vx += dx / distance * 0.01;
-          p.vy += dy / distance * 0.01;
-        }
-        
-        const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
-        if (speed > 1) {
-          p.vx = (p.vx / speed) * 1;
-          p.vy = (p.vy / speed) * 1;
-        }
-        
+        // Connect nearby particles
         for (let i = index + 1; i < particles.length; i++) {
           const p2 = particles[i];
           const dx = p.x - p2.x;
@@ -116,7 +152,7 @@ const WatchlistPage = () => {
           
           if (distance < 100) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(100, 100, 255, ${(1 - distance / 100) * 0.2})`;
+            ctx.strokeStyle = `rgba(255, 215, 0, ${(1 - distance / 100) * 0.15})`;
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
             ctx.stroke();
@@ -136,36 +172,15 @@ const WatchlistPage = () => {
   }, []);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-      const hour = new Date().getHours();
-      setMarketStatus(hour >= 9 && hour < 16 ? "OPEN" : "CLOSED");
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
-    const storedUserId = localStorage.getItem("userId");
-    if (storedUserId) {
-      setUserId(storedUserId);
-    }
-  }, []);
-
-  // Update this useEffect to handle authentication properly
-  useEffect(() => {
-    // Check if user is logged in
     const userStr = localStorage.getItem('user');
     if (userStr) {
       try {
         const userData = JSON.parse(userStr);
         setUser(userData);
-        // Set userId from user data - use the appropriate field from your user object
         const id = userData.id || userData._id || userData.userId;
         if (id) {
           setUserId(id);
-          console.log("User authenticated, ID:", id);
         } else {
-          console.error("User object missing ID field:", userData);
           setError("User authentication issue. Please log in again.");
         }
       } catch (e) {
@@ -173,10 +188,7 @@ const WatchlistPage = () => {
         setError("Authentication error. Please log in again.");
       }
     } else {
-      console.log("No user logged in");
       setError("Please log in to view your watchlist");
-      // Optionally redirect to login page
-      // router.push('/Login');
     }
   }, []);
 
@@ -188,16 +200,13 @@ const WatchlistPage = () => {
     
     setRefreshing(true);
     try {
-      console.log('Fetching watchlist for user:', userId);
       const items = await getUserWatchlist(userId);
-      console.log('Received watchlist items:', items);
       setWatchlistItems(items);
       
       if (items.length > 0) {
         const stockData: Record<string, any> = {};
         for (const item of items) {
           try {
-            console.log(`Fetching details for ${item.stock_symbol}`);
             const data = await fetchStockDetails(item.stock_symbol);
             stockData[item.stock_symbol] = data;
           } catch (error) {
@@ -209,13 +218,11 @@ const WatchlistPage = () => {
             };
           }
         }
-        
-        console.log('Stock data fetched:', stockData);
         setWatchlistData(stockData);
       }
     } catch (error) {
       console.error("Error fetching watchlist:", error);
-      setError("Could not connect to watchlist service. Please make sure the backend server is running.");
+      setError("Could not connect to watchlist service.");
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -238,7 +245,6 @@ const WatchlistPage = () => {
     }
   };
 
-  // Remove all stocks from watchlist
   const handleRemoveAll = async () => {
     setShowRemoveAllConfirm(false);
     setRemovingAll(true);
@@ -247,8 +253,7 @@ const WatchlistPage = () => {
         await removeFromWatchlist(userId, item.stock_symbol, item.stock_name);
       }
       fetchWatchlist();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
+    } catch {
       setError("Error removing all items from watchlist.");
     } finally {
       setRemovingAll(false);
@@ -257,23 +262,6 @@ const WatchlistPage = () => {
 
   const goToStockDetails = (symbol: string) => {
     router.push(`/StockSearchs?stock=${symbol}`);
-  };
-
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
-  };
-
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
   };
 
   const handleExportWatchlist = async () => {
@@ -300,263 +288,336 @@ const WatchlistPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white relative overflow-hidden">
+    <div className="min-h-screen bg-black text-white relative overflow-hidden">
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 w-full h-full pointer-events-none"
+        className="fixed inset-0 pointer-events-none"
+        style={{ zIndex: 1 }}
       />
-      
-      <div className="absolute top-0 left-0 w-full p-4 flex items-center justify-between z-10">
-        <div className="flex items-center">
-          <button
-            className="mr-4 text-blue-400 hover:text-blue-300 transition-colors"
-            onClick={() => router.push("/")}
-          >
-            <FaHome size={24} />
-          </button>
-          <button
-            className="mr-4 text-purple-400 hover:text-purple-300 transition-colors"
-            onClick={() => router.push("/ActiveStocks")}
-          >
-            <FaRocket size={24} />
-          </button>
-          <button
-            className="mr-4 text-green-400 hover:text-green-300 transition-colors"
-            onClick={() => router.push("/StockSearchs")}
-          >
-            <FaSearch size={24} />
-          </button>
-          <button
-            className="text-yellow-400 hover:text-yellow-300 transition-colors"
-            onClick={() => router.push("/Portfolio")}
-          >
-            <FaChartPie size={24} />
-          </button>
-        </div>
-        <div>
-          <div className="text-sm text-gray-400">
-            {formatDate(currentTime)} | {formatTime(currentTime)}
-          </div>
-          <div className="flex items-center justify-end">
-            <div
-              className={`text-xs font-bold ${
-                marketStatus === "OPEN" ? "text-green-400" : "text-red-400"
-              } mr-3`}
-            >
-              Market {marketStatus}
-            </div>
-            {user ? (
-              <UserMenu user={user} />
-            ) : (
-              <button 
-                onClick={() => router.push('/Login')}
-                className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-full"
-              >
-                Login
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
 
-      <div className="container mx-auto pt-24 pb-10 px-4 relative z-10">
-        {/* Export/Import buttons */}
-        <div className="flex gap-4 mb-4">
-          <button
-            onClick={handleExportWatchlist}
-            disabled={!userId}
-            aria-label="Export Watchlist CSV"
-            title={!userId ? "Login required" : "Export Watchlist CSV"}
-            className={`bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white ${!userId ? "opacity-50 cursor-not-allowed" : ""}`}
-          >
-            Export Watchlist CSV
-          </button>
-          <label className={`bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white cursor-pointer ${!userId ? "opacity-50 cursor-not-allowed" : ""}`}>
-            Import Watchlist CSV
-            <input type="file" accept=".csv" style={{ display: 'none' }} onChange={handleImportWatchlist} disabled={!userId} aria-label="Import Watchlist CSV" />
-          </label>
-          {watchlistItems.length > 0 && userId && (
-            <button
-              onClick={() => setShowRemoveAllConfirm(true)}
-              disabled={removingAll}
-              className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-white"
-              title="Remove all stocks from watchlist"
-            >
-              {removingAll ? "Removing..." : "Remove All"}
-            </button>
-          )}
-        </div>
-
-        {/* Remove All Confirmation Dialog */}
-        {showRemoveAllConfirm && (
-          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-            <div className="bg-gray-900 border border-gray-700 rounded-lg p-6 max-w-sm w-full text-center">
-              <h2 className="text-lg font-bold mb-2 text-red-400">Remove All?</h2>
-              <p className="mb-4 text-gray-300">
-                Are you sure you want to remove all stocks from your watchlist?
-              </p>
-              <div className="flex justify-center gap-4">
-                <button
-                  onClick={handleRemoveAll}
-                  className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-white"
-                  disabled={removingAll}
-                >
-                  Yes, Remove All
-                </button>
-                <button
-                  onClick={() => setShowRemoveAllConfirm(false)}
-                  className="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded text-white"
-                  disabled={removingAll}
-                >
-                  Cancel
-                </button>
+      <div className="relative z-10 min-h-screen flex flex-col">
+        {/* Header */}
+        <header className="relative z-50 px-4 sm:px-6 py-4 backdrop-blur-xl bg-black/20 border-b border-white/10 shrink-0">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div className="flex items-center space-x-3 sm:space-x-4">
+              <div className="relative">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-xl flex items-center justify-center transform rotate-12 hover:rotate-0 transition-transform duration-500">
+                  <FaStar className="text-black text-lg sm:text-xl" />
+                </div>
+                <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-green-400 rounded-full animate-pulse"></div>
+              </div>
+              <div>
+                <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 bg-clip-text text-transparent">
+                  My Watchlist
+                </h1>
+                <p className="text-xs text-gray-400 hidden sm:block">
+                  Track Your Favorite Stocks
+                </p>
               </div>
             </div>
-          </div>
-        )}
 
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500">
-            My Watchlist
-          </h1>
-          <button
-            onClick={fetchWatchlist}
-            disabled={refreshing || !userId}
-            className={`flex items-center gap-2 px-4 py-2 rounded-md transition-colors ${
-              refreshing || !userId
-                ? "bg-blue-700/50 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700"
-            }`}
-          >
-            {refreshing ? <FaSyncAlt className="animate-spin" /> : <FaSyncAlt />}
-            <span>Refresh</span>
-          </button>
-        </div>
-
-        {/* Display error message if there's an error or user is not logged in */}
-        {error && (
-          <div className="bg-red-500/30 text-white p-4 rounded-lg mb-6">
-            <p>{error}</p>
-            {!userId && (
-              <button 
-                onClick={() => router.push('/Login')}
-                className="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md"
+            <div className="flex items-center space-x-2 sm:space-x-4 w-full sm:w-auto">
+              <button
+                onClick={() => router.push("/")}
+                className="flex-1 sm:flex-initial px-4 sm:px-6 py-2 bg-gradient-to-r from-gray-600 to-gray-700 rounded-full font-semibold hover:shadow-lg hover:shadow-gray-500/25 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 text-sm sm:text-base"
               >
-                Log In
+                <FaHome className="text-xs sm:text-sm" />
+                <span className="hidden sm:inline">Home</span>
               </button>
-            )}
-          </div>
-        )}
-
-        {loading && !error ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-          </div>
-        ) : !userId ? (
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-8 text-center">
-            <FaStar className="mx-auto text-4xl text-yellow-400 mb-4" />
-            <h2 className="text-xl font-semibold mb-2">Login Required</h2>
-            <p className="text-gray-400 mb-4">
-              Please log in to view and manage your watchlist
-            </p>
-            <button
-              onClick={() => router.push("/Login")}
-              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
-            >
-              Log In
-            </button>
-          </div>
-        ) : watchlistItems.length === 0 ? (
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-8 text-center">
-            <FaStar className="mx-auto text-4xl text-yellow-400 mb-4" />
-            <h2 className="text-xl font-semibold mb-2">Your watchlist is empty</h2>
-            <p className="text-gray-400 mb-4">
-              {removingAll
-                ? "All stocks have been removed from your watchlist."
-                : "Add stocks from the search page to keep track of them here"}
-            </p>
-            <button
-              onClick={() => router.push("/StockSearchs")}
-              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-md transition-colors inline-flex items-center gap-2"
-            >
-              <FaSearch />
-              <span>Search Stocks</span>
-            </button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {watchlistItems.map((item) => {
-              const stockData = watchlistData[item.stock_symbol];
-              return (
-                <div
-                  key={item.stock_symbol}
-                  className="bg-gray-800/50 backdrop-blur-sm rounded-lg overflow-hidden hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300 border border-gray-700"
+              <button
+                onClick={() => router.push("/StockSearchs")}
+                className="flex-1 sm:flex-initial px-4 sm:px-6 py-2 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full font-semibold hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 text-sm sm:text-base"
+              >
+                <FaSearch className="text-xs sm:text-sm" />
+                <span className="hidden sm:inline">Search</span>
+              </button>
+              <button
+                onClick={() => router.push("/Portfolio")}
+                className="flex-1 sm:flex-initial px-4 sm:px-6 py-2 bg-gradient-to-r from-emerald-500 to-green-600 rounded-full font-semibold hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 text-sm sm:text-base"
+              >
+                <FaChartPie className="text-xs sm:text-sm" />
+                <span className="hidden sm:inline">Portfolio</span>
+              </button>
+              {user ? (
+                <UserMenu user={user} />
+              ) : (
+                <button 
+                  onClick={() => router.push('/Login')}
+                  className="px-4 sm:px-6 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full font-semibold hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300 transform hover:scale-105 text-sm sm:text-base"
                 >
-                  <div className="p-4">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="font-bold text-xl text-white">
-                          {item.stock_name}
-                        </h3>
-                        <p className="text-sm text-gray-400">{item.stock_symbol}</p>
-                      </div>
-                      <div className="flex space-x-2">
-                        <button
-                          onClick={() => goToStockDetails(item.stock_symbol)}
-                          aria-label="View Details"
-                          className="p-2 text-blue-400 hover:text-blue-300 transition-colors"
-                          title="View Details"
-                        >
-                          <FaInfoCircle />
-                        </button>
-                        <button
-                          onClick={() => handleRemoveFromWatchlist(item.stock_symbol, item.stock_name)}
-                          aria-label="Remove from Watchlist"
-                          className="p-2 text-red-400 hover:text-red-300 transition-colors"
-                          title="Remove from Watchlist"
-                        >
-                          <FaTrash />
-                        </button>
-                      </div>
+                  Login
+                </button>
+              )}
+            </div>
+          </div>
+        </header>
+
+        {/* Main Content */}
+        <main className="relative z-10 px-4 sm:px-6 py-8 sm:py-12 flex-1">
+          <div className="max-w-7xl mx-auto">
+            {/* Title Section */}
+            <div className="text-center mb-8 sm:mb-12">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-4">
+                <span className="bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 bg-clip-text text-transparent">
+                  Your Watchlist
+                </span>
+              </h1>
+              <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto">
+                Keep track of your favorite stocks and monitor their performance
+              </p>
+            </div>
+
+            {/* Action Bar */}
+            <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8">
+              <div className="flex flex-wrap gap-3 items-center justify-between">
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    onClick={handleExportWatchlist}
+                    disabled={!userId || watchlistItems.length === 0}
+                    className={`px-4 py-2 rounded-xl font-semibold flex items-center gap-2 transition-all duration-300 ${
+                      !userId || watchlistItems.length === 0
+                        ? "bg-gray-700/50 text-gray-500 cursor-not-allowed"
+                        : "bg-gradient-to-r from-blue-500 to-cyan-600 hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-105"
+                    }`}
+                  >
+                    <FaDownload className="text-sm" />
+                    <span>Export CSV</span>
+                  </button>
+                  
+                  <label className={`px-4 py-2 rounded-xl font-semibold flex items-center gap-2 transition-all duration-300 cursor-pointer ${
+                    !userId
+                      ? "bg-gray-700/50 text-gray-500 cursor-not-allowed"
+                      : "bg-gradient-to-r from-purple-500 to-pink-600 hover:shadow-lg hover:shadow-purple-500/25 transform hover:scale-105"
+                  }`}>
+                    <FaUpload className="text-sm" />
+                    <span>Import CSV</span>
+                    <input 
+                      type="file" 
+                      accept=".csv" 
+                      className="hidden" 
+                      onChange={handleImportWatchlist} 
+                      disabled={!userId} 
+                    />
+                  </label>
+
+                  {watchlistItems.length > 0 && userId && (
+                    <button
+                      onClick={() => setShowRemoveAllConfirm(true)}
+                      disabled={removingAll}
+                      className="px-4 py-2 rounded-xl font-semibold flex items-center gap-2 bg-gradient-to-r from-red-500 to-rose-600 hover:shadow-lg hover:shadow-red-500/25 transition-all duration-300 transform hover:scale-105"
+                    >
+                      <FaTrash className="text-sm" />
+                      <span>{removingAll ? "Removing..." : "Clear All"}</span>
+                    </button>
+                  )}
+                </div>
+
+                <button
+                  onClick={fetchWatchlist}
+                  disabled={refreshing || !userId}
+                  className={`px-4 py-2 rounded-xl font-semibold flex items-center gap-2 transition-all duration-300 ${
+                    refreshing || !userId
+                      ? "bg-gray-700/50 text-gray-500 cursor-not-allowed"
+                      : "bg-gradient-to-r from-green-500 to-emerald-600 hover:shadow-lg hover:shadow-green-500/25 transform hover:scale-105"
+                  }`}
+                >
+                  <FaSyncAlt className={refreshing ? "animate-spin" : ""} />
+                  <span>Refresh</span>
+                </button>
+              </div>
+
+              {watchlistItems.length > 0 && (
+                <div className="mt-4 pt-4 border-t border-white/10">
+                  <p className="text-gray-400 text-sm">
+                    Tracking <span className="text-yellow-400 font-semibold">{watchlistItems.length}</span> stock{watchlistItems.length !== 1 ? 's' : ''}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Remove All Confirmation Dialog */}
+            {showRemoveAllConfirm && (
+              <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 sm:p-8 max-w-md w-full">
+                  <div className="text-center">
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-500/20 flex items-center justify-center">
+                      <FaTrash className="text-red-400 text-2xl" />
                     </div>
-                    
-                    <div className="mt-3 pt-3 border-t border-gray-700">
-                      {stockData ? (
-                        <div>
-                          <div className="flex justify-between items-center mb-1">
-                            <span className="text-gray-400">Current Price</span>
-                            <span className="font-semibold">
-                              ₹{stockData.currentPrice?.NSE || 'N/A'}
-                            </span>
-                          </div>
-                          {stockData.percentChange !== undefined && (
-                            <div className="flex justify-between items-center">
-                              <span className="text-gray-400">Change</span>
-                              <span
-                                className={`font-semibold ${
-                                  stockData.percentChange >= 0
-                                    ? "text-green-400"
-                                    : "text-red-400"
-                                }`}
-                              >
-                                {stockData.percentChange >= 0 ? "+" : ""}
-                                {stockData.percentChange}%
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      ) : (
-                        <div className="text-center py-2 text-gray-500">
-                          Loading data...
-                        </div>
-                      )}
+                    <h2 className="text-xl font-bold mb-2 text-white">Clear Watchlist?</h2>
+                    <p className="text-gray-400 mb-6">
+                      This will remove all {watchlistItems.length} stocks from your watchlist. This action cannot be undone.
+                    </p>
+                    <div className="flex gap-3 justify-center">
+                      <button
+                        onClick={() => setShowRemoveAllConfirm(false)}
+                        className="px-6 py-2 rounded-xl bg-gray-700 hover:bg-gray-600 transition-colors font-semibold"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={handleRemoveAll}
+                        className="px-6 py-2 rounded-xl bg-gradient-to-r from-red-500 to-rose-600 hover:shadow-lg hover:shadow-red-500/25 transition-all font-semibold"
+                      >
+                        Yes, Clear All
+                      </button>
                     </div>
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            )}
+
+            {/* Error Message */}
+            {error && (
+              <div className="backdrop-blur-xl bg-red-500/20 border border-red-500/30 rounded-2xl p-4 sm:p-6 mb-6">
+                <p className="text-red-300 text-center">{error}</p>
+                {!userId && (
+                  <div className="text-center mt-4">
+                    <button 
+                      onClick={() => router.push('/Login')}
+                      className="px-6 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/25 transition-all"
+                    >
+                      Log In
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Loading State */}
+            {loading && !error ? (
+              <div className="flex flex-col items-center justify-center py-20">
+                <div className="relative">
+                  <div className="w-16 h-16 border-4 border-yellow-400/30 rounded-full"></div>
+                  <div className="w-16 h-16 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin absolute top-0"></div>
+                </div>
+                <p className="mt-4 text-gray-400">Loading your watchlist...</p>
+              </div>
+            ) : !userId ? (
+              /* Login Required State */
+              <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 sm:p-12 text-center">
+                <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-r from-yellow-400/20 to-amber-500/20 flex items-center justify-center">
+                  <FaStar className="text-yellow-400 text-3xl" />
+                </div>
+                <h2 className="text-2xl font-bold mb-3 text-white">Login Required</h2>
+                <p className="text-gray-400 mb-6 max-w-md mx-auto">
+                  Sign in to create and manage your personal watchlist
+                </p>
+                <button
+                  onClick={() => router.push("/Login")}
+                  className="px-8 py-3 bg-gradient-to-r from-yellow-400 to-amber-500 text-black rounded-xl font-bold hover:shadow-lg hover:shadow-yellow-500/25 transition-all duration-300 transform hover:scale-105"
+                >
+                  Sign In
+                </button>
+              </div>
+            ) : watchlistItems.length === 0 ? (
+              /* Empty Watchlist State */
+              <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 sm:p-12 text-center">
+                <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-r from-yellow-400/20 to-amber-500/20 flex items-center justify-center">
+                  <FaStar className="text-yellow-400 text-3xl" />
+                </div>
+                <h2 className="text-2xl font-bold mb-3 text-white">Your Watchlist is Empty</h2>
+                <p className="text-gray-400 mb-6 max-w-md mx-auto">
+                  Start tracking stocks by adding them from the search page
+                </p>
+                <button
+                  onClick={() => router.push("/StockSearchs")}
+                  className="px-8 py-3 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl font-bold hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-300 transform hover:scale-105 inline-flex items-center gap-2"
+                >
+                  <FaSearch />
+                  <span>Search Stocks</span>
+                </button>
+              </div>
+            ) : (
+              /* Watchlist Grid */
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                {watchlistItems.map((item) => {
+                  const stockData = watchlistData[item.stock_symbol];
+                  const priceChange = stockData?.percentChange || 0;
+                  const isPositive = priceChange >= 0;
+                  
+                  return (
+                    <div
+                      key={item.stock_symbol}
+                      className="group backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-yellow-400/50 hover:shadow-lg hover:shadow-yellow-500/10 transition-all duration-300"
+                    >
+                      <div className="p-5 sm:p-6">
+                        {/* Header */}
+                        <div className="flex justify-between items-start mb-4">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-gradient-to-r from-yellow-400/20 to-amber-500/20 text-yellow-400 border border-yellow-400/30">
+                                {item.stock_symbol}
+                              </span>
+                            </div>
+                            <h3 className="font-bold text-lg text-white group-hover:text-yellow-400 transition-colors line-clamp-1">
+                              {item.stock_name}
+                            </h3>
+                          </div>
+                          <div className="flex gap-1">
+                            <button
+                              onClick={() => goToStockDetails(item.stock_symbol)}
+                              className="p-2 rounded-lg bg-white/5 hover:bg-cyan-500/20 text-gray-400 hover:text-cyan-400 transition-all"
+                              title="View Details"
+                            >
+                              <FaChartLine size={16} />
+                            </button>
+                            <button
+                              onClick={() => handleRemoveFromWatchlist(item.stock_symbol, item.stock_name)}
+                              className="p-2 rounded-lg bg-white/5 hover:bg-red-500/20 text-gray-400 hover:text-red-400 transition-all"
+                              title="Remove from Watchlist"
+                            >
+                              <FaTrash size={16} />
+                            </button>
+                          </div>
+                        </div>
+                        
+                        {/* Price Section */}
+                        <div className="pt-4 border-t border-white/10">
+                          {stockData ? (
+                            <div className="space-y-3">
+                              <div className="flex justify-between items-center">
+                                <span className="text-gray-400 text-sm">Current Price</span>
+                                <span className="font-bold text-xl text-white">
+                                  ₹{stockData.currentPrice?.NSE || 'N/A'}
+                                </span>
+                              </div>
+                              {stockData.percentChange !== undefined && (
+                                <div className="flex justify-between items-center">
+                                  <span className="text-gray-400 text-sm">Change</span>
+                                  <div className={`flex items-center gap-1 px-2 py-1 rounded-lg text-sm font-semibold ${
+                                    isPositive 
+                                      ? "bg-green-500/20 text-green-400" 
+                                      : "bg-red-500/20 text-red-400"
+                                  }`}>
+                                    {isPositive ? "+" : ""}{priceChange}%
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          ) : (
+                            <div className="flex items-center justify-center py-4">
+                              <div className="w-5 h-5 border-2 border-yellow-400/30 border-t-yellow-400 rounded-full animate-spin"></div>
+                              <span className="ml-2 text-gray-500 text-sm">Loading...</span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Quick Action */}
+                        <button
+                          onClick={() => goToStockDetails(item.stock_symbol)}
+                          className="w-full mt-4 py-2.5 rounded-xl bg-gradient-to-r from-yellow-400/10 to-amber-500/10 border border-yellow-400/20 text-yellow-400 font-semibold hover:from-yellow-400/20 hover:to-amber-500/20 transition-all flex items-center justify-center gap-2"
+                        >
+                          <FaInfoCircle size={14} />
+                          <span>View Analysis</span>
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
-        )}
+        </main>
       </div>
     </div>
   );
