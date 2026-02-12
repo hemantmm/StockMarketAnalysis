@@ -99,7 +99,7 @@ const HomePage = () => {
         vy: (Math.random() - 0.5) * 0.3,
         size: Math.random() * 2 + 0.5,
         opacity: Math.random() * 0.4 + 0.1,
-        color: ['#00ffff', '#ff00ff', '#ffff00', '#00ff00', '#8b5cf6', '#06b6d4'][Math.floor(Math.random() * 6)],
+        color: ['#FFD700', '#FDB931', '#FFBF00', '#F59E0B', '#D97706', '#B45309'][Math.floor(Math.random() * 6)],
         type: ['currency', 'graph', 'dot'][Math.floor(Math.random() * 3)] as 'currency' | 'graph' | 'dot'
       });
     }
@@ -140,7 +140,7 @@ const HomePage = () => {
           const distance = Math.sqrt(dx * dx + dy * dy);
           
           if (distance < 100) {
-            ctx.strokeStyle = `rgba(0, 255, 255, ${0.1 * (1 - distance / 100)})`;
+            ctx.strokeStyle = `rgba(255, 215, 0, ${0.1 * (1 - distance / 100)})`;
             ctx.lineWidth = 0.5;
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
@@ -154,7 +154,7 @@ const HomePage = () => {
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      ctx.strokeStyle = 'rgba(0, 255, 255, 0.03)';
+      ctx.strokeStyle = 'rgba(255, 215, 0, 0.03)';
       ctx.lineWidth = 0.5;
       const gridSize = 60;
       for (let x = 0; x < canvas.width; x += gridSize) {
@@ -174,9 +174,9 @@ const HomePage = () => {
         mouseRef.current.x, mouseRef.current.y, 0,
         mouseRef.current.x, mouseRef.current.y, 150 
       );
-      gradient.addColorStop(0, 'rgba(0, 255, 255, 0.2)');
-      gradient.addColorStop(0.5, 'rgba(255, 0, 255, 0.08)');
-      gradient.addColorStop(1, 'rgba(0, 255, 255, 0)');
+      gradient.addColorStop(0, 'rgba(255, 215, 0, 0.2)');
+      gradient.addColorStop(0.5, 'rgba(218, 165, 32, 0.08)');
+      gradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -214,13 +214,13 @@ const HomePage = () => {
   };
 
   const navigationItems = [
-    { label: "Stock Search", icon: FaSearch, action: () => router.push("/StockSearchs"), color: "from-cyan-500 to-blue-600", description: "Advanced AI-powered stock analysis with predictive insights" },
+    { label: "Stock Search", icon: FaSearch, action: () => router.push("/StockSearchs"), color: "from-yellow-400 to-amber-500", description: "Advanced AI-powered stock analysis with predictive insights" },
     { label: "Watchlist", icon: FaStar, action: () => router.push("/Watchlist"), color: "from-yellow-400 to-amber-600", description: "Track your favorite stocks and get instant updates" },
-    { label: "Price Alerts", icon: FaBell, action: () => router.push("/Notifier"), color: "from-purple-500 to-pink-600", description: "Smart price alerts with customizable notifications" },
-    { label: "Active Stocks", icon: FaRocket, action: () => router.push("/ActiveStocks"), color: "from-orange-500 to-red-600", description: "Real-time market data and live stock tracking" },
-    { label: "Portfolio", icon: FaShieldAlt, action: () => router.push("/Portfolio"), color: "from-emerald-500 to-green-600", description: "Manage your investment portfolio securely" },
-    { label: "Trading", icon: FaChartLine, action: () => router.push("/Trading"), color: "from-pink-500 to-purple-500", description: "Execute trades with AI-powered recommendations" },
-    { label: "Hold Stock Advisor", icon: FaLightbulb, action: () => router.push("/HoldStock"), color: "from-indigo-500 to-purple-600", description: "Get expert advice on holding or selling stocks" },
+    { label: "Price Alerts", icon: FaBell, action: () => router.push("/Notifier"), color: "from-amber-500 to-orange-600", description: "Smart price alerts with customizable notifications" },
+    { label: "Active Stocks", icon: FaRocket, action: () => router.push("/ActiveStocks"), color: "from-orange-500 to-amber-600", description: "Real-time market data and live stock tracking" },
+    { label: "Portfolio", icon: FaShieldAlt, action: () => router.push("/Portfolio"), color: "from-yellow-500 to-orange-600", description: "Manage your investment portfolio securely" },
+    { label: "Trading", icon: FaChartLine, action: () => router.push("/Trading"), color: "from-amber-500 to-yellow-600", description: "Execute trades with AI-powered recommendations" },
+    { label: "Hold Stock Advisor", icon: FaLightbulb, action: () => router.push("/HoldStock"), color: "from-yellow-600 to-amber-700", description: "Get expert advice on holding or selling stocks" },
     { label: "Best AI Platform 2024", icon: FaTrophy, action: () => router.push("/BestAIPlatform"), color: "from-yellow-400 to-orange-500", description: "Award-winning AI platform for traders" }
   ];
 
@@ -236,13 +236,13 @@ const HomePage = () => {
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-4">
             <div className="relative">
-              <div className="w-12 h-12 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-xl flex items-center justify-center transform rotate-12 hover:rotate-0 transition-transform duration-500">
+              <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-amber-600 rounded-xl flex items-center justify-center transform rotate-12 hover:rotate-0 transition-transform duration-500">
                 <FaRocket className="text-black text-xl" />
               </div>
               <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-pulse"></div>
             </div>
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 bg-clip-text text-transparent">
                 MarketSense
               </h1>
               <p className="text-xs text-gray-400">Next-Gen Market Intelligence</p>
@@ -267,7 +267,7 @@ const HomePage = () => {
             ) : (
               <button
                 onClick={() => router.push("/Login")}
-                className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full font-semibold hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-300 transform hover:scale-105"
+                className="px-6 py-2 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-full font-semibold hover:shadow-lg hover:shadow-yellow-500/25 transition-all duration-300 transform hover:scale-105"
               >
                 Login
               </button>
@@ -282,22 +282,22 @@ const HomePage = () => {
           <section className="text-center mb-20 relative">
             <div className="absolute inset-0 pointer-events-none z-0">
               {/* Subtle animated gradient overlay */}
-              <div className="w-full h-full bg-gradient-to-br from-cyan-500/10 via-purple-500/10 to-pink-500/10 animate-pulse-slow"></div>
+              <div className="w-full h-full bg-gradient-to-br from-yellow-500/10 via-amber-500/10 to-orange-500/10 animate-pulse-slow"></div>
             </div>
             <div className="relative z-10">
               <div className="mb-8">
-                <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 backdrop-blur-sm mb-6">
+                <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 backdrop-blur-sm mb-6">
                   <FaLightbulb className="text-yellow-400 mr-2 animate-pulse" />
                   <span className="text-sm font-medium">Powered by Advanced AI & Machine Learning</span>
                 </div>
                 <h1 className="text-6xl md:text-8xl font-bold leading-tight mb-6">
-                  <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-pulse">
+                  <span className="bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 bg-clip-text text-transparent animate-pulse">
                     The Future
                   </span>
                   <br />
                   <span className="text-white">of Trading</span>
                   <br />
-                  <span className="bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-amber-400 to-yellow-600 bg-clip-text text-transparent">
                     is Here
                   </span>
                 </h1>
@@ -309,14 +309,14 @@ const HomePage = () => {
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-10">
                   <button
                     onClick={handleGetStarted}
-                    className="group px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-2xl font-bold text-lg hover:shadow-2xl hover:shadow-cyan-500/25 transition-all duration-500 transform hover:scale-105 relative overflow-hidden"
+                    className="group px-8 py-4 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-2xl font-bold text-lg hover:shadow-2xl hover:shadow-yellow-500/25 transition-all duration-500 transform hover:scale-105 relative overflow-hidden"
                   >
                     <span className="relative z-10 flex items-center">
                       <FaPlay className="mr-3" />
                       Get Started
                       <FaArrowRight className="ml-3 group-hover:translate-x-1 transition-transform" />
                     </span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-cyan-600 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-600 to-amber-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </button>
                   <button
                     onClick={() => router.push("/ActiveStocks")}
@@ -334,11 +334,11 @@ const HomePage = () => {
                   onClick={() => setShowModal({ type: "users", open: true })}
                   title="Click to see more about active traders"
                 >
-                  <div className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-2">
+                  <div className="text-4xl font-bold bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent mb-2">
                     {(animatedNumbers.users || 0).toLocaleString()}+
                   </div>
                   <div className="text-gray-400 font-medium">Active Traders</div>
-                  <div className="w-full h-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full mt-4 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+                  <div className="w-full h-1 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-full mt-4 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
                 </div>
                 <div
                   className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300 group cursor-pointer"
@@ -346,11 +346,11 @@ const HomePage = () => {
                   onClick={() => setShowModal({ type: "predictions", open: true })}
                   title="Click to see more about AI predictions"
                 >
-                  <div className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent mb-2">
+                  <div className="text-4xl font-bold bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent mb-2">
                     {(animatedNumbers.predictions || 0).toLocaleString()}+
                   </div>
                   <div className="text-gray-400 font-medium">AI Predictions Made</div>
-                  <div className="w-full h-1 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full mt-4 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+                  <div className="w-full h-1 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full mt-4 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
                 </div>
                 <div
                   className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300 group cursor-pointer"
@@ -358,11 +358,11 @@ const HomePage = () => {
                   onClick={() => setShowModal({ type: "accuracy", open: true })}
                   title="Click to see more about prediction accuracy"
                 >
-                  <div className="text-4xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent mb-2">
+                  <div className="text-4xl font-bold bg-gradient-to-r from-yellow-400 to-amber-600 bg-clip-text text-transparent mb-2">
                     {animatedNumbers.accuracy || 0}%
                   </div>
                   <div className="text-gray-400 font-medium">Prediction Accuracy</div>
-                  <div className="w-full h-1 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full mt-4 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+                  <div className="w-full h-1 bg-gradient-to-r from-yellow-400 to-amber-600 rounded-full mt-4 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
                 </div>
               </div>
             </div>
@@ -381,13 +381,13 @@ const HomePage = () => {
                   <div className={`w-16 h-16 bg-gradient-to-r ${item.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
                     <item.icon className="text-2xl text-white" />
                   </div>
-                  <h3 className="text-xl font-bold mb-3 text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-cyan-400 group-hover:to-purple-500 group-hover:bg-clip-text transition-all duration-300">
+                  <h3 className="text-xl font-bold mb-3 text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-yellow-400 group-hover:to-amber-500 group-hover:bg-clip-text transition-all duration-300">
                     {item.label}
                   </h3>
                   <p className="text-gray-400 text-sm leading-relaxed">
                     {item.description}
                   </p>
-                  <div className="flex items-center mt-4 text-sm font-medium text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="flex items-center mt-4 text-sm font-medium text-yellow-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     Explore <FaArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </div>
@@ -398,7 +398,7 @@ const HomePage = () => {
           
           <div className="mb-20">
             <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
+              <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">
                 Why Choose MarketSense?
               </h2>
               <p className="text-gray-300 text-lg max-w-2xl mx-auto">
@@ -408,7 +408,7 @@ const HomePage = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300">
-                <div className="w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center mb-6">
+                <div className="w-16 h-16 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-xl flex items-center justify-center mb-6">
                   <FaChartLine className="text-3xl text-white" />
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-4">AI-Powered Analysis</h3>
@@ -418,7 +418,7 @@ const HomePage = () => {
               </div>
 
               <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300">
-                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl flex items-center justify-center mb-6">
+                <div className="w-16 h-16 bg-gradient-to-r from-amber-500 to-orange-600 rounded-xl flex items-center justify-center mb-6">
                   <FaBell className="text-3xl text-white" />
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-4">Real-Time Alerts</h3>
@@ -428,7 +428,7 @@ const HomePage = () => {
               </div>
 
               <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300">
-                <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center mb-6">
+                <div className="w-16 h-16 bg-gradient-to-r from-yellow-600 to-amber-700 rounded-xl flex items-center justify-center mb-6">
                   <FaShieldAlt className="text-3xl text-white" />
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-4">Secure Trading</h3>
@@ -451,11 +451,11 @@ const HomePage = () => {
                 <div className="text-sm text-gray-400">FinTech Innovation Awards</div>
               </div>
               <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl p-6">
-                <div className="text-2xl font-bold text-cyan-400 mb-2">Top Trading Tool</div>
+                <div className="text-2xl font-bold text-amber-400 mb-2">Top Trading Tool</div>
                 <div className="text-sm text-gray-400">Global Finance Magazine</div>
               </div>
               <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl p-6">
-                <div className="text-2xl font-bold text-purple-400 mb-2">Innovation Leader</div>
+                <div className="text-2xl font-bold text-yellow-400 mb-2">Innovation Leader</div>
                 <div className="text-sm text-gray-400">Tech Excellence Awards</div>
               </div>
             </div>
@@ -464,7 +464,7 @@ const HomePage = () => {
           {/* Testimonial Section */}
           {user == null && (
             <div className="max-w-3xl mx-auto my-16">
-              <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-400/20 rounded-2xl p-8 shadow-xl text-center">
+              <div className="bg-gradient-to-r from-yellow-500/10 to-amber-500/10 border border-yellow-400/20 rounded-2xl p-8 shadow-xl text-center">
                 <div className="flex items-center justify-center mb-4">
                   <FaStar className="text-yellow-400 text-2xl" />
                   <FaStar className="text-yellow-400 text-2xl" />
@@ -475,7 +475,7 @@ const HomePage = () => {
                 <blockquote className="text-xl font-semibold text-white mb-2">
                   “MarketSense has completely transformed my trading experience. The AI-powered insights are spot on and the platform is incredibly easy to use. Highly recommended for anyone serious about investing!”
                 </blockquote>
-                <div className="text-cyan-400 font-bold">— HMM., Chennai</div>
+                <div className="text-amber-400 font-bold">— HMM., Chennai</div>
                 <div className="text-gray-400 text-sm mt-2">Active Trader & Investor</div>
               </div>
             </div>
@@ -510,7 +510,7 @@ const HomePage = () => {
               {showModal.type === "accuracy" && "Our prediction accuracy is 94% based on backtests."}
             </p>
             <button
-              className="mt-6 px-4 py-2 bg-gradient-to-r from-cyan-500 to-purple-600 text-white rounded-full"
+              className="mt-6 px-4 py-2 bg-gradient-to-r from-yellow-500 to-amber-600 text-white rounded-full"
               onClick={() => setShowModal({ type: "", open: false })}
             >
               Close
