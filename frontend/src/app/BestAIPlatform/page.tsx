@@ -25,7 +25,7 @@ const BestAIPlatformPage = () => {
         <div className="flex flex-col items-center mb-6">
           <FaTrophy className="text-yellow-400 text-6xl mb-4 animate-bounce-slow" />
           <h1 className="text-4xl font-extrabold bg-gradient-to-r from-yellow-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
-            Best AI Platform 2024
+            Best AI Platform 2026
           </h1>
           <span className="text-lg text-purple-300 font-semibold mb-2">
             FinTech Innovation Awards
@@ -35,7 +35,7 @@ const BestAIPlatformPage = () => {
           </div>
         </div>
         <p className="text-lg text-gray-200 mb-6">
-          MarketSense has been recognized as the <span className="font-bold text-yellow-300">Best AI-Powered Stock Market Analysis Platform</span> of 2024 at the FinTech Innovation Awards.
+          MarketSense has been recognized as the <span className="font-bold text-yellow-300">Best AI-Powered Stock Market Analysis Platform</span> of 2026 at the FinTech Innovation Awards.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl p-6 flex flex-col items-center">
