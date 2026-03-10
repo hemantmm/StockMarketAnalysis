@@ -363,45 +363,46 @@ const WatchlistPage = () => {
 
       <div className="relative z-10 min-h-screen flex flex-col">
         {/* Header */}
-        <header className="relative z-50 px-4 sm:px-6 py-4 backdrop-blur-xl bg-black/20 border-b border-white/10 shrink-0">
+        <header className="relative z-50 px-4 sm:px-6 py-5 backdrop-blur-2xl bg-gradient-to-r from-black/40 via-black/30 to-black/40 border-b border-white/20 shadow-2xl shrink-0">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
             <div className="flex items-center space-x-3 sm:space-x-4">
-              <div className="relative">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-xl flex items-center justify-center transform rotate-12 hover:rotate-0 transition-transform duration-500">
-                  <FaStar className="text-black text-lg sm:text-xl" />
+              <div className="relative group">
+                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 rounded-xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity duration-300"></div>
+                <div className="relative w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-500 rounded-xl flex items-center justify-center transform rotate-12 hover:rotate-0 transition-all duration-500 shadow-xl">
+                  <FaStar className="text-black text-lg sm:text-xl animate-pulse" />
                 </div>
-                <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-green-400 rounded-full animate-pulse"></div>
+                <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse shadow-lg shadow-green-500/50"></div>
               </div>
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 bg-clip-text text-transparent">
+                <h1 className="text-xl sm:text-2xl font-extrabold bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-400 bg-clip-text text-transparent drop-shadow-lg">
                   My Watchlist
                 </h1>
-                <p className="text-xs text-gray-400 hidden sm:block">
+                <p className="text-xs text-gray-400 hidden sm:block font-medium">
                   Track Your Favorite Stocks
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center space-x-2 sm:space-x-4 w-full sm:w-auto">
+            <div className="flex items-center space-x-2 sm:space-x-3 w-full sm:w-auto">
               <button
                 onClick={() => router.push("/")}
-                className="flex-1 sm:flex-initial px-4 sm:px-6 py-2 bg-gradient-to-r from-gray-600 to-gray-700 rounded-full font-semibold hover:shadow-lg hover:shadow-gray-500/25 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 text-sm sm:text-base"
+                className="group flex-1 sm:flex-initial px-4 sm:px-6 py-2.5 bg-gradient-to-br from-gray-700 via-gray-600 to-gray-700 rounded-full font-bold hover:shadow-2xl hover:shadow-gray-500/40 transition-all duration-300 transform hover:scale-110 hover:-translate-y-0.5 flex items-center justify-center space-x-2 text-sm sm:text-base border border-gray-500/30"
               >
-                <FaHome className="text-xs sm:text-sm" />
+                <FaHome className="text-xs sm:text-sm group-hover:rotate-12 transition-transform" />
                 <span className="hidden sm:inline">Home</span>
               </button>
               <button
                 onClick={() => router.push("/StockSearchs")}
-                className="flex-1 sm:flex-initial px-4 sm:px-6 py-2 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full font-semibold hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 text-sm sm:text-base"
+                className="group flex-1 sm:flex-initial px-4 sm:px-6 py-2.5 bg-gradient-to-br from-cyan-600 via-purple-600 to-purple-700 rounded-full font-bold hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-110 hover:-translate-y-0.5 flex items-center justify-center space-x-2 text-sm sm:text-base border border-cyan-400/30"
               >
-                <FaSearch className="text-xs sm:text-sm" />
+                <FaSearch className="text-xs sm:text-sm group-hover:rotate-12 transition-transform" />
                 <span className="hidden sm:inline">Search</span>
               </button>
               <button
                 onClick={() => router.push("/Portfolio")}
-                className="flex-1 sm:flex-initial px-4 sm:px-6 py-2 bg-gradient-to-r from-emerald-500 to-green-600 rounded-full font-semibold hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 text-sm sm:text-base"
+                className="group flex-1 sm:flex-initial px-4 sm:px-6 py-2.5 bg-gradient-to-br from-emerald-600 via-green-600 to-green-700 rounded-full font-bold hover:shadow-2xl hover:shadow-emerald-500/50 transition-all duration-300 transform hover:scale-110 hover:-translate-y-0.5 flex items-center justify-center space-x-2 text-sm sm:text-base border border-emerald-400/30"
               >
-                <FaChartPie className="text-xs sm:text-sm" />
+                <FaChartPie className="text-xs sm:text-sm group-hover:rotate-12 transition-transform" />
                 <span className="hidden sm:inline">Portfolio</span>
               </button>
               {user ? (
@@ -409,7 +410,7 @@ const WatchlistPage = () => {
               ) : (
                 <button 
                   onClick={() => router.push('/Login')}
-                  className="px-4 sm:px-6 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full font-semibold hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300 transform hover:scale-105 text-sm sm:text-base"
+                  className="px-4 sm:px-6 py-2.5 bg-gradient-to-br from-blue-600 via-indigo-600 to-indigo-700 rounded-full font-bold hover:shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 transform hover:scale-110 hover:-translate-y-0.5 text-sm sm:text-base border border-blue-400/30"
                 >
                   Login
                 </button>
@@ -423,45 +424,45 @@ const WatchlistPage = () => {
           <div className="max-w-7xl mx-auto">
             {/* Title Section */}
             <div className="text-center mb-8 sm:mb-12">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight">
-                  <span className="bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 bg-clip-text text-transparent">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-4">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl font-black leading-tight">
+                  <span className="bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-500 bg-clip-text text-transparent drop-shadow-2xl animate-pulse">
                     Your Watchlist
                   </span>
                 </h1>
-                <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-semibold ${
+                <div className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold shadow-xl backdrop-blur-md ${
                   marketStatus.status === "open" 
-                    ? "bg-green-500/20 text-green-400 border border-green-400/30" 
-                    : "bg-red-500/20 text-red-400 border border-red-400/30"
+                    ? "bg-gradient-to-r from-green-500/30 to-emerald-500/30 text-green-300 border-2 border-green-400/50 shadow-green-500/30" 
+                    : "bg-gradient-to-r from-red-500/30 to-rose-500/30 text-red-300 border-2 border-red-400/50 shadow-red-500/30"
                 }`}>
                   <FaCircle className={`text-xs ${marketStatus.status === "open" ? "animate-pulse" : ""}`} />
                   {marketStatus.text}
                 </div>
               </div>
-              <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto">
+              <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto font-medium">
                 Keep track of your favorite stocks and monitor their performance in real-time
               </p>
             </div>
 
             {/* Search and Filter Bar */}
             {watchlistItems.length > 0 && userId && (
-              <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-6 mb-6">
+              <div className="backdrop-blur-2xl bg-gradient-to-br from-white/10 via-white/5 to-white/10 border-2 border-white/20 rounded-3xl p-5 sm:p-7 mb-6 shadow-2xl hover:border-yellow-400/30 transition-all duration-300">
                 <div className="flex flex-col sm:flex-row gap-4">
                   {/* Search Input */}
                   <div className="flex-1">
-                    <div className="relative">
+                    <div className="relative group">
                       <input
                         type="text"
                         placeholder="Search stocks by name or symbol..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full px-4 py-3 pl-11 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400/50 transition-colors"
+                        className="w-full px-5 py-3.5 pl-12 bg-black/40 border-2 border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400/70 focus:shadow-lg focus:shadow-yellow-400/20 transition-all duration-300 font-medium backdrop-blur-md group-hover:border-white/30"
                       />
-                      <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
+                      <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-hover:text-yellow-400 transition-colors text-lg" />
                       {searchTerm && (
                         <button
                           onClick={() => setSearchTerm("")}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
+                          className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-400 transition-colors font-bold text-lg"
                         >
                           ✕
                         </button>
@@ -470,34 +471,34 @@ const WatchlistPage = () => {
                   </div>
 
                   {/* Sort Controls */}
-                  <div className="flex gap-2">
-                    <div className="relative">
+                  <div className="flex gap-2 sm:gap-3">
+                    <div className="relative group">
                       <select
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value as "name" | "price" | "change")}
-                        className="appearance-none px-4 py-3 pr-10 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-yellow-400/50 transition-colors cursor-pointer"
+                        className="appearance-none px-5 py-3.5 pr-11 bg-black/40 border-2 border-white/20 rounded-2xl text-white focus:outline-none focus:border-yellow-400/70 focus:shadow-lg focus:shadow-yellow-400/20 transition-all duration-300 cursor-pointer font-semibold backdrop-blur-md group-hover:border-white/30"
                       >
                         <option value="name" className="bg-gray-900">Name</option>
                         <option value="price" className="bg-gray-900">Price</option>
                         <option value="change" className="bg-gray-900">Change %</option>
                       </select>
-                      <FaFilter className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
+                      <FaFilter className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none group-hover:text-yellow-400 transition-colors" />
                     </div>
                     <button
                       onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
-                      className="px-4 py-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors"
+                      className="px-4 py-3.5 bg-black/40 border-2 border-white/20 rounded-2xl hover:bg-white/10 hover:border-yellow-400/50 transition-all duration-300 transform hover:scale-110 shadow-lg"
                       title={sortOrder === "asc" ? "Sort Descending" : "Sort Ascending"}
                     >
-                      {sortOrder === "asc" ? <FaSortAmountUp className="text-gray-400" /> : <FaSortAmountDown className="text-gray-400" />}
+                      {sortOrder === "asc" ? <FaSortAmountUp className="text-gray-300" /> : <FaSortAmountDown className="text-gray-300" />}
                     </button>
                   </div>
                 </div>
 
                 {/* Results Count */}
                 {searchTerm && (
-                  <div className="mt-3 pt-3 border-t border-white/10">
-                    <p className="text-sm text-gray-400">
-                      Found <span className="text-yellow-400 font-semibold">{filteredAndSortedItems.length}</span> of {watchlistItems.length} stocks
+                  <div className="mt-4 pt-4 border-t border-white/20">
+                    <p className="text-sm text-gray-300 font-medium">
+                      Found <span className="text-yellow-400 font-bold text-lg">{filteredAndSortedItems.length}</span> of {watchlistItems.length} stocks
                     </p>
                   </div>
                 )}
@@ -505,28 +506,28 @@ const WatchlistPage = () => {
             )}
 
             {/* Action Bar */}
-            <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8">
+            <div className="backdrop-blur-2xl bg-gradient-to-br from-white/10 via-white/5 to-white/10 border-2 border-white/20 rounded-3xl p-5 sm:p-7 mb-6 sm:mb-8 shadow-2xl hover:border-yellow-400/30 transition-all duration-300">
               <div className="flex flex-wrap gap-3 items-center justify-between">
                 <div className="flex flex-wrap gap-3">
                   <button
                     onClick={handleExportWatchlist}
                     disabled={!userId || watchlistItems.length === 0}
-                    className={`px-4 py-2.5 rounded-xl font-semibold flex items-center gap-2 transition-all duration-300 ${
+                    className={`group px-5 py-3 rounded-2xl font-bold flex items-center gap-2.5 transition-all duration-300 shadow-lg ${
                       !userId || watchlistItems.length === 0
-                        ? "bg-gray-700/50 text-gray-500 cursor-not-allowed"
-                        : "bg-gradient-to-r from-blue-500 to-cyan-600 hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-105"
+                        ? "bg-gray-700/50 text-gray-500 cursor-not-allowed border-2 border-gray-600/30"
+                        : "bg-gradient-to-br from-blue-600 via-cyan-600 to-cyan-700 hover:shadow-2xl hover:shadow-blue-500/40 transform hover:scale-110 hover:-translate-y-1 border-2 border-blue-400/30"
                     }`}
                   >
-                    <FaDownload className="text-sm" />
+                    <FaDownload className="text-base group-hover:animate-bounce" />
                     <span className="hidden sm:inline">Export</span>
                   </button>
                   
-                  <label className={`px-4 py-2.5 rounded-xl font-semibold flex items-center gap-2 transition-all duration-300 cursor-pointer ${
+                  <label className={`group px-5 py-3 rounded-2xl font-bold flex items-center gap-2.5 transition-all duration-300 shadow-lg ${
                     !userId
-                      ? "bg-gray-700/50 text-gray-500 cursor-not-allowed"
-                      : "bg-gradient-to-r from-purple-500 to-pink-600 hover:shadow-lg hover:shadow-purple-500/25 transform hover:scale-105"
+                      ? "bg-gray-700/50 text-gray-500 cursor-not-allowed border-2 border-gray-600/30"
+                      : "bg-gradient-to-br from-purple-600 via-pink-600 to-pink-700 hover:shadow-2xl hover:shadow-purple-500/40 cursor-pointer transform hover:scale-110 hover:-translate-y-1 border-2 border-purple-400/30"
                   }`}>
-                    <FaUpload className="text-sm" />
+                    <FaUpload className="text-base group-hover:animate-bounce" />
                     <span className="hidden sm:inline">Import</span>
                     <input 
                       type="file" 
@@ -541,9 +542,9 @@ const WatchlistPage = () => {
                     <button
                       onClick={() => setShowRemoveAllConfirm(true)}
                       disabled={removingAll}
-                      className="px-4 py-2.5 rounded-xl font-semibold flex items-center gap-2 bg-gradient-to-r from-red-500 to-rose-600 hover:shadow-lg hover:shadow-red-500/25 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="group px-5 py-3 rounded-2xl font-bold flex items-center gap-2.5 bg-gradient-to-br from-red-600 via-rose-600 to-rose-700 hover:shadow-2xl hover:shadow-red-500/40 transition-all duration-300 transform hover:scale-110 hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed border-2 border-red-400/30 shadow-lg"
                     >
-                      <FaTrash className="text-sm" />
+                      <FaTrash className="text-base group-hover:animate-bounce" />
                       <span className="hidden sm:inline">{removingAll ? "Clearing..." : "Clear All"}</span>
                     </button>
                   )}
@@ -552,25 +553,25 @@ const WatchlistPage = () => {
                 <button
                   onClick={fetchWatchlist}
                   disabled={refreshing || !userId}
-                  className={`px-4 py-2.5 rounded-xl font-semibold flex items-center gap-2 transition-all duration-300 ${
+                  className={`group px-5 py-3 rounded-2xl font-bold flex items-center gap-2.5 transition-all duration-300 shadow-lg ${
                     refreshing || !userId
-                      ? "bg-gray-700/50 text-gray-500 cursor-not-allowed"
-                      : "bg-gradient-to-r from-green-500 to-emerald-600 hover:shadow-lg hover:shadow-green-500/25 transform hover:scale-105"
+                      ? "bg-gray-700/50 text-gray-500 cursor-not-allowed border-2 border-gray-600/30"
+                      : "bg-gradient-to-br from-green-600 via-emerald-600 to-emerald-700 hover:shadow-2xl hover:shadow-green-500/40 transform hover:scale-110 hover:-translate-y-1 border-2 border-green-400/30"
                   }`}
                 >
-                  <FaSyncAlt className={`text-sm ${refreshing ? "animate-spin" : ""}`} />
+                  <FaSyncAlt className={`text-base ${refreshing ? "animate-spin" : "group-hover:rotate-180 transition-transform duration-500"}`} />
                   <span className="hidden sm:inline">Refresh</span>
                 </button>
               </div>
 
               {watchlistItems.length > 0 && (
-                <div className="mt-4 pt-4 border-t border-white/10 flex flex-wrap gap-4 justify-between items-center">
-                  <p className="text-gray-400 text-sm">
-                    Tracking <span className="text-yellow-400 font-semibold">{watchlistItems.length}</span> stock{watchlistItems.length !== 1 ? 's' : ''}
+                <div className="mt-5 pt-5 border-t-2 border-white/20 flex flex-wrap gap-4 justify-between items-center">
+                  <p className="text-gray-300 text-sm font-semibold">
+                    Tracking <span className="text-yellow-400 font-extrabold text-lg">{watchlistItems.length}</span> stock{watchlistItems.length !== 1 ? 's' : ''}
                   </p>
                   {filteredAndSortedItems.length > 0 && (
-                    <div className="text-sm text-gray-400">
-                      Total Value: <span className="text-green-400 font-semibold">
+                    <div className="text-sm text-gray-300 font-semibold">
+                      Total Value: <span className="text-green-400 font-extrabold text-lg">
                         ₹{filteredAndSortedItems.reduce((sum, item) => {
                           const price = parseFloat(watchlistData[item.stock_symbol]?.currentPrice?.NSE || "0");
                           return sum + price;
@@ -584,26 +585,29 @@ const WatchlistPage = () => {
 
             {/* Remove All Confirmation Dialog */}
             {showRemoveAllConfirm && (
-              <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 sm:p-8 max-w-md w-full">
+              <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-fadeIn">
+                <div className="backdrop-blur-2xl bg-gradient-to-br from-white/20 via-white/10 to-white/20 border-2 border-white/30 rounded-3xl p-8 sm:p-10 max-w-md w-full shadow-2xl transform scale-100 hover:scale-105 transition-transform duration-300">
                   <div className="text-center">
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-500/20 flex items-center justify-center">
-                      <FaTrash className="text-red-400 text-2xl" />
+                    <div className="relative w-20 h-20 mx-auto mb-6">
+                      <div className="absolute inset-0 bg-red-500/30 rounded-full animate-pulse blur-lg"></div>
+                      <div className="relative w-full h-full rounded-full bg-gradient-to-br from-red-500/40 to-rose-500/40 flex items-center justify-center border-4 border-red-400/50 shadow-2xl shadow-red-500/30">
+                        <FaTrash className="text-red-300 text-3xl" />
+                      </div>
                     </div>
-                    <h2 className="text-xl font-bold mb-2 text-white">Clear Watchlist?</h2>
-                    <p className="text-gray-400 mb-6">
-                      This will remove all {watchlistItems.length} stocks from your watchlist. This action cannot be undone.
+                    <h2 className="text-2xl font-black mb-3 text-white">Clear Watchlist?</h2>
+                    <p className="text-gray-300 mb-8 font-medium">
+                      This will remove all <span className="text-yellow-400 font-bold">{watchlistItems.length}</span> stocks from your watchlist. This action cannot be undone.
                     </p>
                     <div className="flex gap-3 justify-center">
                       <button
                         onClick={() => setShowRemoveAllConfirm(false)}
-                        className="px-6 py-2 rounded-xl bg-gray-700 hover:bg-gray-600 transition-colors font-semibold"
+                        className="px-8 py-3 rounded-2xl bg-gray-700 hover:bg-gray-600 transition-all font-bold border-2 border-gray-600/50 hover:border-gray-500/50 transform hover:scale-110"
                       >
                         Cancel
                       </button>
                       <button
                         onClick={handleRemoveAll}
-                        className="px-6 py-2 rounded-xl bg-gradient-to-r from-red-500 to-rose-600 hover:shadow-lg hover:shadow-red-500/25 transition-all font-semibold"
+                        className="px-8 py-3 rounded-2xl bg-gradient-to-br from-red-600 via-rose-600 to-rose-700 hover:shadow-2xl hover:shadow-red-500/50 transition-all font-bold border-2 border-red-400/30 transform hover:scale-110 hover:-translate-y-1"
                       >
                         Yes, Clear All
                       </button>
@@ -615,13 +619,13 @@ const WatchlistPage = () => {
 
             {/* Error Message */}
             {error && (
-              <div className="backdrop-blur-xl bg-red-500/20 border border-red-500/30 rounded-2xl p-4 sm:p-6 mb-6">
-                <p className="text-red-300 text-center">{error}</p>
+              <div className="backdrop-blur-2xl bg-gradient-to-br from-red-500/30 via-red-500/20 to-rose-500/30 border-2 border-red-500/50 rounded-3xl p-6 sm:p-8 mb-6 shadow-2xl shadow-red-500/30">
+                <p className="text-red-200 text-center font-bold text-lg">{error}</p>
                 {!userId && (
-                  <div className="text-center mt-4">
+                  <div className="text-center mt-6">
                     <button 
                       onClick={() => router.push('/Login')}
-                      className="px-6 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/25 transition-all"
+                      className="px-8 py-3 bg-gradient-to-br from-blue-600 via-indigo-600 to-indigo-700 rounded-2xl font-black hover:shadow-2xl hover:shadow-blue-500/50 transition-all transform hover:scale-110 hover:-translate-y-1 border-2 border-blue-400/30"
                     >
                       Log In
                     </button>
@@ -632,81 +636,89 @@ const WatchlistPage = () => {
 
             {/* Loading State */}
             {loading && !error ? (
-              <div className="space-y-6">
-                <div className="flex flex-col items-center justify-center py-12">
-                  <div className="relative">
-                    <div className="w-20 h-20 border-4 border-yellow-400/20 rounded-full"></div>
-                    <div className="w-20 h-20 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin absolute top-0"></div>
+              <div className="space-y-8">
+                <div className="flex flex-col items-center justify-center py-16">
+                  <div className="relative mb-8">
+                    <div className="w-24 h-24 border-4 border-yellow-400/20 rounded-full"></div>
+                    <div className="w-24 h-24 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin absolute top-0"></div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <FaStar className="text-yellow-400 text-2xl animate-pulse" />
+                    </div>
                   </div>
-                  <p className="mt-6 text-gray-400 text-lg">Loading your watchlist...</p>
+                  <p className="text-gray-300 text-xl font-bold">Loading your watchlist...</p>
+                  <p className="text-gray-400 text-sm mt-2">Please wait</p>
                 </div>
                 {/* Skeleton Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-7">
                   {[1, 2, 3, 4, 5, 6].map((i) => (
-                    <div key={i} className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6 animate-pulse">
-                      <div className="flex justify-between items-start mb-4">
+                    <div key={i} className="backdrop-blur-2xl bg-gradient-to-br from-white/10 via-white/5 to-white/10 border-2 border-white/20 rounded-3xl p-7 animate-pulse shadow-xl">
+                      <div className="flex justify-between items-start mb-5">
                         <div className="flex-1">
-                          <div className="h-6 bg-white/10 rounded-full w-20 mb-2"></div>
-                          <div className="h-4 bg-white/10 rounded w-32"></div>
+                          <div className="h-7 bg-white/10 rounded-xl w-24 mb-3"></div>
+                          <div className="h-5 bg-white/10 rounded-lg w-40"></div>
                         </div>
                         <div className="flex gap-2">
-                          <div className="w-8 h-8 bg-white/10 rounded-lg"></div>
-                          <div className="w-8 h-8 bg-white/10 rounded-lg"></div>
+                          <div className="w-10 h-10 bg-white/10 rounded-xl"></div>
+                          <div className="w-10 h-10 bg-white/10 rounded-xl"></div>
                         </div>
                       </div>
-                      <div className="pt-4 border-t border-white/10 space-y-3">
-                        <div className="h-8 bg-white/10 rounded w-full"></div>
-                        <div className="h-6 bg-white/10 rounded w-3/4"></div>
+                      <div className="pt-5 border-t-2 border-white/10 space-y-4">
+                        <div className="h-10 bg-white/10 rounded-xl w-full"></div>
+                        <div className="h-8 bg-white/10 rounded-lg w-3/4"></div>
+                        <div className="grid grid-cols-2 gap-3 pt-4">
+                          <div className="h-16 bg-white/10 rounded-xl"></div>
+                          <div className="h-16 bg-white/10 rounded-xl"></div>
+                        </div>
                       </div>
-                      <div className="h-10 bg-white/10 rounded-xl mt-4"></div>
+                      <div className="h-12 bg-white/10 rounded-2xl mt-6"></div>
                     </div>
                   ))}
                 </div>
               </div>
             ) : !userId ? (
               /* Login Required State */
-              <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 sm:p-12 text-center">
-                <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-r from-yellow-400/20 to-amber-500/20 flex items-center justify-center">
-                  <FaStar className="text-yellow-400 text-3xl" />
+              <div className="backdrop-blur-2xl bg-gradient-to-br from-white/10 via-white/5 to-white/10 border-2 border-white/20 rounded-3xl p-10 sm:p-16 text-center shadow-2xl">
+                <div className="w-24 h-24 mx-auto mb-8 rounded-full bg-gradient-to-br from-yellow-400/40 via-amber-500/40 to-orange-500/40 flex items-center justify-center border-4 border-yellow-400/50 shadow-2xl shadow-yellow-500/30">
+                  <FaStar className="text-yellow-300 text-4xl animate-pulse" />
                 </div>
-                <h2 className="text-2xl font-bold mb-3 text-white">Login Required</h2>
-                <p className="text-gray-400 mb-6 max-w-md mx-auto">
+                <h2 className="text-3xl font-black mb-4 text-white">Login Required</h2>
+                <p className="text-gray-300 mb-8 max-w-md mx-auto text-lg font-medium">
                   Sign in to create and manage your personal watchlist
                 </p>
                 <button
                   onClick={() => router.push("/Login")}
-                  className="px-8 py-3 bg-gradient-to-r from-yellow-400 to-amber-500 text-black rounded-xl font-bold hover:shadow-lg hover:shadow-yellow-500/25 transition-all duration-300 transform hover:scale-105"
+                  className="px-10 py-4 bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-500 text-black rounded-2xl font-black hover:shadow-2xl hover:shadow-yellow-500/50 transition-all duration-300 transform hover:scale-110 hover:-translate-y-1 text-lg"
                 >
                   Sign In
                 </button>
               </div>
             ) : watchlistItems.length === 0 ? (
               /* Empty Watchlist State */
-              <div className="backdrop-blur-xl bg-gradient-to-br from-white/5 to-white/10 border border-white/10 rounded-2xl p-8 sm:p-12 text-center shadow-2xl">
-                <div className="relative w-24 h-24 mx-auto mb-6">
-                  <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-amber-500/20 rounded-full animate-pulse"></div>
-                  <div className="relative w-full h-full rounded-full bg-gradient-to-r from-yellow-400/30 to-amber-500/30 flex items-center justify-center">
-                    <FaStar className="text-yellow-400 text-4xl" />
+              <div className="backdrop-blur-2xl bg-gradient-to-br from-white/10 via-white/5 to-white/10 border-2 border-white/20 rounded-3xl p-10 sm:p-16 text-center shadow-2xl hover:border-yellow-400/40 transition-all duration-500">
+                <div className="relative w-28 h-28 mx-auto mb-8">
+                  <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/30 to-amber-500/30 rounded-full animate-pulse blur-xl"></div>
+                  <div className="relative w-full h-full rounded-full bg-gradient-to-br from-yellow-400/40 via-amber-500/40 to-orange-500/40 flex items-center justify-center border-4 border-yellow-400/50 shadow-2xl shadow-yellow-500/30">
+                    <FaStar className="text-yellow-300 text-5xl animate-pulse" />
                   </div>
                 </div>
-                <h2 className="text-2xl sm:text-3xl font-bold mb-3 text-white">Your Watchlist is Empty</h2>
-                <p className="text-gray-400 mb-8 max-w-md mx-auto text-lg">
+                <h2 className="text-3xl sm:text-4xl font-black mb-4 text-white">Your Watchlist is Empty</h2>
+                <p className="text-gray-300 mb-10 max-w-md mx-auto text-lg font-medium">
                   Start building your personalized watchlist by adding stocks from the search page
                 </p>
                 <button
                   onClick={() => router.push("/StockSearchs")}
-                  className="px-10 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl font-bold hover:shadow-2xl hover:shadow-cyan-500/30 transition-all duration-300 transform hover:scale-105 inline-flex items-center gap-3 text-lg"
+                  className="px-12 py-5 bg-gradient-to-br from-cyan-600 via-purple-600 to-purple-700 rounded-2xl font-black hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-110 hover:-translate-y-1 inline-flex items-center gap-3 text-lg border-2 border-cyan-400/30"
                 >
-                  <FaSearch className="text-xl" />
+                  <FaSearch className="text-2xl animate-bounce" />
                   <span>Discover Stocks</span>
                 </button>
               </div>
             ) : filteredAndSortedItems.length === 0 ? (
               /* No Search Results */
-              <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 text-center">
-                <FaSearch className="text-gray-500 text-5xl mx-auto mb-4" />
-                <h2 className="text-xl font-bold mb-2 text-white">No stocks found</h2>
-                <p className="text-gray-400 mb-4">
+              <div className="backdrop-blur-2xl bg-gradient-to-br from-white/10 via-white/5 to-white/10 border-2 border-white/20 rounded-3xl p-10 text-center shadow-2xl">
+                <FaSearch className="text-gray-400 text-6xl mx-auto mb-6 animate-bounce" />
+                <h2 className="text-2xl font-black mb-3 text-white">No stocks found</h2>
+                <p className="text-gray-300 mb-6 font-medium">
                   Try a different search term or clear your filters
                 </p>
                 <button
@@ -715,14 +727,14 @@ const WatchlistPage = () => {
                     setSortBy("name");
                     setSortOrder("asc");
                   }}
-                  className="px-6 py-2 bg-gradient-to-r from-yellow-400 to-amber-500 text-black rounded-xl font-semibold hover:shadow-lg hover:shadow-yellow-500/25 transition-all"
+                  className="px-8 py-3 bg-gradient-to-br from-yellow-400 to-amber-500 text-black rounded-2xl font-black hover:shadow-2xl hover:shadow-yellow-500/50 transition-all transform hover:scale-110 hover:-translate-y-1"
                 >
                   Clear Filters
                 </button>
               </div>
             ) : (
               /* Watchlist Grid */
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-7">
                 {filteredAndSortedItems.map((item, index) => {
                   const stockData = watchlistData[item.stock_symbol];
                   const priceChange = stockData?.percentChange || 0;
@@ -731,92 +743,104 @@ const WatchlistPage = () => {
                   return (
                     <div
                       key={item.stock_symbol}
-                      className="group backdrop-blur-xl bg-gradient-to-br from-white/5 to-white/10 border border-white/10 rounded-2xl overflow-hidden hover:border-yellow-400/50 hover:shadow-2xl hover:shadow-yellow-500/20 transition-all duration-500 hover:scale-[1.02] animate-fadeIn"
+                      className="group relative backdrop-blur-2xl bg-gradient-to-br from-white/10 via-white/5 to-black/20 border-2 border-white/20 rounded-3xl overflow-hidden hover:border-yellow-400/60 hover:shadow-2xl hover:shadow-yellow-500/30 transition-all duration-500 hover:scale-105 hover:-translate-y-2 animate-fadeIn"
                       style={{ animationDelay: `${index * 50}ms` }}
                     >
-                      {/* Gradient Overlay on Hover */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/0 via-amber-500/0 to-orange-500/0 group-hover:from-yellow-400/5 group-hover:via-amber-500/5 group-hover:to-orange-500/5 transition-all duration-500 pointer-events-none"></div>
+                      {/* Animated Gradient Overlay on Hover */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/0 via-amber-500/0 to-orange-500/0 group-hover:from-yellow-400/10 group-hover:via-amber-500/10 group-hover:to-orange-500/10 transition-all duration-500 pointer-events-none"></div>
                       
-                      <div className="relative p-5 sm:p-6">
+                      {/* Glowing Top Border */}
+                      <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${
+                        isPositive 
+                          ? "from-green-400 via-emerald-400 to-green-500" 
+                          : "from-red-400 via-rose-400 to-red-500"
+                      } shadow-lg ${isPositive ? "shadow-green-500/50" : "shadow-red-500/50"}`}></div>
+                      
+                      <div className="relative p-6 sm:p-7">
                         {/* Header */}
-                        <div className="flex justify-between items-start mb-4">
+                        <div className="flex justify-between items-start mb-5">
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-2">
-                              <span className="px-2.5 py-1 text-xs font-bold rounded-full bg-gradient-to-r from-yellow-400/20 to-amber-500/20 text-yellow-400 border border-yellow-400/40 shadow-lg shadow-yellow-500/10">
+                            <div className="flex items-center gap-2.5 mb-3">
+                              <span className="px-3 py-1.5 text-xs font-extrabold rounded-xl bg-gradient-to-r from-yellow-400/30 to-amber-500/30 text-yellow-300 border-2 border-yellow-400/50 shadow-xl shadow-yellow-500/20 backdrop-blur-md">
                                 {item.stock_symbol}
                               </span>
                               {stockData && (
-                                <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${
-                                  isPositive ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"
+                                <span className={`px-3 py-1 text-xs font-bold rounded-xl shadow-lg backdrop-blur-md ${
+                                  isPositive 
+                                    ? "bg-gradient-to-r from-green-500/30 to-emerald-500/30 text-green-300 border-2 border-green-400/50 shadow-green-500/30" 
+                                    : "bg-gradient-to-r from-red-500/30 to-rose-500/30 text-red-300 border-2 border-red-400/50 shadow-red-500/30"
                                 }`}>
                                   {isPositive ? "↑" : "↓"} {Math.abs(priceChange).toFixed(2)}%
                                 </span>
                               )}
                             </div>
-                            <h3 className="font-bold text-lg text-white group-hover:text-yellow-400 transition-colors line-clamp-2 pr-2">
+                            <h3 className="font-extrabold text-lg text-white group-hover:text-yellow-300 transition-colors line-clamp-2 pr-2 leading-tight">
                               {item.stock_name}
                             </h3>
                           </div>
-                          <div className="flex gap-1.5 flex-shrink-0">
+                          <div className="flex gap-2 flex-shrink-0">
                             <button
                               onClick={() => goToStockDetails(item.stock_symbol)}
-                              className="p-2.5 rounded-lg bg-white/5 hover:bg-cyan-500/20 text-gray-400 hover:text-cyan-400 transition-all transform hover:scale-110"
+                              className="p-3 rounded-xl bg-black/30 hover:bg-gradient-to-br hover:from-cyan-500/30 hover:to-purple-500/30 text-gray-300 hover:text-cyan-300 transition-all transform hover:scale-125 hover:-translate-y-1 shadow-lg border-2 border-white/10 hover:border-cyan-400/50 backdrop-blur-md"
                               title="View Details"
                             >
-                              <FaChartLine size={16} />
+                              <FaChartLine size={18} />
                             </button>
                             <button
                               onClick={() => handleRemoveFromWatchlist(item.stock_symbol, item.stock_name)}
-                              className="p-2.5 rounded-lg bg-white/5 hover:bg-red-500/20 text-gray-400 hover:text-red-400 transition-all transform hover:scale-110"
+                              className="p-3 rounded-xl bg-black/30 hover:bg-gradient-to-br hover:from-red-500/30 hover:to-rose-500/30 text-gray-300 hover:text-red-300 transition-all transform hover:scale-125 hover:-translate-y-1 shadow-lg border-2 border-white/10 hover:border-red-400/50 backdrop-blur-md"
                               title="Remove from Watchlist"
                             >
-                              <FaTrash size={16} />
+                              <FaTrash size={18} />
                             </button>
                           </div>
                         </div>
                         
                         {/* Price Section */}
-                        <div className="pt-4 border-t border-white/10">
+                        <div className="pt-5 border-t-2 border-white/20">
                           {stockData ? (
-                            <div className="space-y-3">
+                            <div className="space-y-4">
                               <div className="flex justify-between items-center">
-                                <span className="text-gray-400 text-sm font-medium">Current Price</span>
-                                <span className="font-bold text-2xl bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                                <span className="text-gray-300 text-sm font-bold">Current Price</span>
+                                <span className="font-black text-3xl bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent drop-shadow-lg">
                                   ₹{parseFloat(stockData.currentPrice?.NSE || '0').toFixed(2)}
                                 </span>
                               </div>
                               {stockData.percentChange !== undefined && (
                                 <div className="flex justify-between items-center">
-                                  <span className="text-gray-400 text-sm font-medium">Day Change</span>
-                                  <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-bold shadow-lg ${
+                                  <span className="text-gray-300 text-sm font-bold">Day Change</span>
+                                  <div className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-extrabold shadow-xl backdrop-blur-md border-2 ${
                                     isPositive 
-                                      ? "bg-green-500/20 text-green-400 shadow-green-500/20" 
-                                      : "bg-red-500/20 text-red-400 shadow-red-500/20"
+                                      ? "bg-gradient-to-r from-green-500/30 to-emerald-500/30 text-green-300 border-green-400/50 shadow-green-500/30" 
+                                      : "bg-gradient-to-r from-red-500/30 to-rose-500/30 text-red-300 border-red-400/50 shadow-red-500/30"
                                   }`}>
                                     {isPositive ? "▲" : "▼"} {isPositive ? "+" : ""}{priceChange.toFixed(2)}%
                                   </div>
                                 </div>
                               )}
                               {/* Additional Stock Info */}
-                              <div className="pt-3 mt-3 border-t border-white/5 grid grid-cols-2 gap-2 text-xs">
-                                <div className="flex flex-col">
-                                  <span className="text-gray-500">High</span>
-                                  <span className="text-green-400 font-semibold">
+                              <div className="pt-4 mt-4 border-t-2 border-white/10 grid grid-cols-2 gap-3 text-xs">
+                                <div className="flex flex-col p-3 rounded-xl bg-black/30 border border-green-500/30 backdrop-blur-md">
+                                  <span className="text-gray-400 font-bold mb-1">High</span>
+                                  <span className="text-green-300 font-extrabold text-base">
                                     ₹{stockData.dayHigh || 'N/A'}
                                   </span>
                                 </div>
-                                <div className="flex flex-col">
-                                  <span className="text-gray-500">Low</span>
-                                  <span className="text-red-400 font-semibold">
+                                <div className="flex flex-col p-3 rounded-xl bg-black/30 border border-red-500/30 backdrop-blur-md">
+                                  <span className="text-gray-400 font-bold mb-1">Low</span>
+                                  <span className="text-red-300 font-extrabold text-base">
                                     ₹{stockData.dayLow || 'N/A'}
                                   </span>
                                 </div>
                               </div>
                             </div>
                           ) : (
-                            <div className="flex items-center justify-center py-6">
-                              <div className="w-6 h-6 border-2 border-yellow-400/30 border-t-yellow-400 rounded-full animate-spin"></div>
-                              <span className="ml-3 text-gray-500 text-sm">Loading data...</span>
+                            <div className="flex items-center justify-center py-8">
+                              <div className="relative">
+                                <div className="w-8 h-8 border-3 border-yellow-400/30 rounded-full"></div>
+                                <div className="w-8 h-8 border-3 border-yellow-400 border-t-transparent rounded-full animate-spin absolute top-0"></div>
+                              </div>
+                              <span className="ml-3 text-gray-400 text-sm font-semibold">Loading data...</span>
                             </div>
                           )}
                         </div>
@@ -824,9 +848,9 @@ const WatchlistPage = () => {
                         {/* Quick Action */}
                         <button
                           onClick={() => goToStockDetails(item.stock_symbol)}
-                          className="w-full mt-5 py-3 rounded-xl bg-gradient-to-r from-yellow-400/10 to-amber-500/10 border border-yellow-400/20 text-yellow-400 font-bold hover:from-yellow-400/20 hover:to-amber-500/20 hover:border-yellow-400/40 hover:shadow-lg hover:shadow-yellow-500/20 transition-all duration-300 flex items-center justify-center gap-2 group"
+                          className="w-full mt-6 py-3.5 rounded-2xl bg-gradient-to-r from-yellow-400/20 via-amber-500/20 to-orange-500/20 border-2 border-yellow-400/30 text-yellow-300 font-extrabold hover:from-yellow-400/30 hover:via-amber-500/30 hover:to-orange-500/30 hover:border-yellow-400/60 hover:shadow-2xl hover:shadow-yellow-500/30 transition-all duration-300 flex items-center justify-center gap-2.5 group backdrop-blur-md transform hover:scale-105 hover:-translate-y-1"
                         >
-                          <FaInfoCircle size={14} className="group-hover:rotate-12 transition-transform" />
+                          <FaInfoCircle size={16} className="group-hover:rotate-12 transition-transform" />
                           <span>View Full Analysis</span>
                         </button>
                       </div>
