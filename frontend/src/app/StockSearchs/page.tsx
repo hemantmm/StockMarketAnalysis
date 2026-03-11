@@ -116,12 +116,12 @@ const StockSearchs = () => {
           size: Math.random() * 2 + 0.5,
           opacity: Math.random() * 0.4 + 0.1,
           color: [
-            "#00ffff",
-            "#ff00ff",
-            "#ffff00",
-            "#00ff00",
-            "#8b5cf6",
-            "#06b6d4",
+            "#FFD700",
+            "#FDB931",
+            "#FFBF00",
+            "#F59E0B",
+            "#D97706",
+            "#B45309",
           ][Math.floor(Math.random() * 6)],
           type: ["currency", "graph", "dot"][Math.floor(Math.random() * 3)] as
             | "currency"
@@ -146,12 +146,12 @@ const StockSearchs = () => {
         size: Math.random() * 2 + 0.5,
         opacity: Math.random() * 0.4 + 0.1,
         color: [
-          "#00ffff",
-          "#ff00ff",
-          "#ffff00",
-          "#00ff00",
-          "#8b5cf6",
-          "#06b6d4",
+          "#FFD700",
+          "#FDB931",
+          "#FFBF00",
+          "#F59E0B",
+          "#D97706",
+          "#B45309",
         ][Math.floor(Math.random() * 6)],
         type: ["currency", "graph", "dot"][Math.floor(Math.random() * 3)] as
           | "currency"
@@ -200,7 +200,7 @@ const StockSearchs = () => {
           const distance = Math.sqrt(dx * dx + dy * dy);
 
           if (distance < 100) {
-            ctx.strokeStyle = `rgba(0, 255, 255, ${
+            ctx.strokeStyle = `rgba(255, 215, 0, ${
               0.1 * (1 - distance / 100)
             })`;
             ctx.lineWidth = 0.5;
@@ -216,7 +216,7 @@ const StockSearchs = () => {
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      ctx.strokeStyle = "rgba(0, 255, 255, 0.03)";
+      ctx.strokeStyle = "rgba(255, 215, 0, 0.03)";
       ctx.lineWidth = 0.5;
       const gridSize = window.innerWidth < 768 ? 40 : 60;
       for (let x = 0; x < canvas.width; x += gridSize) {
@@ -240,9 +240,9 @@ const StockSearchs = () => {
         mouseRef.current.y,
         150
       );
-      gradient.addColorStop(0, "rgba(0, 255, 255, 0.2)");
-      gradient.addColorStop(0.5, "rgba(255, 0, 255, 0.08)");
-      gradient.addColorStop(1, "rgba(0, 255, 255, 0)");
+      gradient.addColorStop(0, "rgba(255, 215, 0, 0.2)");
+      gradient.addColorStop(0.5, "rgba(218, 165, 32, 0.08)");
+      gradient.addColorStop(1, "rgba(255, 215, 0, 0)");
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -658,13 +658,13 @@ const StockSearchs = () => {
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
             <div className="flex items-center space-x-3 sm:space-x-4">
               <div className="relative">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-xl flex items-center justify-center transform rotate-12 hover:rotate-0 transition-transform duration-500">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-yellow-400 to-amber-600 rounded-xl flex items-center justify-center transform rotate-12 hover:rotate-0 transition-transform duration-500">
                   <FaSearch className="text-black text-lg sm:text-xl" />
                 </div>
                 <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-green-400 rounded-full animate-pulse"></div>
               </div>
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 bg-clip-text text-transparent">
                   MarketSense
                 </h1>
                 <p className="text-xs text-gray-400 hidden sm:block">
@@ -690,14 +690,14 @@ const StockSearchs = () => {
               </button>
               <button
                 onClick={() => router.push("/HoldStock")}
-                className="flex-1 sm:flex-initial px-4 sm:px-6 py-2 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full font-semibold hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-300 transform hover:scale-105 text-sm sm:text-base"
+                className="flex-1 sm:flex-initial px-4 sm:px-6 py-2 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-full font-semibold hover:shadow-lg hover:shadow-yellow-500/25 transition-all duration-300 transform hover:scale-105 text-sm sm:text-base"
               >
                 <span className="sm:hidden">Hold</span>
                 <span className="hidden sm:inline">Hold Stock</span>
               </button>
               <button
                 onClick={() => router.push("/Watchlist")}
-                className="flex-1 sm:flex-initial px-4 sm:px-6 py-2 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-full font-semibold hover:shadow-lg hover:shadow-yellow-500/25 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 text-sm sm:text-base"
+                className="flex-1 sm:flex-initial px-4 sm:px-6 py-2 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full font-semibold hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 text-sm sm:text-base"
               >
                 <FaStar className="text-xs sm:text-sm" />
                 <span className="hidden sm:inline">Watchlist</span>
@@ -710,7 +710,7 @@ const StockSearchs = () => {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-8 sm:mb-12">
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-4 sm:mb-6">
-                <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 bg-clip-text text-transparent">
                   Powered
                 </span>
                 <br />
@@ -724,8 +724,8 @@ const StockSearchs = () => {
 
             <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8 shadow-2xl">
               <div className="flex items-center space-x-2 sm:space-x-3 mb-4 sm:mb-6">
-                <FaChartLine className="text-cyan-400 text-xl sm:text-2xl" />
-                <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
+                <FaChartLine className="text-yellow-400 text-xl sm:text-2xl" />
+                <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">
                   Stock Search & Analysis
                 </h2>
                 <button
@@ -749,12 +749,12 @@ const StockSearchs = () => {
                     setShowInputError(false);
                     setError("");
                   }}
-                  className={`lg:col-span-2 px-4 sm:px-6 py-3 sm:py-4 rounded-xl border border-white/20 bg-white/5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm text-base sm:text-lg ${showInputError ? "border-red-500" : ""}`}
+                  className={`lg:col-span-2 px-4 sm:px-6 py-3 sm:py-4 rounded-xl border border-white/20 bg-white/5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent backdrop-blur-sm text-base sm:text-lg ${showInputError ? "border-red-500" : ""}`}
                 />
                 <select
                   value={periodWise}
                   onChange={(e) => setPeriodWise(e.target.value)}
-                  className="px-4 sm:px-6 py-3 sm:py-4 rounded-xl border border-white/20 bg-white/5 text-white focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm text-base sm:text-lg"
+                  className="px-4 sm:px-6 py-3 sm:py-4 rounded-xl border border-white/20 bg-white/5 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent backdrop-blur-sm text-base sm:text-lg"
                 >
                   {periodWiseOptions.map((option) => (
                     <option
@@ -773,19 +773,19 @@ const StockSearchs = () => {
               <button
                 onClick={handleSearchClick}
                 disabled={loading}
-                className="w-full group px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl font-bold text-base sm:text-lg hover:shadow-2xl hover:shadow-cyan-500/25 transition-all duration-500 transform hover:scale-105 relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full group px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-xl font-bold text-base sm:text-lg hover:shadow-2xl hover:shadow-yellow-500/25 transition-all duration-500 transform hover:scale-105 relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="relative z-10 flex items-center justify-center">
                   <FaSearch className="mr-2 sm:mr-3" />
                   {loading ? "Analyzing..." : "Analyze Stock"}
                 </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-cyan-600 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-amber-600 to-orange-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </button>
 
               {loading && (
                 <div className="flex items-center justify-center mt-4 sm:mt-6 space-x-3">
-                  <div className="animate-spin rounded-full h-5 w-5 sm:h-6 sm:w-6 border-b-2 border-cyan-400"></div>
-                  <p className="text-cyan-400 text-sm sm:text-base">
+                  <div className="animate-spin rounded-full h-5 w-5 sm:h-6 sm:w-6 border-b-2 border-yellow-400"></div>
+                  <p className="text-yellow-400 text-sm sm:text-base">
                     Analyzing stock data...
                   </p>
                 </div>
@@ -816,7 +816,7 @@ const StockSearchs = () => {
                       </h2>
                       <div className="space-y-3 text-gray-300">
                         <p className="text-sm sm:text-base">
-                          <strong className="text-cyan-400">Industry:</strong>{" "}
+                          <strong className="text-yellow-400">Industry:</strong>{" "}
                           {stockData.industry}
                         </p>
                         <p className="text-sm sm:text-base leading-relaxed">
@@ -827,7 +827,7 @@ const StockSearchs = () => {
                   </div>
                 )}
 
-                <div className="backdrop-blur-sm bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-500/20 rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6">
+                <div className="backdrop-blur-sm bg-gradient-to-r from-yellow-500/10 to-amber-500/10 border border-yellow-500/20 rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6">
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
                     <div className="flex-1">
                       <h3 className="text-base sm:text-lg font-medium text-gray-300 mb-2">
@@ -883,7 +883,7 @@ const StockSearchs = () => {
                       >
                         <FaInfoCircle
                           size={18}
-                          className="text-cyan-400 sm:text-xl"
+                          className="text-yellow-400 sm:text-xl"
                         />
                       </button>
                     </div>
@@ -931,7 +931,7 @@ const StockSearchs = () => {
 
             {stockPriceData.length > 0 && !loading && (
               <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl">
-                <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
+                <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">
                   Price Chart
                 </h3>
 
@@ -948,10 +948,10 @@ const StockSearchs = () => {
                             ),
                             tension: 0.4,
                             fill: true,
-                            borderColor: "rgba(6, 182, 212, 1)",
-                            backgroundColor: "rgba(6, 182, 212, 0.1)",
+                            borderColor: "rgba(251, 191, 36, 1)",
+                            backgroundColor: "rgba(251, 191, 36, 0.1)",
                             borderWidth: 3,
-                            pointBackgroundColor: "rgba(6, 182, 212, 1)",
+                            pointBackgroundColor: "rgba(251, 191, 36, 1)",
                             pointBorderColor: "rgba(255, 255, 255, 0.8)",
                             pointBorderWidth: 2,
                             pointRadius: 4,
@@ -1068,15 +1068,15 @@ const StockSearchs = () => {
 
             {stockData && !loading && (
               <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8 shadow-2xl">
-                <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
+                <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">
                   AI-Powered Recommendation
                 </h3>
 
                 <div className="backdrop-blur-sm bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-6">
                   {recommendationLoading ? (
                     <div className="flex items-center justify-center py-8">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-400"></div>
-                      <p className="ml-3 text-cyan-400">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-400"></div>
+                      <p className="ml-3 text-yellow-400">
                         Analyzing stock trends...
                       </p>
                     </div>
@@ -1184,7 +1184,7 @@ const StockSearchs = () => {
                               {/* Target Price */}
                               {stockRecommendation?.targetPrice && (
                                 <div
-                                  className="absolute top-0 h-full border-r-2 border-cyan-400"
+                                  className="absolute top-0 h-full border-r-2 border-yellow-400"
                                   style={{
                                     left: `${(() => {
                                       const targetPrice = Number(
@@ -1207,7 +1207,7 @@ const StockSearchs = () => {
                                     })()}%`,
                                   }}
                                 >
-                                  <div className="absolute bottom-0 right-0 transform translate-x-2 translate-y-6 text-xs text-cyan-400">
+                                  <div className="absolute bottom-0 right-0 transform translate-x-2 translate-y-6 text-xs text-yellow-400">
                                     Target: ₹
                                     {Number(
                                       stockRecommendation.targetPrice
