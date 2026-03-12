@@ -72,7 +72,7 @@ const HoldStock = () => {
         vy: (Math.random() - 0.5) * 0.3,
         size: Math.random() * 2 + 0.5,
         opacity: Math.random() * 0.4 + 0.1,
-        color: ['#a855f7', '#ec4899', '#f97316', '#10b981', '#8b5cf6', '#06b6d4'][Math.floor(Math.random() * 6)],
+        color: ['#FFD700', '#FDB931', '#FFBF00', '#F59E0B', '#D97706', '#B45309'][Math.floor(Math.random() * 6)],
         type: ['currency', 'graph', 'dot'][Math.floor(Math.random() * 3)] as 'currency' | 'graph' | 'dot'
       });
     }
@@ -113,7 +113,7 @@ const HoldStock = () => {
           const distance = Math.sqrt(dx * dx + dy * dy);
           
           if (distance < 100) {
-            ctx.strokeStyle = `rgba(168, 85, 247, ${0.1 * (1 - distance / 100)})`;
+            ctx.strokeStyle = `rgba(255, 215, 0, ${0.1 * (1 - distance / 100)})`;
             ctx.lineWidth = 0.5;
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
@@ -127,7 +127,7 @@ const HoldStock = () => {
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      ctx.strokeStyle = 'rgba(168, 85, 247, 0.03)';
+      ctx.strokeStyle = 'rgba(255, 215, 0, 0.03)';
       ctx.lineWidth = 0.5;
       const gridSize = 60;
       for (let x = 0; x < canvas.width; x += gridSize) {
@@ -147,9 +147,9 @@ const HoldStock = () => {
         mouseRef.current.x, mouseRef.current.y, 0,
         mouseRef.current.x, mouseRef.current.y, 150 
       );
-      gradient.addColorStop(0, 'rgba(168, 85, 247, 0.2)');
-      gradient.addColorStop(0.5, 'rgba(236, 72, 153, 0.08)');
-      gradient.addColorStop(1, 'rgba(168, 85, 247, 0)');
+      gradient.addColorStop(0, 'rgba(255, 215, 0, 0.2)');
+      gradient.addColorStop(0.5, 'rgba(218, 165, 32, 0.08)');
+      gradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -260,13 +260,13 @@ const HoldStock = () => {
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-4">
             <div className="relative">
-              <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-pink-500 rounded-xl flex items-center justify-center transform rotate-12 hover:rotate-0 transition-transform duration-500">
-                <FaHeart className="text-white text-xl" />
+              <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-amber-600 rounded-xl flex items-center justify-center transform rotate-12 hover:rotate-0 transition-transform duration-500">
+                <FaHeart className="text-black text-xl" />
               </div>
               <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-pulse"></div>
             </div>
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 bg-clip-text text-transparent">
                 Hold Stock
               </h1>
               <p className="text-xs text-gray-400">Smart Investment Advice</p>
@@ -288,7 +288,7 @@ const HoldStock = () => {
             </div>
             <button
               onClick={() => router.push("/Login")}
-              className="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full font-semibold hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-105"
+              className="px-6 py-2 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-full font-semibold hover:shadow-lg hover:shadow-yellow-500/25 transition-all duration-300 transform hover:scale-105"
             >
               Login
             </button>
@@ -310,7 +310,7 @@ const HoldStock = () => {
               onClick={() => router.push("/StockSearchs")}
               className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-300"
             >
-              <FaSearch className="text-purple-400" />
+              <FaSearch className="text-yellow-400" />
               <span className="hidden sm:inline text-sm">Stock Search</span>
             </button>
             <button
@@ -334,15 +334,15 @@ const HoldStock = () => {
       <main className="relative z-10 px-6 py-12">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 backdrop-blur-sm mb-8 shadow-lg">
-              <FaShieldAlt className="text-purple-400 mr-3 text-lg" />
-              <span className="text-sm font-semibold bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
+            <div className="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 backdrop-blur-sm mb-8 shadow-lg">
+              <FaShieldAlt className="text-yellow-400 mr-3 text-lg" />
+              <span className="text-sm font-semibold bg-gradient-to-r from-yellow-300 to-amber-300 bg-clip-text text-transparent">
                 AI-Powered Investment Advisory
               </span>
             </div>
             
             <h1 className="text-5xl md:text-7xl font-extrabold leading-tight mb-8">
-              <span className="bg-gradient-to-r from-purple-400 via-pink-500 to-purple-500 bg-clip-text text-transparent drop-shadow-lg">
+              <span className="bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 bg-clip-text text-transparent drop-shadow-lg">
                 Hold or Sell?
               </span>
               <br />
@@ -371,16 +371,16 @@ const HoldStock = () => {
 
           <div className="max-w-5xl mx-auto">
             <div className="backdrop-blur-xl bg-gradient-to-br from-white/10 to-white/5 border border-white/20 rounded-3xl p-10 mb-8 shadow-2xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl"></div>
-              <div className="absolute bottom-0 left-0 w-64 h-64 bg-pink-500/10 rounded-full blur-3xl"></div>
+              <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-500/10 rounded-full blur-3xl"></div>
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl"></div>
               
               <div className="relative z-10">
                 <div className="flex items-center space-x-4 mb-8">
-                  <div className="w-14 h-14 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg">
+                  <div className="w-14 h-14 bg-gradient-to-r from-yellow-500 to-amber-500 rounded-2xl flex items-center justify-center shadow-lg">
                     <FaBullseye className="text-white text-2xl" />
                   </div>
                   <div>
-                    <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
+                    <h2 className="text-3xl font-bold bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">
                       Investment Analysis
                     </h2>
                     <p className="text-sm text-gray-400 mt-1">Enter your stock details for personalized advice</p>
@@ -390,9 +390,9 @@ const HoldStock = () => {
                 <form onSubmit={handleSubmit} className="space-y-8">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="space-y-3 group">
-                      <label className="flex items-center text-sm font-bold text-gray-200 group-hover:text-purple-400 transition-colors duration-300">
-                        <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center mr-3">
-                          <FaChartLine className="text-purple-400" />
+                      <label className="flex items-center text-sm font-bold text-gray-200 group-hover:text-yellow-400 transition-colors duration-300">
+                        <div className="w-8 h-8 bg-yellow-500/20 rounded-lg flex items-center justify-center mr-3">
+                          <FaChartLine className="text-yellow-400" />
                         </div>
                         Stock Symbol
                       </label>
@@ -402,7 +402,7 @@ const HoldStock = () => {
                         value={form.stock}
                         onChange={handleChange}
                         placeholder="e.g., RELIANCE, TCS"
-                        className="w-full px-5 py-4 bg-white/10 border-2 border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 hover:border-purple-400/50 text-lg font-medium"
+                        className="w-full px-5 py-4 bg-white/10 border-2 border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-300 hover:border-yellow-400/50 text-lg font-medium"
                         required
                       />
                     </div>
@@ -447,7 +447,7 @@ const HoldStock = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full group px-10 py-5 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 rounded-2xl font-bold text-xl hover:shadow-2xl hover:shadow-purple-500/40 transition-all duration-500 transform hover:scale-[1.02] relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                    className="w-full group px-10 py-5 bg-gradient-to-r from-yellow-600 via-amber-600 to-yellow-600 rounded-2xl font-bold text-xl hover:shadow-2xl hover:shadow-yellow-500/40 transition-all duration-500 transform hover:scale-[1.02] relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                   >
                     <span className="relative z-10 flex items-center justify-center">
                       {loading ? (
@@ -455,7 +455,7 @@ const HoldStock = () => {
                           <FaSpinner className="mr-3 animate-spin text-2xl" />
                           <span className="flex flex-col items-start">
                             <span>Analyzing Your Investment</span>
-                            <span className="text-xs font-normal text-purple-200">Please wait while we process...</span>
+                            <span className="text-xs font-normal text-yellow-200">Please wait while we process...</span>
                           </span>
                         </>
                       ) : (
@@ -465,7 +465,7 @@ const HoldStock = () => {
                         </>
                       )}
                     </span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-purple-700 via-pink-700 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-700 via-amber-700 to-yellow-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </button>
                 </form>
               </div>
@@ -475,13 +475,13 @@ const HoldStock = () => {
               <div className="space-y-8 animate-fadeIn">
                 {/* Stock Overview Card */}
                 {currentPrice && (
-                  <div className="backdrop-blur-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 rounded-3xl p-8 shadow-2xl">
+                  <div className="backdrop-blur-xl bg-gradient-to-br from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 rounded-3xl p-8 shadow-2xl">
                     <div className="flex items-center justify-between mb-6">
                       <div>
                         <h3 className="text-3xl font-bold text-white mb-1">{stockName || form.stock}</h3>
                         <p className="text-gray-400 text-sm">Stock Symbol: {form.stock}</p>
                       </div>
-                      <div className="w-16 h-16 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg">
+                      <div className="w-16 h-16 bg-gradient-to-r from-yellow-500 to-amber-500 rounded-2xl flex items-center justify-center shadow-lg">
                         <FaChartLine className="text-3xl text-white" />
                       </div>
                     </div>
@@ -581,9 +581,9 @@ const HoldStock = () => {
 
                 {/* Target Prices Card */}
                 {recommendation === "Hold" && targetPrices && (
-                  <div className="backdrop-blur-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 rounded-3xl p-10 shadow-2xl">
+                  <div className="backdrop-blur-xl bg-gradient-to-br from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 rounded-3xl p-10 shadow-2xl">
                     <div className="text-center mb-10">
-                      <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mb-6 shadow-2xl">
+                      <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-yellow-500 to-amber-500 rounded-full mb-6 shadow-2xl">
                         <FaBullseye className="text-3xl text-white" />
                       </div>
                       <h3 className="text-3xl font-bold text-white mb-3">Target Price Projections</h3>
@@ -708,17 +708,17 @@ const HoldStock = () => {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col items-center text-center space-y-6">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-purple-400 to-pink-500 rounded-xl flex items-center justify-center">
-                <FaHeart className="text-white text-lg" />
+              <div className="w-10 h-10 bg-gradient-to-r from-yellow-400 to-amber-600 rounded-xl flex items-center justify-center">
+                <FaHeart className="text-black text-lg" />
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <span className="text-xl font-bold bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 bg-clip-text text-transparent">
                 MarketSense
               </span>
             </div>
             
             <div className="flex flex-wrap items-center justify-center gap-4">
               <div className="flex items-center space-x-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
-                <FaShieldAlt className="text-purple-400 text-sm" />
+                <FaShieldAlt className="text-yellow-400 text-sm" />
                 <span className="text-sm text-gray-400">Secure & Reliable</span>
               </div>
               <div className="flex items-center space-x-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
