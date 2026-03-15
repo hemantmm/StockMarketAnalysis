@@ -72,7 +72,7 @@ const ActiveStocks = () => {
         vy: (Math.random() - 0.5) * 0.3,
         size: Math.random() * 2 + 0.5,
         opacity: Math.random() * 0.4 + 0.1,
-        color: ['#00ffff', '#ff00ff', '#ffff00', '#00ff00', '#8b5cf6', '#06b6d4'][Math.floor(Math.random() * 6)],
+        color: ['#FFD700', '#FDB931', '#FFBF00', '#F59E0B', '#D97706', '#B45309'][Math.floor(Math.random() * 6)],
         type: ['currency', 'graph', 'dot'][Math.floor(Math.random() * 3)] as 'currency' | 'graph' | 'dot'
       });
     }
@@ -113,7 +113,7 @@ const ActiveStocks = () => {
           const distance = Math.sqrt(dx * dx + dy * dy);
           
           if (distance < 100) {
-            ctx.strokeStyle = `rgba(0, 255, 255, ${0.1 * (1 - distance / 100)})`;
+            ctx.strokeStyle = `rgba(255, 215, 0, ${0.1 * (1 - distance / 100)})`;
             ctx.lineWidth = 0.5;
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
@@ -127,7 +127,7 @@ const ActiveStocks = () => {
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      ctx.strokeStyle = 'rgba(0, 255, 255, 0.03)';
+      ctx.strokeStyle = 'rgba(255, 215, 0, 0.03)';
       ctx.lineWidth = 0.5;
       const gridSize = 60;
       for (let x = 0; x < canvas.width; x += gridSize) {
@@ -147,9 +147,9 @@ const ActiveStocks = () => {
         mouseRef.current.x, mouseRef.current.y, 0,
         mouseRef.current.x, mouseRef.current.y, 150 
       );
-      gradient.addColorStop(0, 'rgba(0, 255, 255, 0.2)');
-      gradient.addColorStop(0.5, 'rgba(255, 0, 255, 0.08)');
-      gradient.addColorStop(1, 'rgba(0, 255, 255, 0)');
+      gradient.addColorStop(0, 'rgba(255, 215, 0, 0.2)');
+      gradient.addColorStop(0.5, 'rgba(218, 165, 32, 0.08)');
+      gradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -236,13 +236,13 @@ const ActiveStocks = () => {
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-3 sm:space-x-4">
             <div className="relative">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-orange-400 to-red-500 rounded-xl flex items-center justify-center transform rotate-12 hover:rotate-0 transition-transform duration-500">
-                <FaFire className="text-white text-lg sm:text-xl" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-yellow-400 to-amber-600 rounded-xl flex items-center justify-center transform rotate-12 hover:rotate-0 transition-transform duration-500">
+                <FaFire className="text-black text-lg sm:text-xl" />
               </div>
               <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-green-400 rounded-full animate-pulse"></div>
             </div>
             <div>
-              <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 bg-clip-text text-transparent">
+              <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 bg-clip-text text-transparent">
                 Active Stocks
               </h1>
               <p className="text-xs text-gray-400 hidden sm:block">Live Market Movers</p>
@@ -268,7 +268,7 @@ const ActiveStocks = () => {
               <button
                 onClick={() => router.push('/Login')}
                 aria-label="Login"
-                className="px-4 lg:px-6 py-2 bg-gradient-to-r from-orange-500 to-red-600 rounded-full font-semibold hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-300 transform hover:scale-105 text-sm"
+                className="px-4 lg:px-6 py-2 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-full font-semibold hover:shadow-lg hover:shadow-yellow-500/25 transition-all duration-300 transform hover:scale-105 text-sm"
               >
                 Login
               </button>
@@ -278,7 +278,7 @@ const ActiveStocks = () => {
               disabled={refreshing}
               aria-label="Refresh"
               title={refreshing ? "Refreshing..." : "Refresh"}
-              className="px-3 lg:px-4 py-2 bg-gradient-to-r from-orange-500 to-red-600 rounded-full font-semibold hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 flex items-center space-x-2 text-sm"
+              className="px-3 lg:px-4 py-2 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-full font-semibold hover:shadow-lg hover:shadow-yellow-500/25 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 flex items-center space-x-2 text-sm"
             >
               <FaSyncAlt className={`${refreshing ? 'animate-spin' : ''}`} />
               <span className="hidden lg:inline">Refresh</span>
@@ -291,7 +291,7 @@ const ActiveStocks = () => {
               disabled={refreshing}
               aria-label="Refresh"
               title={refreshing ? "Refreshing..." : "Refresh"}
-              className="p-2 bg-gradient-to-r from-orange-500 to-red-600 rounded-lg"
+              className="p-2 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-lg"
             >
               <FaSyncAlt className={`${refreshing ? 'animate-spin' : ''}`} />
             </button>
@@ -307,7 +307,7 @@ const ActiveStocks = () => {
               aria-label="Home"
               className="flex items-center space-x-2 px-3 sm:px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-300 shrink-0"
             >
-              <FaHome className="text-cyan-400" />
+              <FaHome className="text-yellow-400" />
               <span className="hidden sm:inline text-sm">Home</span>
             </button>
             <button
@@ -315,7 +315,7 @@ const ActiveStocks = () => {
               aria-label="Stock Search"
               className="flex items-center space-x-2 px-3 sm:px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-300 shrink-0"
             >
-              <FaSearch className="text-purple-400" />
+              <FaSearch className="text-amber-400" />
               <span className="hidden sm:inline text-sm">Search</span>
             </button>
             <button
@@ -323,11 +323,11 @@ const ActiveStocks = () => {
               aria-label="Portfolio"
               className="flex items-center space-x-2 px-3 sm:px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-300 shrink-0"
             >
-              <FaChartPie className="text-emerald-400" />
+              <FaChartPie className="text-amber-400" />
               <span className="hidden sm:inline text-sm">Portfolio</span>
             </button>
-            <div className="flex items-center space-x-2 px-3 sm:px-4 py-2 rounded-lg bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/30 shrink-0">
-              <FaRocket className="text-orange-400" />
+            <div className="flex items-center space-x-2 px-3 sm:px-4 py-2 rounded-lg bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 shrink-0">
+              <FaRocket className="text-yellow-400" />
               <span className="text-sm font-medium">Active</span>
             </div>
           </div>
@@ -337,13 +337,13 @@ const ActiveStocks = () => {
       <main className="relative z-10 px-4 sm:px-6 py-8 sm:py-12">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-8 sm:mb-12">
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/30 backdrop-blur-sm mb-4 sm:mb-6">
-              <FaFire className="text-orange-400 mr-2 animate-pulse" />
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 backdrop-blur-sm mb-4 sm:mb-6">
+              <FaFire className="text-yellow-400 mr-2 animate-pulse" />
               <span className="text-sm font-medium">Live Market Data</span>
             </div>
             
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 sm:mb-6">
-              <span className="bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 bg-clip-text text-transparent">
                 Most Active
               </span>
               <br />
@@ -358,9 +358,9 @@ const ActiveStocks = () => {
 
           {/* Stats Section */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-8 sm:mb-10">
-            <div className="backdrop-blur-xl bg-gradient-to-br from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-xl sm:rounded-2xl p-4 sm:p-6">
+            <div className="backdrop-blur-xl bg-gradient-to-br from-yellow-500/10 to-amber-500/10 border border-yellow-500/20 rounded-xl sm:rounded-2xl p-4 sm:p-6">
               <div className="flex items-center space-x-2 sm:space-x-3">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg sm:rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-lg sm:rounded-xl flex items-center justify-center">
                   <FaBolt className="text-white text-sm sm:text-lg" />
                 </div>
                 <div>
@@ -370,9 +370,9 @@ const ActiveStocks = () => {
               </div>
             </div>
             
-            <div className="backdrop-blur-xl bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-xl sm:rounded-2xl p-4 sm:p-6">
+            <div className="backdrop-blur-xl bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/20 rounded-xl sm:rounded-2xl p-4 sm:p-6">
               <div className="flex items-center space-x-2 sm:space-x-3">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg sm:rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-amber-500 to-orange-600 rounded-lg sm:rounded-xl flex items-center justify-center">
                   <FaArrowUp className="text-white text-sm sm:text-lg" />
                 </div>
                 <div>
@@ -382,9 +382,9 @@ const ActiveStocks = () => {
               </div>
             </div>
             
-            <div className="backdrop-blur-xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20 rounded-xl sm:rounded-2xl p-4 sm:p-6">
+            <div className="backdrop-blur-xl bg-gradient-to-br from-yellow-500/10 to-orange-500/10 border border-yellow-500/20 rounded-xl sm:rounded-2xl p-4 sm:p-6">
               <div className="flex items-center space-x-2 sm:space-x-3">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg sm:rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-lg sm:rounded-xl flex items-center justify-center">
                   <FaEye className="text-white text-sm sm:text-lg" />
                 </div>
                 <div>
@@ -394,9 +394,9 @@ const ActiveStocks = () => {
               </div>
             </div>
             
-            <div className="backdrop-blur-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 rounded-xl sm:rounded-2xl p-4 sm:p-6">
+            <div className="backdrop-blur-xl bg-gradient-to-br from-amber-500/10 to-yellow-500/10 border border-amber-500/20 rounded-xl sm:rounded-2xl p-4 sm:p-6">
               <div className="flex items-center space-x-2 sm:space-x-3">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg sm:rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-lg sm:rounded-xl flex items-center justify-center">
                   <FaSyncAlt className="text-white text-sm sm:text-lg" />
                 </div>
                 <div>
@@ -412,7 +412,7 @@ const ActiveStocks = () => {
           <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
               <div>
-                <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">
+                <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">
                   Trending Now
                 </h2>
                 <p className="text-gray-400 text-sm mt-1">High volume traded stocks</p>
@@ -422,7 +422,7 @@ const ActiveStocks = () => {
                 disabled={refreshing}
                 aria-label="Refresh Data"
                 title={refreshing ? "Refreshing..." : "Refresh Data"}
-                className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-orange-500 to-red-600 rounded-xl font-medium hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 flex items-center justify-center space-x-2"
+                className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-xl font-medium hover:shadow-lg hover:shadow-yellow-500/25 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 flex items-center justify-center space-x-2"
               >
                 <FaSyncAlt className={`${refreshing ? 'animate-spin' : ''}`} />
                 <span>Refresh Data</span>
@@ -433,9 +433,9 @@ const ActiveStocks = () => {
               <div className="flex justify-center items-center h-48 sm:h-64">
                 <div className="flex flex-col items-center space-y-4">
                   <div className="relative">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 border-4 border-orange-500/20 rounded-full"></div>
-                    <div className="absolute top-0 left-0 w-16 h-16 sm:w-20 sm:h-20 border-4 border-transparent border-t-orange-500 rounded-full animate-spin"></div>
-                    <FaFire className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-orange-400 text-xl sm:text-2xl" />
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 border-4 border-yellow-500/20 rounded-full"></div>
+                    <div className="absolute top-0 left-0 w-16 h-16 sm:w-20 sm:h-20 border-4 border-transparent border-t-yellow-500 rounded-full animate-spin"></div>
+                    <FaFire className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-yellow-400 text-xl sm:text-2xl" />
                   </div>
                   <span className="text-base sm:text-lg text-gray-400">Loading active stocks...</span>
                 </div>
@@ -449,7 +449,7 @@ const ActiveStocks = () => {
                 <p className="text-gray-500 text-sm sm:text-base">Try refreshing the data or check your connection.</p>
                 <button
                   onClick={handleRefresh}
-                  className="mt-4 sm:mt-6 px-6 py-2 bg-gradient-to-r from-orange-500 to-red-600 rounded-xl font-medium hover:shadow-lg transition-all"
+                  className="mt-4 sm:mt-6 px-6 py-2 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-xl font-medium hover:shadow-lg transition-all"
                 >
                   Try Again
                 </button>
@@ -459,7 +459,7 @@ const ActiveStocks = () => {
                 {activeStocks.map((stock, index) => (
                   <div
                     key={stock.company || index}
-                    className="group relative backdrop-blur-xl bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 rounded-xl sm:rounded-2xl p-4 sm:p-5 hover:bg-white/10 hover:border-orange-500/40 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-1 cursor-pointer overflow-hidden"
+                    className="group relative backdrop-blur-xl bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 rounded-xl sm:rounded-2xl p-4 sm:p-5 hover:bg-white/10 hover:border-yellow-500/40 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-1 cursor-pointer overflow-hidden"
                     title={`View details for ${stock.company || "Unknown"}`}
                     onClick={() => router.push(`/StockSearchs?stock=${encodeURIComponent(stock.company || "")}`)}
                   >
@@ -469,7 +469,7 @@ const ActiveStocks = () => {
                     </div>
 
                     {/* Glow effect on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-orange-500/0 via-red-500/0 to-pink-500/0 group-hover:from-orange-500/5 group-hover:via-red-500/5 group-hover:to-pink-500/5 transition-all duration-500 rounded-xl sm:rounded-2xl"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/0 via-amber-500/0 to-orange-500/0 group-hover:from-yellow-500/5 group-hover:via-amber-500/5 group-hover:to-orange-500/5 transition-all duration-500 rounded-xl sm:rounded-2xl"></div>
                     
                     <div className="relative z-10">
                       <div className="flex items-start justify-between mb-3 sm:mb-4">
@@ -478,7 +478,7 @@ const ActiveStocks = () => {
                             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                             <span className="text-xs text-green-400 font-medium">LIVE</span>
                           </div>
-                          <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-orange-400 transition-colors truncate">
+                          <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-yellow-400 transition-colors truncate">
                             {stock.company || <span className="text-gray-500">Unknown</span>}
                           </h3>
                         </div>
@@ -487,7 +487,7 @@ const ActiveStocks = () => {
                       <div className="mb-4">
                         <p className="text-xs text-gray-500 mb-1">Current Price</p>
                         <div className="flex items-baseline space-x-1">
-                          <span className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                          <span className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">
                             ₹{typeof stock.price === "number" && stock.price > 0
                               ? stock.price.toLocaleString('en-IN', { maximumFractionDigits: 2 })
                               : typeof stock.currentPrice === "number" && stock.currentPrice > 0
@@ -501,11 +501,11 @@ const ActiveStocks = () => {
                       <div className="mb-4">
                         <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
                           <span>Activity Level</span>
-                          <span className="text-orange-400">{Math.max(100 - index * 5, 50)}%</span>
+                          <span className="text-yellow-400">{Math.max(100 - index * 5, 50)}%</span>
                         </div>
                         <div className="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
                           <div 
-                            className="h-full bg-gradient-to-r from-orange-500 to-red-500 rounded-full transition-all duration-500"
+                            className="h-full bg-gradient-to-r from-yellow-500 to-amber-600 rounded-full transition-all duration-500"
                             style={{ width: `${Math.max(100 - index * 5, 50)}%` }}
                           ></div>
                         </div>
@@ -516,10 +516,10 @@ const ActiveStocks = () => {
                           e.stopPropagation();
                           router.push(`/StockSearchs?stock=${encodeURIComponent(stock.company || "")}`);
                         }}
-                        className="w-full px-4 py-2.5 bg-gradient-to-r from-orange-500/20 to-red-500/20 hover:from-orange-500 hover:to-red-500 border border-orange-500/30 hover:border-transparent rounded-xl text-white font-semibold text-sm transition-all duration-300 flex items-center justify-center space-x-2 group-hover:shadow-lg group-hover:shadow-orange-500/20"
+                        className="w-full px-4 py-2.5 bg-gradient-to-r from-yellow-500/20 to-amber-500/20 hover:from-yellow-500 hover:to-amber-600 border border-yellow-500/30 hover:border-transparent rounded-xl text-white font-semibold text-sm transition-all duration-300 flex items-center justify-center space-x-2 group-hover:shadow-lg group-hover:shadow-yellow-500/20"
                         title={`Analyze ${stock.company || "Unknown"}`}
                       >
-                        <FaChartLine className="text-orange-400 group-hover:text-white transition-colors" />
+                        <FaChartLine className="text-yellow-400 group-hover:text-white transition-colors" />
                         <span>View Details</span>
                       </button>
                     </div>
@@ -534,7 +534,7 @@ const ActiveStocks = () => {
       <footer className="relative z-10 mt-16 sm:mt-20 px-4 sm:px-6 py-6 sm:py-8 border-t border-white/10 backdrop-blur-xl bg-black/20">
         <div className="max-w-7xl mx-auto text-center">
           <div className="flex items-center justify-center space-x-2 mb-3 sm:mb-4">
-            <FaTrophy className="text-orange-400" />
+            <FaTrophy className="text-yellow-400" />
             <span className="text-xs sm:text-sm text-gray-400">Real-time market data & advanced analytics</span>
           </div>
           <p className="text-gray-500 text-xs sm:text-sm">
