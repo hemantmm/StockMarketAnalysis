@@ -101,7 +101,7 @@ const NotifierPage = () => {
         vy: (Math.random() - 0.5) * 0.3,
         size: Math.random() * 2 + 0.5,
         opacity: Math.random() * 0.4 + 0.1,
-        color: ['#a855f7', '#ec4899', '#8b5cf6', '#d946ef', '#c084fc', '#f472b6'][Math.floor(Math.random() * 6)],
+        color: ['#FFD700', '#FDB931', '#FFBF00', '#F59E0B', '#D97706', '#B45309'][Math.floor(Math.random() * 6)],
         type: ['currency', 'graph', 'dot'][Math.floor(Math.random() * 3)] as 'currency' | 'graph' | 'dot'
       });
     }
@@ -142,7 +142,7 @@ const NotifierPage = () => {
           const distance = Math.sqrt(dx * dx + dy * dy);
           
           if (distance < 100) {
-            ctx.strokeStyle = `rgba(168, 85, 247, ${0.1 * (1 - distance / 100)})`;
+            ctx.strokeStyle = `rgba(255, 215, 0, ${0.1 * (1 - distance / 100)})`;
             ctx.lineWidth = 0.5;
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
@@ -156,7 +156,7 @@ const NotifierPage = () => {
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      ctx.strokeStyle = 'rgba(168, 85, 247, 0.03)';
+      ctx.strokeStyle = 'rgba(255, 215, 0, 0.03)';
       ctx.lineWidth = 0.5;
       const gridSize = 60;
       for (let x = 0; x < canvas.width; x += gridSize) {
@@ -176,9 +176,9 @@ const NotifierPage = () => {
         mouseRef.current.x, mouseRef.current.y, 0,
         mouseRef.current.x, mouseRef.current.y, 150 
       );
-      gradient.addColorStop(0, 'rgba(168, 85, 247, 0.2)');
-      gradient.addColorStop(0.5, 'rgba(236, 72, 153, 0.08)');
-      gradient.addColorStop(1, 'rgba(168, 85, 247, 0)');
+      gradient.addColorStop(0, 'rgba(255, 215, 0, 0.2)');
+      gradient.addColorStop(0.5, 'rgba(218, 165, 32, 0.08)');
+      gradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -297,13 +297,13 @@ const NotifierPage = () => {
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-4">
             <div className="relative cursor-pointer group" onClick={() => router.push("/")}>
-              <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-pink-500 rounded-xl flex items-center justify-center transform rotate-12 group-hover:rotate-0 transition-all duration-500 group-hover:scale-110">
+              <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-amber-600 rounded-xl flex items-center justify-center transform rotate-12 group-hover:rotate-0 transition-all duration-500 group-hover:scale-110">
                 <FaRocket className="text-black text-xl" />
               </div>
               <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-pulse"></div>
             </div>
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 via-pink-500 to-purple-600 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 bg-clip-text text-transparent">
                 MarketSense
               </h1>
               <p className="text-xs text-gray-400">Smart Price Alerts</p>
@@ -335,13 +335,13 @@ const NotifierPage = () => {
               onClick={() => router.push("/")}
               className="flex items-center space-x-2 px-3 py-1 rounded-lg bg-white/5 hover:bg-white/10 transition-colors duration-200 border border-white/10 hover:border-white/20"
             >
-              <FaHome className="text-purple-400" />
+              <FaHome className="text-yellow-400" />
               <span>Home</span>
             </button>
             <span className="text-gray-500">/</span>
-            <div className="flex items-center space-x-2 px-3 py-1 rounded-lg bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30">
-              <FaBell className="text-purple-400" />
-              <span className="text-purple-300 font-medium">Price Alerts</span>
+            <div className="flex items-center space-x-2 px-3 py-1 rounded-lg bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30">
+              <FaBell className="text-yellow-400" />
+              <span className="text-yellow-300 font-medium">Price Alerts</span>
             </div>
           </div>
         </div>
@@ -351,11 +351,11 @@ const NotifierPage = () => {
       <main className="relative z-10 px-6 py-12">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <div className="inline-flex items-center space-x-3 px-6 py-3 rounded-full bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 mb-6 hover:scale-105 transition-transform duration-300">
-              <FaBell className="text-purple-400 text-xl animate-pulse" />
-              <span className="text-purple-300 font-semibold">Smart Price Alerts</span>
+            <div className="inline-flex items-center space-x-3 px-6 py-3 rounded-full bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 mb-6 hover:scale-105 transition-transform duration-300">
+              <FaBell className="text-yellow-400 text-xl animate-pulse" />
+              <span className="text-yellow-300 font-semibold">Smart Price Alerts</span>
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-purple-400 via-pink-500 to-purple-600 bg-clip-text text-transparent animate-gradient">
+            <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 bg-clip-text text-transparent animate-gradient">
               Never Miss a
               <br />
               <span className="inline-block mt-2">Market Move</span>
@@ -369,9 +369,9 @@ const NotifierPage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
             {/* Alert Form */}
             <div className="lg:sticky lg:top-8 h-fit">
-              <div className="backdrop-blur-xl bg-gradient-to-br from-white/10 to-white/5 rounded-3xl border border-white/20 p-8 shadow-2xl hover:shadow-purple-500/20 transition-all duration-300">
+              <div className="backdrop-blur-xl bg-gradient-to-br from-white/10 to-white/5 rounded-3xl border border-white/20 p-8 shadow-2xl hover:shadow-amber-500/20 transition-all duration-300">
                 <div className="mb-8">
-                  <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">
                     Create Price Alert
                   </h2>
                   <p className="text-gray-400">Set up personalized alerts for your favorite stocks</p>
@@ -379,45 +379,45 @@ const NotifierPage = () => {
 
                 <div className="space-y-6">
                   <div className="relative group">
-                    <label className="block text-sm font-medium text-purple-300 mb-2">Stock Symbol</label>
+                    <label className="block text-sm font-medium text-yellow-300 mb-2">Stock Symbol</label>
                     <div className="relative">
-                      <FaChartLine className="absolute left-4 top-1/2 transform -translate-y-1/2 text-purple-400 z-10" />
+                      <FaChartLine className="absolute left-4 top-1/2 transform -translate-y-1/2 text-yellow-400 z-10" />
                       <input
                         type="text"
                         placeholder="e.g., RELIANCE, TCS, INFY"
                         value={stock}
                         onChange={(e) => setStock(e.target.value.toUpperCase())}
-                        className={`w-full pl-12 pr-4 py-4 bg-white/5 border ${fieldErrors.stock ? 'border-red-500' : 'border-white/20'} rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 hover:bg-white/10`}
+                        className={`w-full pl-12 pr-4 py-4 bg-white/5 border ${fieldErrors.stock ? 'border-red-500' : 'border-white/20'} rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 hover:bg-white/10`}
                       />
                       {fieldErrors.stock && <p className="text-red-400 text-xs mt-1">Please enter a valid stock symbol</p>}
                     </div>
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-sm font-medium text-purple-300 mb-2">Target Price (₹)</label>
+                    <label className="block text-sm font-medium text-yellow-300 mb-2">Target Price (₹)</label>
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-purple-400 font-bold z-10">₹</span>
+                      <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-yellow-400 font-bold z-10">₹</span>
                       <input
                         type="number"
                         placeholder="0.00"
                         value={target}
                         onChange={(e) => setTarget(e.target.value)}
-                        className={`w-full pl-12 pr-4 py-4 bg-white/5 border ${fieldErrors.target ? 'border-red-500' : 'border-white/20'} rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 hover:bg-white/10`}
+                        className={`w-full pl-12 pr-4 py-4 bg-white/5 border ${fieldErrors.target ? 'border-red-500' : 'border-white/20'} rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 hover:bg-white/10`}
                       />
                       {fieldErrors.target && <p className="text-red-400 text-xs mt-1">Please enter a valid price</p>}
                     </div>
                   </div>
 
                   <div className="relative group">
-                    <label className="block text-sm font-medium text-purple-300 mb-2">Email Address</label>
+                    <label className="block text-sm font-medium text-yellow-300 mb-2">Email Address</label>
                     <div className="relative">
-                      <FaEnvelope className="absolute left-4 top-1/2 transform -translate-y-1/2 text-purple-400 z-10" />
+                      <FaEnvelope className="absolute left-4 top-1/2 transform -translate-y-1/2 text-yellow-400 z-10" />
                       <input
                         type="email"
                         placeholder="your.email@example.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className={`w-full pl-12 pr-4 py-4 bg-white/5 border ${fieldErrors.email ? 'border-red-500' : 'border-white/20'} rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 hover:bg-white/10`}
+                        className={`w-full pl-12 pr-4 py-4 bg-white/5 border ${fieldErrors.email ? 'border-red-500' : 'border-white/20'} rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 hover:bg-white/10`}
                       />
                       {fieldErrors.email && <p className="text-red-400 text-xs mt-1">Please enter a valid email</p>}
                     </div>
@@ -426,7 +426,7 @@ const NotifierPage = () => {
                   <button
                     onClick={handleSubmit}
                     disabled={loading}
-                    className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-4 rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/50 flex items-center justify-center space-x-2 group"
+                    className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-4 rounded-xl font-semibold hover:from-amber-600 hover:to-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-amber-500/50 flex items-center justify-center space-x-2 group"
                   >
                     {loading ? (
                       <>
@@ -448,13 +448,13 @@ const NotifierPage = () => {
             <div>
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold text-white flex items-center space-x-3">
-                  <FaArrowUp className="text-purple-400" />
+                  <FaArrowUp className="text-yellow-400" />
                   <span>Active Alerts</span>
                   <span className="text-sm font-normal text-gray-400">({alerts.length})</span>
                 </h2>
                 <button
                   onClick={() => setShowAlerts(!showAlerts)}
-                  className="text-purple-400 hover:text-purple-300 transition-colors"
+                  className="text-yellow-400 hover:text-yellow-300 transition-colors"
                 >
                   {showAlerts ? <FaBellSlash /> : <FaBell />}
                 </button>
@@ -476,7 +476,7 @@ const NotifierPage = () => {
                       >
                         <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center space-x-3">
-                            <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                            <div className="w-12 h-12 bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl flex items-center justify-center">
                               <FaChartLine className="text-white text-xl" />
                             </div>
                             <div>
@@ -518,11 +518,11 @@ const NotifierPage = () => {
 
           {/* Features Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
-            <div className="backdrop-blur-xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-2xl border border-purple-500/30 p-6 text-center hover:bg-purple-500/20 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/25 group">
-              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform duration-300">
+            <div className="backdrop-blur-xl bg-gradient-to-br from-yellow-500/10 to-amber-500/10 rounded-2xl border border-yellow-500/30 p-6 text-center hover:bg-yellow-500/20 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-yellow-500/25 group">
+              <div className="w-16 h-16 bg-gradient-to-r from-yellow-500 to-amber-500 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform duration-300">
                 <FaBell className="text-white text-2xl" />
               </div>
-              <h3 className="text-xl font-semibold text-purple-300 mb-2">Instant Notifications</h3>
+              <h3 className="text-xl font-semibold text-yellow-300 mb-2">Instant Notifications</h3>
               <p className="text-gray-400 text-sm leading-relaxed">Get real-time email alerts when your target price is reached</p>
             </div>
 
@@ -595,7 +595,7 @@ const NotifierPage = () => {
 
       {/* Testimonial Section */}
       <div className="relative z-10 max-w-4xl mx-auto my-20 px-6">
-        <div className="bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-purple-500/10 border border-purple-400/30 rounded-3xl p-10 shadow-2xl text-center hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-[1.02]">
+        <div className="bg-gradient-to-r from-yellow-500/10 via-amber-500/10 to-orange-500/10 border border-yellow-400/30 rounded-3xl p-10 shadow-2xl text-center hover:shadow-amber-500/25 transition-all duration-300 transform hover:scale-[1.02]">
           <div className="flex items-center justify-center mb-6">
             <div className="flex space-x-1">
               {[...Array(5)].map((_, i) => (
@@ -609,11 +609,11 @@ const NotifierPage = () => {
             &ldquo;The price alerts from MarketSense have helped me catch market moves I would have missed. The notifications are instant and reliable!&rdquo;
           </blockquote>
           <div className="flex items-center justify-center space-x-3">
-            <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center justify-center">
               <span className="text-white font-bold text-lg">SM</span>
             </div>
             <div className="text-left">
-              <div className="text-purple-300 font-bold">SMM.</div>
+              <div className="text-yellow-300 font-bold">SMM.</div>
               <div className="text-gray-400 text-sm">Swing Trader, USA</div>
             </div>
           </div>
@@ -625,10 +625,10 @@ const NotifierPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             <div>
               <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 bg-gradient-to-r from-purple-400 to-pink-500 rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-xl flex items-center justify-center">
                   <FaRocket className="text-white" />
                 </div>
-                <h3 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
+                <h3 className="text-xl font-bold bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">
                   MarketSense
                 </h3>
               </div>
@@ -640,9 +640,9 @@ const NotifierPage = () => {
             <div>
               <h4 className="text-white font-semibold mb-4">Quick Links</h4>
               <div className="space-y-2">
-                <button onClick={() => router.push("/")} className="block text-gray-400 hover:text-purple-400 transition-colors text-sm">Home</button>
-                <button onClick={() => router.push("/StockSearchs")} className="block text-gray-400 hover:text-purple-400 transition-colors text-sm">Stock Search</button>
-                <button onClick={() => router.push("/Portfolio")} className="block text-gray-400 hover:text-purple-400 transition-colors text-sm">Portfolio</button>
+                <button onClick={() => router.push("/")} className="block text-gray-400 hover:text-yellow-400 transition-colors text-sm">Home</button>
+                <button onClick={() => router.push("/StockSearchs")} className="block text-gray-400 hover:text-yellow-400 transition-colors text-sm">Stock Search</button>
+                <button onClick={() => router.push("/Portfolio")} className="block text-gray-400 hover:text-yellow-400 transition-colors text-sm">Portfolio</button>
               </div>
             </div>
             
@@ -653,7 +653,7 @@ const NotifierPage = () => {
                 <span className="text-sm text-gray-400">Enterprise-grade security</span>
               </div>
               <div className="flex items-center space-x-2">
-                <FaBell className="text-purple-400" />
+                <FaBell className="text-yellow-400" />
                 <span className="text-sm text-gray-400">24/7 monitoring</span>
               </div>
             </div>
