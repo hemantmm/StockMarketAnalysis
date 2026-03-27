@@ -195,6 +195,20 @@ const HoldStock = () => {
     return "max";
   };
 
+  const normalizePrice = (value: unknown): number | null => {
+    if (typeof value === "number" && Number.isFinite(value)) {
+      return value;
+    }
+
+    if (typeof value === "string") {
+      const normalized = value.replace(/,/g, "").trim();
+      const parsed = Number.parseFloat(normalized);
+      return Number.isFinite(parsed) ? parsed : null;
+    }
+
+    return null;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -212,15 +226,19 @@ const HoldStock = () => {
       const prices = historical?.data?.map((item: any) => item.close) || [];
       
       const stockDetails = await fetchStockDetails(form.stock);
-      const fetchedPrice = stockDetails?.currentPrice?.NSE || stockDetails?.currentPrice?.BSE || 0;
+      const fetchedPrice = normalizePrice(stockDetails?.currentPrice?.NSE)
+        ?? normalizePrice(stockDetails?.currentPrice?.BSE)
+        ?? 0;
       setCurrentPrice(fetchedPrice);
       setStockName(stockDetails?.info?.shortName || form.stock);
       
       // Calculate profit/loss
       const buyPrice = parseFloat(form.price);
-      const plAmount = fetchedPrice - buyPrice;
-      const plPercentage = ((plAmount / buyPrice) * 100);
-      setProfitLoss({ amount: plAmount, percentage: plPercentage });
+      if (Number.isFinite(buyPrice) && buyPrice > 0) {
+        const plAmount = fetchedPrice - buyPrice;
+        const plPercentage = (plAmount / buyPrice) * 100;
+        setProfitLoss({ amount: plAmount, percentage: plPercentage });
+      }
       
       const response = await fetch(`https://stockmarketanalysis-1.onrender.com/hold-advice`, {
         method: "POST",
@@ -474,7 +492,7 @@ const HoldStock = () => {
             {result && (
               <div className="space-y-8 animate-fadeIn">
                 {/* Stock Overview Card */}
-                {currentPrice && (
+                {currentPrice !== null && (
                   <div className="backdrop-blur-xl bg-gradient-to-br from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 rounded-3xl p-8 shadow-2xl">
                     <div className="flex items-center justify-between mb-6">
                       <div>
