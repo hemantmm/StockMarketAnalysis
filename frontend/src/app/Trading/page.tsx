@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { getCurrentStockPrice, placeTrade, getTradeHistory, getPortfolio, addFunds, Trade, Portfolio } from '../services/tradingAPI';
 import UserMenu from '../components/UserMenu';
-import { FaHome, FaStar, FaSearch, FaChartPie, FaRocket, FaSpinner } from "react-icons/fa";
+import { FaHome, FaStar, FaSearch, FaChartPie, FaRocket, FaSpinner, FaArrowRight } from "react-icons/fa";
 
 export default function TradingPage() {
   const router = useRouter();
@@ -26,6 +26,8 @@ export default function TradingPage() {
   const [showAddFunds, setShowAddFunds] = useState(false);
   const [portfolioValue, setPortfolioValue] = useState<number | null>(null);
   const [portfolioValueLoading, setPortfolioValueLoading] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [marketStatus, setMarketStatus] = useState<'OPEN' | 'CLOSED'>('CLOSED');
   const [tradeAnalysis, setTradeAnalysis] = useState<{
     totalTrades: number;
     totalBuy: number;
@@ -63,6 +65,23 @@ export default function TradingPage() {
     };
     checkAuth();
   }, [router]);
+
+  useEffect(() => {
+    const updateClock = () => {
+      const now = new Date();
+      setCurrentTime(now);
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const day = now.getDay();
+      const isWeekday = day >= 1 && day <= 5;
+      const isMarketOpen = isWeekday && (hours > 9 || (hours === 9 && minutes >= 15)) && hours < 15;
+      setMarketStatus(isMarketOpen ? 'OPEN' : 'CLOSED');
+    };
+
+    updateClock();
+    const intervalId = setInterval(updateClock, 1000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   useEffect(() => {
     if (userId) {
@@ -237,50 +256,81 @@ export default function TradingPage() {
   };
 
   const renderHeader = () => (
-    <div className="flex justify-between items-center mb-8 pt-4">
-      <div className="flex items-center space-x-4">
+    <div className="relative z-20 mb-10 pt-3">
+      <div className="backdrop-blur-xl bg-black/20 border border-white/10 rounded-2xl px-5 py-4 flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center space-x-4">
+          <div className="relative">
+            <div className="w-11 h-11 bg-gradient-to-r from-yellow-400 to-amber-600 rounded-xl flex items-center justify-center transform rotate-12 hover:rotate-0 transition-transform duration-500">
+              <FaRocket className="text-black text-lg" />
+            </div>
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 bg-clip-text text-transparent">
+              Trading Command Center
+            </h1>
+            <p className="text-xs text-gray-400">Execute, track, and optimize your strategy</p>
+          </div>
+        </div>
+
+        <div className="flex items-center space-x-2 flex-wrap">
         <button
           onClick={() => router.push("/")}
-          className="p-2 text-cyan-400 hover:text-cyan-300 transition-colors"
+          className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-yellow-400 hover:bg-white/10 transition-all"
         >
           <FaHome size={24} />
         </button>
         <button
           onClick={() => router.push("/StockSearchs")}
-          className="p-2 text-purple-400 hover:text-purple-300 transition-colors"
+          className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-amber-400 hover:bg-white/10 transition-all"
         >
           <FaSearch size={24} />
         </button>
         <button
           onClick={() => router.push("/Watchlist")}
-          className="p-2 text-yellow-400 hover:text-yellow-300 transition-colors"
+          className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-yellow-300 hover:bg-white/10 transition-all"
         >
           <FaStar size={24} />
         </button>
         <button
           onClick={() => router.push("/ActiveStocks")}
-          className="p-2 text-orange-400 hover:text-orange-300 transition-colors"
+          className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-orange-400 hover:bg-white/10 transition-all"
         >
           <FaRocket size={24} />
         </button>
         <button
           onClick={() => router.push("/Portfolio")}
-          className="p-2 text-green-400 hover:text-green-300 transition-colors"
+          className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-emerald-400 hover:bg-white/10 transition-all"
         >
           <FaChartPie size={24} />
         </button>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div className="hidden md:flex items-center space-x-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
+            <div className={`w-2 h-2 rounded-full ${marketStatus === 'OPEN' ? 'bg-green-400 animate-pulse' : 'bg-red-400'}`} />
+            <span className="text-sm font-medium">{marketStatus}</span>
+          </div>
+          <div className="hidden md:block text-sm text-gray-400">
+            {currentTime.toLocaleTimeString('en-US', {
+              hour12: false,
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit'
+            })}
+          </div>
+          {user ? (
+            <UserMenu user={user} />
+          ) : (
+            <button
+              onClick={() => router.push('/Login')}
+              className="px-6 py-2 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-full font-semibold hover:shadow-lg hover:shadow-yellow-500/25 transition-all duration-300 transform hover:scale-105"
+            >
+              Login
+            </button>
+          )}
+        </div>
       </div>
-      <h1 className="text-3xl font-bold text-white">Stock Trading</h1>
-      {user ? (
-        <UserMenu user={user} />
-      ) : (
-        <button
-          onClick={() => router.push('/Login')}
-          className="px-6 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg"
-        >
-          Login
-        </button>
-      )}
     </div>
   );
 
@@ -443,13 +493,13 @@ export default function TradingPage() {
 
   if (!userId) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 p-4 flex items-center justify-center">
-        <div className="bg-white/10 backdrop-blur-lg rounded-xl p-8 border border-white/20 max-w-md w-full text-center">
-          <div className="text-3xl font-bold text-white mb-4">Authentication Required</div>
+      <div className="min-h-screen bg-black p-4 flex items-center justify-center">
+        <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-white/10 max-w-md w-full text-center">
+          <div className="text-3xl font-bold bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent mb-4">Authentication Required</div>
           <p className="text-gray-300 mb-6">Please log in to access the trading platform</p>
           <button 
             onClick={() => router.push('/Login')}
-            className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-600 text-white rounded-lg font-semibold hover:opacity-90 transition-opacity"
+            className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-amber-600 text-black rounded-xl font-semibold hover:opacity-90 transition-opacity"
           >
             Go to Login
           </button>
@@ -459,15 +509,23 @@ export default function TradingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 p-4">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-black p-4 md:p-6 relative overflow-hidden text-white">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute -top-24 -left-24 h-72 w-72 bg-yellow-500/10 blur-3xl rounded-full" />
+        <div className="absolute top-1/3 -right-24 h-72 w-72 bg-amber-500/10 blur-3xl rounded-full" />
+        <div className="absolute -bottom-24 left-1/3 h-72 w-72 bg-orange-500/10 blur-3xl rounded-full" />
+      </div>
+
+      <div className="max-w-6xl mx-auto relative z-10">
         {renderHeader()}
-        <h1 className="text-4xl font-bold text-white mb-8 text-center">Stock Trading Platform</h1>
+        <h1 className="text-4xl md:text-5xl font-bold mb-8 text-center">
+          <span className="bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 bg-clip-text text-transparent">Stock Trading Platform</span>
+        </h1>
         
         {/* --- Trade Analysis Section --- */}
         {tradeAnalysis && (
-          <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20 mb-8">
-            <h2 className="text-xl font-semibold text-cyan-300 mb-2">Your Trading Analysis</h2>
+          <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 mb-8">
+            <h2 className="text-xl font-semibold bg-gradient-to-r from-yellow-300 to-amber-500 bg-clip-text text-transparent mb-2">Your Trading Analysis</h2>
             <div className="flex flex-wrap gap-6 text-white text-base">
               <div>Total Trades: <span className="font-bold">{tradeAnalysis.totalTrades}</span></div>
               <div>Buys: <span className="text-green-400 font-bold">{tradeAnalysis.totalBuy}</span></div>
@@ -478,7 +536,7 @@ export default function TradingPage() {
               <div>Net: <span className={tradeAnalysis.net >= 0 ? "text-green-400 font-bold" : "text-red-400 font-bold"}>₹{tradeAnalysis.net.toFixed(2)}</span></div>
               <div>Win Rate: <span>{tradeAnalysis.winRate}%</span></div>
             </div>
-            <div className="mt-4 text-cyan-200 font-semibold">{tradeAnalysis.recommendation}</div>
+            <div className="mt-4 text-amber-200 font-semibold">{tradeAnalysis.recommendation}</div>
           </div>
         )}
         {/* --- End Trade Analysis Section --- */}
@@ -488,20 +546,23 @@ export default function TradingPage() {
             <button
               key={stock.symbol}
               onClick={() => handleQuickBuy(stock.symbol)}
-              className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-600 text-white rounded-xl font-bold shadow-lg hover:scale-105 transition-transform"
+              className="group px-6 py-3 bg-gradient-to-r from-yellow-500 to-amber-600 text-black rounded-xl font-bold shadow-lg shadow-yellow-500/20 hover:scale-105 transition-transform"
             >
-              Quick Buy {stock.name}
+              <span className="inline-flex items-center gap-2">
+                Quick Buy {stock.name}
+                <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
+              </span>
             </button>
           ))}
         </div>
 
         <div className="flex justify-end items-center mb-4">
-          <div className="bg-white/10 backdrop-blur-lg rounded-xl px-6 py-3 border border-white/20 flex items-center gap-3">
+          <div className="bg-white/5 backdrop-blur-xl rounded-xl px-6 py-3 border border-white/10 flex items-center gap-3">
             <span className="text-lg text-white font-semibold">Portfolio Value:</span>
             {portfolioValueLoading ? (
-              <FaSpinner className="animate-spin text-cyan-400" size={22} />
+              <FaSpinner className="animate-spin text-yellow-400" size={22} />
             ) : (
-              <span className="text-cyan-400 font-bold">{portfolioValue !== null ? formatCurrency(portfolioValue) : "--"}</span>
+              <span className="text-yellow-300 font-bold">{portfolioValue !== null ? formatCurrency(portfolioValue) : "--"}</span>
             )}
           </div>
         </div>
@@ -509,7 +570,7 @@ export default function TradingPage() {
         {renderErrorMessage()}
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
+          <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
             <h2 className="text-xl font-semibold text-white mb-4">Account Balance</h2>
             <div className="flex items-center justify-between">
               <p className="text-3xl font-bold text-green-400">
@@ -517,14 +578,14 @@ export default function TradingPage() {
               </p>
               <button 
                 onClick={() => setShowAddFunds(true)} 
-                className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg text-white text-sm transition-colors"
+                className="px-4 py-2 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-lg text-black text-sm font-semibold hover:shadow-lg hover:shadow-yellow-500/25 transition-all"
               >
                 Add Funds
               </button>
             </div>
           </div>
           
-          <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
+          <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
             <h2 className="text-xl font-semibold text-white mb-4">Your Positions</h2>
             <div className="max-h-32 overflow-y-auto">
               {portfolio && Object.entries(portfolio.positions).length > 0 ? (
@@ -544,7 +605,7 @@ export default function TradingPage() {
           </div>
         </div>
 
-        <form onSubmit={handleTrade} className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20 mb-8">
+        <form onSubmit={handleTrade} className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 mb-8">
           <h2 className="text-xl font-semibold text-white mb-6">Place Trade</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -555,7 +616,7 @@ export default function TradingPage() {
                 value={symbol}
                 onChange={(e) => setSymbol(e.target.value.toUpperCase())}
                 placeholder="e.g., RELIANCE"
-                className="w-full px-3 py-2 bg-white/10 border border-white/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 required
               />
             </div>
@@ -567,7 +628,7 @@ export default function TradingPage() {
                 value={qty === '' ? '' : qty}
                 onChange={(e) => setQty(e.target.value === '' ? '' : Math.max(1, parseInt(e.target.value)))}
                 min="1"
-                className="w-full px-3 py-2 bg-white/10 border border-white/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 required
               />
             </div>
@@ -580,7 +641,7 @@ export default function TradingPage() {
                 onChange={(e) => setPrice(e.target.value === '' ? '' : Math.max(0, parseFloat(e.target.value)))}
                 min="0.01"
                 step="0.01"
-                className="w-full px-3 py-2 bg-white/10 border border-white/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 required
               />
             </div>
@@ -590,7 +651,7 @@ export default function TradingPage() {
               <select
                 value={side}
                 onChange={(e) => setSide(e.target.value as 'buy' | 'sell')}
-                className="w-full px-3 py-2 bg-white/10 border border-white/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
               >
                 <option value="buy">Buy</option>
                 <option value="sell">Sell</option>
@@ -603,7 +664,7 @@ export default function TradingPage() {
               type="button"
               onClick={fetchCurrentPrice}
               disabled={priceLoading || !symbol}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white rounded-lg transition-colors"
+              className="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-600 text-black font-semibold rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-amber-500/25 transition-all"
             >
               {priceLoading ? 'Fetching...' : 'Get Current Price'}
             </button>
@@ -611,7 +672,7 @@ export default function TradingPage() {
             <button
               type="submit"
               disabled={loading || !symbol || !qty || !price || price <= 0}
-              className={`px-6 py-2 ${side === 'buy' ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'} disabled:bg-gray-600 text-white rounded-lg transition-colors`}
+              className={`px-6 py-2 ${side === 'buy' ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-rose-600 hover:bg-rose-700'} disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg transition-colors`}
             >
               {loading ? 'Processing...' : `${side === 'buy' ? 'Buy' : 'Sell'} ${qty || ''} shares`}
             </button>
@@ -644,7 +705,7 @@ export default function TradingPage() {
           )}
         </form>
 
-        <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20 mb-8">
+        <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10 mb-8">
           {/* Export/Import buttons */}
           <div className="flex gap-4 mb-4">
             <button
@@ -652,11 +713,11 @@ export default function TradingPage() {
               disabled={!userId}
               aria-label="Export Trade History CSV"
               title={!userId ? "Login required" : "Export Trade History CSV"}
-              className={`bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white ${!userId ? "opacity-50 cursor-not-allowed" : ""}`}
+              className={`bg-gradient-to-r from-yellow-500 to-amber-600 px-4 py-2 rounded-lg text-black font-semibold ${!userId ? "opacity-50 cursor-not-allowed" : "hover:shadow-lg hover:shadow-yellow-500/25"}`}
             >
               Export Trade History CSV
             </button>
-            <label className={`bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white cursor-pointer ${!userId ? "opacity-50 cursor-not-allowed" : ""}`}>
+            <label className={`bg-gradient-to-r from-amber-500 to-orange-600 px-4 py-2 rounded-lg text-black font-semibold cursor-pointer ${!userId ? "opacity-50 cursor-not-allowed" : "hover:shadow-lg hover:shadow-amber-500/25"}`}>
               Import Trade History CSV
               <input type="file" accept=".csv" style={{ display: 'none' }} onChange={handleImportTradeHistory} disabled={!userId} aria-label="Import Trade History CSV" />
             </label>
@@ -666,7 +727,7 @@ export default function TradingPage() {
             <h2 className="text-xl font-semibold text-white">Trade History</h2>
             <button 
               onClick={() => setShowHistory(!showHistory)}
-              className="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-lg text-white text-sm transition-colors"
+              className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-white text-sm transition-colors border border-white/10"
             >
               {showHistory ? 'Hide History' : 'Show History'}
             </button>
@@ -714,7 +775,7 @@ export default function TradingPage() {
 
         {showAddFunds && (
           <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-            <div className="bg-gray-800 rounded-xl p-6 max-w-md w-full border border-white/20">
+            <div className="bg-black/90 backdrop-blur-xl rounded-2xl p-6 max-w-md w-full border border-white/10">
               <h3 className="text-xl font-semibold text-white mb-4">Add Funds</h3>
               <form onSubmit={handleAddFunds}>
                 <div className="mb-4">
@@ -724,7 +785,7 @@ export default function TradingPage() {
                     value={fundAmount}
                     onChange={(e) => setFundAmount(Math.max(1000, parseFloat(e.target.value) || 0))}
                     min="1000"
-                    className="w-full px-3 py-2 bg-white/10 border border-white/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
                     required
                   />
                 </div>
@@ -732,14 +793,14 @@ export default function TradingPage() {
                   <button
                     type="button"
                     onClick={() => setShowAddFunds(false)}
-                    className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg"
+                    className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg border border-white/10"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={loading}
-                    className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg"
+                    className="px-4 py-2 bg-gradient-to-r from-yellow-500 to-amber-600 text-black font-semibold rounded-lg hover:shadow-lg hover:shadow-yellow-500/25 disabled:opacity-50"
                   >
                     {loading ? 'Processing...' : 'Add Funds'}
                   </button>
