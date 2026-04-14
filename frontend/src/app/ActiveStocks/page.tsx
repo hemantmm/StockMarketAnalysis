@@ -1,8 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { FaChartLine, FaHome, FaSearch, FaRocket, FaSyncAlt, FaFire, FaTrophy, FaChartPie, FaArrowUp, FaBolt, FaEye } from "react-icons/fa";
+import {
+  FaArrowUp,
+  FaBolt,
+  FaChartLine,
+  FaChartPie,
+  FaEye,
+  FaFilter,
+  FaFire,
+  FaHome,
+  FaRocket,
+  FaSearch,
+  FaSignal,
+  FaSortAmountDown,
+  FaSyncAlt,
+  FaTrophy,
+} from "react-icons/fa";
+import { Space_Grotesk, Sora } from "next/font/google";
 import activeTrendingStocks from "../ActiveStockAPI";
 import UserMenu from "../components/UserMenu";
 
@@ -11,6 +27,16 @@ type ActiveStocks = {
   price?: number;
   currentPrice?: number;
 };
+
+const displayFont = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["500", "700"],
+});
+
+const bodyFont = Sora({
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+});
 
 const ActiveStocks = () => {
   const router = useRouter();
@@ -24,6 +50,8 @@ const ActiveStocks = () => {
   const [marketStatus, setMarketStatus] = useState("OPEN");
   const [user, setUser] = useState<any>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortMode, setSortMode] = useState<"rank" | "priceHigh" | "priceLow" | "name">("rank");
 
   useEffect(() => {
     setIsClient(true);
@@ -201,6 +229,40 @@ const ActiveStocks = () => {
     fetchActiveStocks();
   }, []);
 
+  const getStockValue = (stock: ActiveStocks) => {
+    if (typeof stock.price === "number" && stock.price > 0) {
+      return stock.price;
+    }
+    if (typeof stock.currentPrice === "number" && stock.currentPrice > 0) {
+      return stock.currentPrice;
+    }
+    return 0;
+  };
+
+  const visibleStocks = useMemo(() => {
+    const filtered = activeStocks.filter((stock) =>
+      (stock.company || "").toLowerCase().includes(searchTerm.toLowerCase().trim())
+    );
+
+    if (sortMode === "priceHigh") {
+      return [...filtered].sort((a, b) => getStockValue(b) - getStockValue(a));
+    }
+    if (sortMode === "priceLow") {
+      return [...filtered].sort((a, b) => getStockValue(a) - getStockValue(b));
+    }
+    if (sortMode === "name") {
+      return [...filtered].sort((a, b) => (a.company || "").localeCompare(b.company || ""));
+    }
+    return filtered;
+  }, [activeStocks, searchTerm, sortMode]);
+
+  const averagePrice = useMemo(() => {
+    if (!visibleStocks.length) return 0;
+    const valid = visibleStocks.map(getStockValue).filter((value) => value > 0);
+    if (!valid.length) return 0;
+    return valid.reduce((sum, value) => sum + value, 0) / valid.length;
+  }, [visibleStocks]);
+
   const handleRefresh = () => {
     fetchActiveStocks();
   };
@@ -225,27 +287,33 @@ const ActiveStocks = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-hidden">
+    <div className={`min-h-screen bg-[#07070a] text-white relative overflow-hidden ${bodyFont.className}`}>
       <canvas
         ref={canvasRef}
         className="fixed inset-0 pointer-events-none"
         style={{ zIndex: 1 }}
       />
 
-      <header className="relative z-50 px-4 sm:px-6 py-4 backdrop-blur-xl bg-black/20 border-b border-white/10">
+      <div className="pointer-events-none absolute inset-0 z-[2]">
+        <div className="absolute -top-24 -left-16 h-72 w-72 rounded-full bg-amber-500/20 blur-3xl" />
+        <div className="absolute top-1/3 -right-20 h-80 w-80 rounded-full bg-orange-500/15 blur-3xl" />
+        <div className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-yellow-300/10 blur-3xl" />
+      </div>
+
+      <header className="relative z-50 px-4 sm:px-6 py-4 backdrop-blur-xl bg-black/30 border-b border-white/10">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-3 sm:space-x-4">
             <div className="relative">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-yellow-400 to-amber-600 rounded-xl flex items-center justify-center transform rotate-12 hover:rotate-0 transition-transform duration-500">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-amber-300 to-orange-500 rounded-xl flex items-center justify-center transform rotate-12 hover:rotate-0 transition-transform duration-500 shadow-lg shadow-orange-600/30">
                 <FaFire className="text-black text-lg sm:text-xl" />
               </div>
               <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-green-400 rounded-full animate-pulse"></div>
             </div>
             <div>
-              <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 bg-clip-text text-transparent">
+              <h1 className={`text-xl sm:text-2xl font-bold bg-gradient-to-r from-amber-300 via-orange-400 to-yellow-500 bg-clip-text text-transparent ${displayFont.className}`}>
                 Active Stocks
               </h1>
-              <p className="text-xs text-gray-400 hidden sm:block">Live Market Movers</p>
+              <p className="text-xs text-amber-100/60 hidden sm:block">Live Market Movers</p>
             </div>
           </div>
           
@@ -254,7 +322,7 @@ const ActiveStocks = () => {
               <div className={`w-2 h-2 rounded-full ${marketStatus === 'OPEN' ? 'bg-green-400 animate-pulse' : 'bg-red-400'}`}></div>
               <span className="text-sm font-medium">{marketStatus}</span>
             </div>
-            <div className="text-sm text-gray-400">
+            <div className="text-sm text-amber-100/70">
               {currentTime.toLocaleTimeString('en-US', { 
                 hour12: false,
                 hour: '2-digit',
@@ -336,36 +404,59 @@ const ActiveStocks = () => {
 
       <main className="relative z-10 px-4 sm:px-6 py-8 sm:py-12">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-8 sm:mb-12">
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 backdrop-blur-sm mb-4 sm:mb-6">
-              <FaFire className="text-yellow-400 mr-2 animate-pulse" />
-              <span className="text-sm font-medium">Live Market Data</span>
+          <div className="mb-8 sm:mb-12">
+            <div className="rounded-3xl border border-amber-300/25 bg-gradient-to-br from-[#1a1304]/80 via-[#1a1208]/60 to-[#0f0c08]/60 backdrop-blur-xl p-6 sm:p-8 lg:p-10 shadow-2xl shadow-black/50">
+              <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
+                <div className="max-w-3xl">
+                  <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-400/40 backdrop-blur-sm mb-5">
+                    <FaSignal className="text-amber-300 mr-2 animate-pulse" />
+                    <span className="text-xs sm:text-sm font-semibold tracking-wide text-amber-100">Market Pulse</span>
+                  </div>
+
+                  <h1 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 sm:mb-6 ${displayFont.className}`}>
+                    <span className="bg-gradient-to-r from-amber-200 via-orange-300 to-yellow-400 bg-clip-text text-transparent">
+                      Most Active
+                    </span>
+                    <br />
+                    <span className="text-white">Stocks Dashboard</span>
+                  </h1>
+
+                  <p className="text-base sm:text-lg text-amber-50/80 max-w-2xl leading-relaxed">
+                    Discover the market&apos;s busiest counters at a glance. Filter quickly, sort by price, and jump straight into analysis.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 sm:gap-4 w-full lg:max-w-sm">
+                  <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+                    <p className="text-xs text-amber-100/65 mb-1">Listed</p>
+                    <p className="text-2xl font-semibold text-white">{activeStocks.length}</p>
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+                    <p className="text-xs text-amber-100/65 mb-1">Visible</p>
+                    <p className="text-2xl font-semibold text-white">{visibleStocks.length}</p>
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+                    <p className="text-xs text-amber-100/65 mb-1">Market</p>
+                    <p className="text-lg font-semibold text-white">{marketStatus}</p>
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+                    <p className="text-xs text-amber-100/65 mb-1">Avg. Price</p>
+                    <p className="text-lg font-semibold text-white">₹{averagePrice > 0 ? averagePrice.toLocaleString("en-IN", { maximumFractionDigits: 2 }) : "N/A"}</p>
+                  </div>
+                </div>
+              </div>
             </div>
-            
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 sm:mb-6">
-              <span className="bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 bg-clip-text text-transparent">
-                Most Active
-              </span>
-              <br />
-              <span className="text-white">Stocks Today</span>
-            </h1>
-            
-            <p className="text-base sm:text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed px-4">
-              Track the most actively traded stocks in real-time. Stay ahead of market trends 
-              and discover high-volume trading opportunities.
-            </p>
           </div>
 
-          {/* Stats Section */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-8 sm:mb-10">
-            <div className="backdrop-blur-xl bg-gradient-to-br from-yellow-500/10 to-amber-500/10 border border-yellow-500/20 rounded-xl sm:rounded-2xl p-4 sm:p-6">
+            <div className="backdrop-blur-xl bg-gradient-to-br from-yellow-500/10 to-amber-500/10 border border-yellow-500/25 rounded-xl sm:rounded-2xl p-4 sm:p-6">
               <div className="flex items-center space-x-2 sm:space-x-3">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-lg sm:rounded-xl flex items-center justify-center">
                   <FaBolt className="text-white text-sm sm:text-lg" />
                 </div>
                 <div>
                   <p className="text-xs sm:text-sm text-gray-400">Total Active</p>
-                  <p className="text-xl sm:text-2xl font-bold text-white">{activeStocks.length}</p>
+                  <p className="text-xl sm:text-2xl font-bold text-white">{visibleStocks.length}</p>
                 </div>
               </div>
             </div>
@@ -410,13 +501,48 @@ const ActiveStocks = () => {
           </div>
 
           <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-6 sm:mb-8 gap-4">
               <div>
-                <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">
+                <h2 className={`text-xl sm:text-2xl font-bold bg-gradient-to-r from-yellow-300 to-amber-400 bg-clip-text text-transparent ${displayFont.className}`}>
                   Trending Now
                 </h2>
                 <p className="text-gray-400 text-sm mt-1">High volume traded stocks</p>
               </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full lg:w-auto lg:min-w-[530px]">
+                <label className="sm:col-span-2 flex items-center gap-3 rounded-xl border border-white/10 bg-black/25 px-3 py-2.5 focus-within:border-amber-400/60">
+                  <FaSearch className="text-amber-300 text-sm" />
+                  <input
+                    value={searchTerm}
+                    onChange={(event) => setSearchTerm(event.target.value)}
+                    placeholder="Filter by company"
+                    className="w-full bg-transparent text-sm text-white placeholder:text-gray-500 outline-none"
+                    aria-label="Filter companies"
+                  />
+                </label>
+
+                <label className="flex items-center gap-2 rounded-xl border border-white/10 bg-black/25 px-3 py-2.5">
+                  <FaFilter className="text-amber-300 text-sm" />
+                  <select
+                    className="w-full bg-transparent text-sm text-white outline-none"
+                    value={sortMode}
+                    onChange={(event) => setSortMode(event.target.value as "rank" | "priceHigh" | "priceLow" | "name")}
+                    aria-label="Sort stocks"
+                  >
+                    <option value="rank" className="bg-[#101014]">Default</option>
+                    <option value="priceHigh" className="bg-[#101014]">Price: High to Low</option>
+                    <option value="priceLow" className="bg-[#101014]">Price: Low to High</option>
+                    <option value="name" className="bg-[#101014]">Name</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+
+            <div className="mb-6 rounded-xl border border-amber-300/15 bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-transparent p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <p className="text-xs sm:text-sm text-amber-100/80 flex items-center gap-2">
+                <FaSortAmountDown className="text-amber-300" />
+                Showing {visibleStocks.length} stock{visibleStocks.length === 1 ? "" : "s"}
+              </p>
               <button
                 onClick={handleRefresh}
                 disabled={refreshing}
@@ -440,54 +566,56 @@ const ActiveStocks = () => {
                   <span className="text-base sm:text-lg text-gray-400">Loading active stocks...</span>
                 </div>
               </div>
-            ) : activeStocks.length === 0 ? (
+            ) : visibleStocks.length === 0 ? (
               <div className="text-center py-12 sm:py-16">
                 <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-gray-700 to-gray-800 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
                   <FaChartLine className="text-3xl sm:text-4xl text-gray-500" />
                 </div>
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-400 mb-2">No Active Stocks Found</h3>
-                <p className="text-gray-500 text-sm sm:text-base">Try refreshing the data or check your connection.</p>
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-300 mb-2">No Stocks Match This Filter</h3>
+                <p className="text-gray-500 text-sm sm:text-base">Try a different company name or reset sorting.</p>
                 <button
-                  onClick={handleRefresh}
+                  onClick={() => {
+                    setSearchTerm("");
+                    setSortMode("rank");
+                  }}
                   className="mt-4 sm:mt-6 px-6 py-2 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-xl font-medium hover:shadow-lg transition-all"
                 >
-                  Try Again
+                  Reset Filters
                 </button>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
-                {activeStocks.map((stock, index) => (
+                {visibleStocks.map((stock, index) => (
                   <div
                     key={stock.company || index}
-                    className="group relative backdrop-blur-xl bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 rounded-xl sm:rounded-2xl p-4 sm:p-5 hover:bg-white/10 hover:border-yellow-500/40 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-1 cursor-pointer overflow-hidden"
+                    className="group relative backdrop-blur-xl bg-gradient-to-br from-[#171311]/80 via-[#131110]/80 to-[#0d0d10]/90 border border-amber-200/15 rounded-2xl p-4 sm:p-5 hover:border-amber-300/45 transition-all duration-300 transform hover:scale-[1.015] hover:-translate-y-1 cursor-pointer overflow-hidden animate-fade-in"
+                    style={{ animationDelay: `${index * 50}ms` }}
                     title={`View details for ${stock.company || "Unknown"}`}
                     onClick={() => router.push(`/StockSearchs?stock=${encodeURIComponent(stock.company || "")}`)}
                   >
-                    {/* Rank Badge */}
                     <div className={`absolute top-3 right-3 w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-r ${getRankBadgeColor(index)} rounded-full flex items-center justify-center shadow-lg`}>
                       {getRankIcon(index)}
                     </div>
 
-                    {/* Glow effect on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/0 via-amber-500/0 to-orange-500/0 group-hover:from-yellow-500/5 group-hover:via-amber-500/5 group-hover:to-orange-500/5 transition-all duration-500 rounded-xl sm:rounded-2xl"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/0 via-amber-500/0 to-orange-500/0 group-hover:from-yellow-500/10 group-hover:via-amber-500/10 group-hover:to-orange-500/10 transition-all duration-500 rounded-2xl"></div>
                     
                     <div className="relative z-10">
                       <div className="flex items-start justify-between mb-3 sm:mb-4">
                         <div className="flex-1 pr-8">
-                          <div className="flex items-center space-x-2 mb-1">
+                          <div className="flex items-center space-x-2 mb-2">
                             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                            <span className="text-xs text-green-400 font-medium">LIVE</span>
+                            <span className="text-xs text-green-400 font-semibold tracking-wide">LIVE</span>
                           </div>
-                          <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-yellow-400 transition-colors truncate">
+                          <h3 className={`text-base sm:text-lg font-bold text-white group-hover:text-yellow-300 transition-colors truncate ${displayFont.className}`}>
                             {stock.company || <span className="text-gray-500">Unknown</span>}
                           </h3>
                         </div>
                       </div>
                       
                       <div className="mb-4">
-                        <p className="text-xs text-gray-500 mb-1">Current Price</p>
+                        <p className="text-xs text-amber-100/60 mb-1">Current Price</p>
                         <div className="flex items-baseline space-x-1">
-                          <span className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">
+                          <span className={`text-2xl sm:text-3xl font-bold bg-gradient-to-r from-yellow-300 to-amber-500 bg-clip-text text-transparent ${displayFont.className}`}>
                             ₹{typeof stock.price === "number" && stock.price > 0
                               ? stock.price.toLocaleString('en-IN', { maximumFractionDigits: 2 })
                               : typeof stock.currentPrice === "number" && stock.currentPrice > 0
@@ -497,7 +625,6 @@ const ActiveStocks = () => {
                         </div>
                       </div>
 
-                      {/* Activity indicator bar */}
                       <div className="mb-4">
                         <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
                           <span>Activity Level</span>
@@ -508,6 +635,18 @@ const ActiveStocks = () => {
                             className="h-full bg-gradient-to-r from-yellow-500 to-amber-600 rounded-full transition-all duration-500"
                             style={{ width: `${Math.max(100 - index * 5, 50)}%` }}
                           ></div>
+                        </div>
+                      </div>
+
+                      <div className="mb-4">
+                        <div className="h-8 flex items-end gap-1.5">
+                          {getMiniBars(index).map((barHeight, barIndex) => (
+                            <span
+                              key={`${stock.company}-${barIndex}`}
+                              className="flex-1 rounded-sm bg-gradient-to-t from-amber-600/60 to-yellow-300/90"
+                              style={{ height: `${barHeight}%` }}
+                            />
+                          ))}
                         </div>
                       </div>
                       
@@ -547,6 +686,11 @@ const ActiveStocks = () => {
 };
 
 export default ActiveStocks;
+
+const getMiniBars = (index: number) => {
+  const base = [30, 44, 58, 36, 62, 48, 72, 40];
+  return base.map((value, i) => Math.max(20, Math.min(95, value + ((index + i) % 5) * 6 - 10)));
+};
 
 const getRankBadgeColor = (index: number) => {
   if (index === 0) return "from-yellow-400 to-amber-500";
