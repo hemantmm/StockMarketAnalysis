@@ -19,8 +19,9 @@ const LoginPage = () => {
     e.preventDefault();
     setErrorMsg('');
     setIsLoading(true);
-    
-    await axios.post(`https://stockmarketanalysis-node.onrender.com/Login`, {
+
+    await axios
+    .post(`https://stockmarketanalysis-node.onrender.com/Login`, {
       email,
       password,
     })
@@ -48,180 +49,132 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-black relative overflow-hidden text-white">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute inset-0 bg-linear-to-br from-yellow-500/10 via-amber-500/8 to-orange-500/10"></div>
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-yellow-500 rounded-full mix-blend-screen filter blur-xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-amber-500 rounded-full mix-blend-screen filter blur-xl opacity-20 animate-pulse animation-delay-2000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-orange-500 rounded-full mix-blend-screen filter blur-xl opacity-20 animate-pulse animation-delay-4000"></div>
-      </div>
+    <main className="relative min-h-screen overflow-hidden bg-slate-950 text-white">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,#f59e0b22,transparent_45%),radial-gradient(circle_at_bottom_left,#06b6d444,transparent_50%),linear-gradient(135deg,#020617_0%,#0f172a_55%,#1e293b_100%)]" />
+      <div className="absolute -top-24 right-0 h-72 w-72 rounded-full bg-cyan-400/20 blur-3xl" />
+      <div className="absolute -bottom-24 left-0 h-72 w-72 rounded-full bg-amber-400/20 blur-3xl" />
 
-      {/* Login Card */}
-      <div className="relative z-10 w-full max-w-md px-6">
-        <div className="bg-white/5 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/10 p-8 transform transition-all duration-300 hover:scale-[1.02] hover:bg-white/10">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-linear-to-br from-yellow-400 to-amber-600 rounded-full mb-4 shadow-lg shadow-yellow-500/25">
-              <svg className="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-              </svg>
+      <section className="relative z-10 mx-auto grid min-h-screen w-full max-w-6xl items-center gap-8 px-5 py-8 sm:px-8 lg:grid-cols-2 lg:px-12">
+        <aside className="hidden rounded-3xl border border-white/15 bg-white/5 p-10 backdrop-blur-2xl lg:block">
+          <p className="mb-5 inline-flex items-center rounded-full border border-cyan-300/30 bg-cyan-300/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-100">
+            MarketSense Dashboard
+          </p>
+          <h1 className="font-serif text-5xl font-semibold leading-tight text-slate-50">
+            Trade with clarity, not noise.
+          </h1>
+          <p className="mt-5 max-w-md text-base leading-relaxed text-slate-300">
+            Sign in to access your watchlists, active positions, paper trades, and AI-driven stock insights in one place.
+          </p>
+
+          <div className="mt-10 grid gap-4 sm:grid-cols-2">
+            <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-4">
+              <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Daily Volume</p>
+              <p className="mt-2 text-2xl font-semibold text-cyan-200">$14.2M</p>
             </div>
-            <h1 className="text-4xl font-bold mb-2 bg-linear-to-r from-yellow-400 via-amber-500 to-orange-500 bg-clip-text text-transparent">Welcome Back</h1>
-            <p className="text-gray-300 text-sm">Sign in to continue to your account</p>
+            <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-4">
+              <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Win Rate</p>
+              <p className="mt-2 text-2xl font-semibold text-emerald-300">68.4%</p>
+            </div>
+          </div>
+        </aside>
+
+        <div className="rounded-3xl border border-white/15 bg-slate-900/75 p-6 shadow-2xl shadow-black/40 backdrop-blur-2xl sm:p-8 md:p-10">
+          <div className="mb-7">
+            <p className="text-sm uppercase tracking-[0.18em] text-amber-300">Welcome back</p>
+            <h2 className="mt-2 font-serif text-4xl font-semibold text-slate-100">Sign In</h2>
+            <p className="mt-2 text-sm text-slate-300">Continue to your stock market workspace.</p>
           </div>
 
-          {/* Error Message */}
           {errorMsg && (
-            <div className="mb-6 bg-red-500/20 border border-red-500/50 rounded-xl px-4 py-3 flex items-start animate-shake">
-              <svg className="w-5 h-5 text-red-400 mr-2 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-              </svg>
-              <span className="text-red-200 text-sm">{errorMsg}</span>
+            <div className="mb-5 rounded-xl border border-red-300/50 bg-red-500/15 px-4 py-3 text-sm text-red-100">
+              {errorMsg}
             </div>
           )}
 
-          {/* Form */}
-          <form onSubmit={handleLogin} className="space-y-6">
-            {/* Email Field */}
+          <form onSubmit={handleLogin} className="space-y-5">
             <div>
-              <label className="block text-gray-200 text-sm font-semibold mb-2" htmlFor="email">
+              <label className="mb-2 block text-sm font-semibold text-slate-200" htmlFor="email">
                 Email Address
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
-                  </svg>
-                </div>
-                <input
-                  className="w-full bg-white/10 border border-white/20 rounded-xl py-3 pl-12 pr-4 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200"
-                  type="email"
-                  id="email"
-                  name="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
+              <input
+                className="w-full rounded-xl border border-slate-600/70 bg-slate-800/75 px-4 py-3 text-slate-50 placeholder:text-slate-400 focus:border-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-300/30"
+                type="email"
+                id="email"
+                name="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </div>
 
-            {/* Password Field */}
             <div>
-              <label className="block text-gray-200 text-sm font-semibold mb-2" htmlFor="password">
+              <label className="mb-2 block text-sm font-semibold text-slate-200" htmlFor="password">
                 Password
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                </div>
                 <input
-                  className="w-full bg-white/10 border border-white/20 rounded-xl py-3 pl-12 pr-12 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200"
-                  type={showPassword ? "text" : "password"}
+                  className="w-full rounded-xl border border-slate-600/70 bg-slate-800/75 px-4 py-3 pr-20 text-slate-50 placeholder:text-slate-400 focus:border-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-300/30"
+                  type={showPassword ? 'text' : 'password'}
                   id="password"
                   name="password"
-                  placeholder="••••••••"
+                  placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
                 <button
                   type="button"
-                  className="absolute inset-y-0 right-0 pr-4 flex items-center"
+                  className="absolute inset-y-0 right-3 my-auto h-fit text-xs font-semibold uppercase tracking-wide text-cyan-200 transition-colors hover:text-cyan-100"
                   onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
-                  {showPassword ? (
-                    <svg className="w-5 h-5 text-gray-400 hover:text-gray-200 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7-1.274 4.057-5.064 7-9.543 7-1.653 0-3.2-.386-4.59-1.073M6.59 6.59L3 3m3.59 3.59L9.88 9.88" />
-                    </svg>
-                  ) : (
-                    <svg className="w-5 h-5 text-gray-400 hover:text-gray-200 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                  )}
+                  {showPassword ? 'Hide' : 'Show'}
                 </button>
               </div>
             </div>
 
-            {/* Forgot Password Link */}
             <div className="flex items-center justify-end">
-              <button type="button" className="text-sm text-yellow-400 hover:text-amber-300 transition-colors">
+              <button type="button" className="text-sm text-amber-300 transition-colors hover:text-amber-200">
                 Forgot password?
               </button>
             </div>
 
-            {/* Login Button */}
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-linear-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl hover:shadow-yellow-500/25 transform hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center"
+              className="inline-flex w-full items-center justify-center rounded-xl bg-linear-to-r from-cyan-400 to-amber-400 px-4 py-3 text-sm font-bold uppercase tracking-wider text-slate-950 shadow-lg shadow-cyan-400/20 transition hover:-translate-y-px hover:shadow-cyan-300/30 disabled:cursor-not-allowed disabled:opacity-70"
             >
               {isLoading ? (
                 <>
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <svg className="mr-2 h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle className="opacity-30" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-90" fill="currentColor" d="M12 2a10 10 0 00-10 10h4a6 6 0 016-6V2z" />
                   </svg>
-                  Signing in...
+                  Signing in
                 </>
               ) : (
-                <>
-                  Sign In
-                  <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </>
+                'Sign In'
               )}
             </button>
           </form>
 
-          {/* Divider */}
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-white/20"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-transparent text-gray-400">New to Stock Market Analysis?</span>
-            </div>
-          </div>
+          <div className="my-6 h-px w-full bg-linear-to-r from-transparent via-slate-500/60 to-transparent" />
 
-          {/* Sign Up Button */}
           <button
             type="button"
             onClick={handleSignUpPage}
-            className="w-full bg-white/10 hover:bg-white/20 border border-yellow-500/30 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 transform hover:-translate-y-0.5"
+            className="w-full rounded-xl border border-cyan-300/40 bg-cyan-300/10 px-4 py-3 text-sm font-semibold uppercase tracking-wider text-cyan-100 transition hover:bg-cyan-300/20"
           >
             Create an Account
           </button>
+
+          <p className="mt-6 text-center text-xs text-slate-400">
+            By signing in, you agree to our Terms of Service and Privacy Policy.
+          </p>
         </div>
-
-        {/* Footer */}
-        <p className="text-center text-gray-400 text-xs mt-6">
-          By signing in, you agree to our Terms of Service and Privacy Policy
-        </p>
-      </div>
-
-      <style jsx>{`
-        @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          25% { transform: translateX(-10px); }
-          75% { transform: translateX(10px); }
-        }
-        .animate-shake {
-          animation: shake 0.5s ease-in-out;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-      `}</style>
-    </div>
+      </section>
+    </main>
   );
 }
 export default LoginPage;
