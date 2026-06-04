@@ -97,14 +97,6 @@ Contributions are welcome! Please open issues or pull requests for bug fixes, fe
 4. Push to the branch (`git push origin feature/your-feature`)
 5. Open a pull request
 
-## Acknowledgements
-
-- [Next.js](https://nextjs.org/)
-- [FastAPI](https://fastapi.tiangolo.com/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [React](https://react.dev/)
-- [Vercel](https://vercel.com/)
-
 ---
 
 *MarketSense: Empowering smarter trading decisions with AI.*
