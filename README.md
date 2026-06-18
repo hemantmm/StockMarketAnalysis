@@ -1,6 +1,6 @@
 # MarketSense: AI-Powered Stock Market Analysis Platform
 
-MarketSense is an advanced, open-source stock market analysis platform powered by AI and machine learning. It provides real-time insights, predictive analytics, intelligent recommendations, and a suite of trading simulation tools for both beginners and experienced traders.
+MarketSense is an advanced, open-source stock market analysis platform powered by AI and machine learning. It provides real-time insights, predictive analytics, and intelligent recommendations of trading simulation tools for both beginners and experienced traders.
 
 ## Features
 
