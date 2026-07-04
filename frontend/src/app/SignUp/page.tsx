@@ -5,6 +5,13 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+const AUTH_API_BASE = (
+  process.env.NEXT_PUBLIC_AUTH_API_BASE ||
+  (process.env.NODE_ENV === 'production'
+    ? 'https://stockmarketanalysis-node.onrender.com'
+    : 'http://127.0.0.1:4000')
+).replace(/\/$/, '');
+
 const SignUpPage = () => {
   const router = useRouter();
   const [name, setName] = useState('');
@@ -65,7 +72,7 @@ const SignUpPage = () => {
     setIsLoading(true);
     
     try {
-      await axios.post('https://stockmarketanalysis-node.onrender.com/SignUp', {
+      await axios.post(`${AUTH_API_BASE}/SignUp`, {
         username: name,
         email,
         password,

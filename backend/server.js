@@ -1,4 +1,5 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -11,7 +12,7 @@ const app= express();
 const PORT = process.env.PORT || 4000;
 
 app.use(cors({
-    origin: ['http://localhost:3000','https://stock-market-analysis-five-lake.vercel.app'],
+    origin: ['http://localhost:3000', 'http://127.0.0.1:3000', 'https://stock-market-analysis-five-lake.vercel.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true,
 }))
@@ -53,14 +54,20 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model('User', userSchema);
 
 app.post('/SignUp', async (req, res) => {
-    const { username, email, password } = req.body;
+    const username = req.body.username?.trim();
+    const email = req.body.email?.trim().toLowerCase();
+    const { password } = req.body;
+
+    if (!username || !email || !password) {
+        return res.status(400).json({ message: 'Username, email, and password are required' });
+    }
 
     if(!validator.isEmail(email)) {
         return res.status(400).json({ message: 'Invalid email address' });
     }
 
     try {
-        const existingUser = await User.findOne({$or: [{ username, email }] });
+        const existingUser = await User.findOne({ $or: [{ username }, { email }] });
         if(existingUser) {
             return res.status(400).json({ message: 'User already exists' });
         }
@@ -82,10 +89,16 @@ app.post('/SignUp', async (req, res) => {
 });
 
 app.post('/Login', async (req, res) => {
-    const { username, email, password } = req.body;
+    const username = req.body.username?.trim();
+    const email = req.body.email?.trim().toLowerCase();
+    const { password } = req.body;
     console.log('Login attempt with:', { username, email, hasPassword: !!password });
     
     try {
+        if (!password) {
+            return res.status(400).json({ message: 'Password is required' });
+        }
+
         // Build query dynamically based on what's provided
         let query = {};
         if (username) {
@@ -106,8 +119,6 @@ app.post('/Login', async (req, res) => {
         }
         
         console.log('User found:', { id: user._id, username: user.username, email: user.email });
-        console.log('Stored password hash:', user.password);
-        console.log('Provided password:', password);
         
         const isMatch = await bcrypt.compare(password, user.password);
         console.log('Password match result:', isMatch);
@@ -117,9 +128,14 @@ app.post('/Login', async (req, res) => {
             return res.status(400).json({ message: 'Invalid username/email or password' });
         }
         
+        if (!process.env.JWT_SECRET) {
+            console.error('JWT_SECRET is not configured');
+            return res.status(500).json({ message: 'Authentication service is not configured' });
+        }
+
         const token = jwt.sign({ userId: user._id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
         console.log('Login successful for user:', user.username);
-        res.json({token,username:user.username});
+        res.json({ token, username: user.username, email: user.email, id: user._id });
     } catch (error) {
         console.error('Login error:', error);
         res.status(500).json({ message: 'Internal server error' });
