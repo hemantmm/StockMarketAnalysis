@@ -45,6 +45,18 @@ interface StockData {
 
 const periodWiseOptions = ["1m", "6m", "1yr", "3yr", "5yr", "10yr", "max"];
 
+const getStockSymbol = (stockData: any, fallback: string) =>
+  String(
+    stockData?.symbol ||
+      stockData?.ticker ||
+      stockData?.nseCode ||
+      stockData?.bseCode ||
+      fallback
+  ).trim();
+
+const getStockName = (stockData: any, fallback: string) =>
+  String(stockData?.companyName || stockData?.name || fallback).trim();
+
 const StockSearchs = () => {
   const router = useRouter();
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -323,14 +335,11 @@ const StockSearchs = () => {
         `Sending recommendation request for ${symbol} with ${prices.length} price points, period: ${period}`
       );
 
-      const res = await fetch(
-        "http://127.0.0.1:5000/api/stock-recommendation",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ symbol, prices, period }),
-        }
-      );
+      const res = await fetch("/api/stock-recommendation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ symbol, prices, period }),
+      });
 
       if (!res.ok) {
         const errorText = await res.text();
@@ -375,7 +384,7 @@ const StockSearchs = () => {
         targetPrice: targetPrice,
       });
     } catch (error) {
-      console.error("Recommendation error:", error);
+      console.warn("Using local recommendation fallback:", error);
 
       const lastPrice = prices[prices.length - 1];
       const recentPrices = prices.slice(-20);
@@ -604,23 +613,26 @@ const StockSearchs = () => {
     setWatchlistErrorMsg("");
 
     try {
+      const stockSymbol = getStockSymbol(stockData, stockName);
+      const stockDisplayName = getStockName(stockData, stockName || stockSymbol);
+
       console.log("Watchlist toggle for:", {
         userId,
-        symbol: stockData.symbol || stockName,
-        name: stockData.companyName || stockName,
+        symbol: stockSymbol,
+        name: stockDisplayName,
       });
 
       if (isInWatchlist) {
       } else {
         const response = await addToWatchlist(
           userId,
-          stockData.symbol || stockName,
-          stockData.companyName || stockName
+          stockSymbol,
+          stockDisplayName
         );
         if (response.success) {
           setIsInWatchlist(true);
           setWatchlistErrorMsg("");
-          alert(`${stockData.symbol} added to watchlist successfully!`);
+          alert(`${stockDisplayName} added to watchlist successfully!`);
         } else {
           setWatchlistErrorMsg(response.message || "Failed to add to watchlist");
           alert(response.message || "Failed to add to watchlist");
@@ -640,10 +652,11 @@ const StockSearchs = () => {
   };
 
   useEffect(() => {
-    if (stockData?.symbol && userId) {
-      checkWatchlistStatus(stockData.symbol);
+    const stockSymbol = getStockSymbol(stockData, stockName);
+    if (stockSymbol && userId) {
+      checkWatchlistStatus(stockSymbol);
     }
-  }, [stockData, userId, checkWatchlistStatus]);
+  }, [stockData, stockName, userId, checkWatchlistStatus]);
 
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">

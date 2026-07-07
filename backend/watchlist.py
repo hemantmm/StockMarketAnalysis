@@ -3,7 +3,7 @@ import os
 from typing import List, Dict, Any, Optional
 
 # Path to the watchlist JSON file
-WATCHLIST_PATH = "watchlist.json"
+WATCHLIST_PATH = os.path.join(os.path.dirname(__file__), "watchlist.json")
 
 def _load_watchlist() -> List[Dict[str, Any]]:
     """Load the watchlist from the JSON file. Create if it doesn't exist."""

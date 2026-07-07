@@ -7,6 +7,19 @@ import { getUserWatchlist, WatchlistItem, removeFromWatchlist } from "../watchli
 import fetchStockDetails from "../stockNameAPI";
 import UserMenu from "../components/UserMenu";
 
+const toFiniteNumber = (value: unknown, fallback = 0) => {
+  if (typeof value === "number") {
+    return Number.isFinite(value) ? value : fallback;
+  }
+
+  if (typeof value === "string") {
+    const parsed = parseFloat(value.replace(/,/g, ""));
+    return Number.isFinite(parsed) ? parsed : fallback;
+  }
+
+  return fallback;
+};
+
 const WatchlistPage = () => {
   const router = useRouter();
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -313,13 +326,13 @@ const WatchlistPage = () => {
           comparison = a.stock_name.localeCompare(b.stock_name);
           break;
         case "price":
-          const aPrice = parseFloat(aData?.currentPrice?.NSE || "0");
-          const bPrice = parseFloat(bData?.currentPrice?.NSE || "0");
+          const aPrice = toFiniteNumber(aData?.currentPrice?.NSE);
+          const bPrice = toFiniteNumber(bData?.currentPrice?.NSE);
           comparison = aPrice - bPrice;
           break;
         case "change":
-          const aChange = parseFloat(aData?.percentChange || "0");
-          const bChange = parseFloat(bData?.percentChange || "0");
+          const aChange = toFiniteNumber(aData?.percentChange);
+          const bChange = toFiniteNumber(bData?.percentChange);
           comparison = aChange - bChange;
           break;
       }
@@ -363,18 +376,18 @@ const WatchlistPage = () => {
 
       <div className="relative z-10 min-h-screen flex flex-col">
         {/* Header */}
-        <header className="relative z-50 px-4 sm:px-6 py-5 backdrop-blur-2xl bg-gradient-to-r from-black/40 via-black/30 to-black/40 border-b border-white/20 shadow-2xl shrink-0">
+        <header className="relative z-50 px-4 sm:px-6 py-5 backdrop-blur-2xl bg-linear-to-r from-black/40 via-black/30 to-black/40 border-b border-white/20 shadow-2xl shrink-0">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
             <div className="flex items-center space-x-3 sm:space-x-4">
               <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 rounded-xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity duration-300"></div>
-                <div className="relative w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-500 rounded-xl flex items-center justify-center transform rotate-12 hover:rotate-0 transition-all duration-500 shadow-xl">
+                <div className="absolute inset-0 bg-linear-to-r from-yellow-400 via-amber-500 to-orange-500 rounded-xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity duration-300"></div>
+                <div className="relative w-10 h-10 sm:w-12 sm:h-12 bg-linear-to-br from-yellow-400 via-amber-500 to-orange-500 rounded-xl flex items-center justify-center transform rotate-12 hover:rotate-0 transition-all duration-500 shadow-xl">
                   <FaStar className="text-black text-lg sm:text-xl animate-pulse" />
                 </div>
-                <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse shadow-lg shadow-green-500/50"></div>
+                <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-linear-to-r from-green-400 to-emerald-500 rounded-full animate-pulse shadow-lg shadow-green-500/50"></div>
               </div>
               <div>
-                <h1 className="text-xl sm:text-2xl font-extrabold bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-400 bg-clip-text text-transparent drop-shadow-lg">
+                <h1 className="text-xl sm:text-2xl font-extrabold bg-linear-to-r from-yellow-300 via-amber-400 to-orange-400 bg-clip-text text-transparent drop-shadow-lg">
                   My Watchlist
                 </h1>
                 <p className="text-xs text-gray-400 hidden sm:block font-medium">
@@ -386,14 +399,14 @@ const WatchlistPage = () => {
             <div className="flex items-center space-x-2 sm:space-x-3 w-full sm:w-auto">
               <button
                 onClick={() => router.push("/")}
-                className="group flex-1 sm:flex-initial px-4 sm:px-6 py-2.5 bg-gradient-to-br from-gray-700 via-gray-600 to-gray-700 rounded-full font-bold hover:shadow-2xl hover:shadow-gray-500/40 transition-all duration-300 transform hover:scale-110 hover:-translate-y-0.5 flex items-center justify-center space-x-2 text-sm sm:text-base border border-gray-500/30"
+                className="group flex-1 sm:flex-initial px-4 sm:px-6 py-2.5 bg-linear-to-br from-gray-700 via-gray-600 to-gray-700 rounded-full font-bold hover:shadow-2xl hover:shadow-gray-500/40 transition-all duration-300 transform hover:scale-110 hover:-translate-y-0.5 flex items-center justify-center space-x-2 text-sm sm:text-base border border-gray-500/30"
               >
                 <FaHome className="text-xs sm:text-sm group-hover:rotate-12 transition-transform" />
                 <span className="hidden sm:inline">Home</span>
               </button>
               <button
                 onClick={() => router.push("/StockSearchs")}
-                className="group flex-1 sm:flex-initial px-4 sm:px-6 py-2.5 bg-gradient-to-br from-cyan-600 via-purple-600 to-purple-700 rounded-full font-bold hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-110 hover:-translate-y-0.5 flex items-center justify-center space-x-2 text-sm sm:text-base border border-cyan-400/30"
+                className="group flex-1 sm:flex-initial px-4 sm:px-6 py-2.5 bg-linear-to-br from-cyan-600 via-purple-600 to-purple-700 rounded-full font-bold hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-110 hover:-translate-y-0.5 flex items-center justify-center space-x-2 text-sm sm:text-base border border-cyan-400/30"
               >
                 <FaSearch className="text-xs sm:text-sm group-hover:rotate-12 transition-transform" />
                 <span className="hidden sm:inline">Search</span>
@@ -573,7 +586,7 @@ const WatchlistPage = () => {
                     <div className="text-sm text-gray-300 font-semibold">
                       Total Value: <span className="text-green-400 font-extrabold text-lg">
                         ₹{filteredAndSortedItems.reduce((sum, item) => {
-                          const price = parseFloat(watchlistData[item.stock_symbol]?.currentPrice?.NSE || "0");
+                          const price = toFiniteNumber(watchlistData[item.stock_symbol]?.currentPrice?.NSE);
                           return sum + price;
                         }, 0).toFixed(2)}
                       </span>
@@ -737,7 +750,8 @@ const WatchlistPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-7">
                 {filteredAndSortedItems.map((item, index) => {
                   const stockData = watchlistData[item.stock_symbol];
-                  const priceChange = stockData?.percentChange || 0;
+                  const priceChange = toFiniteNumber(stockData?.percentChange);
+                  const currentPrice = toFiniteNumber(stockData?.currentPrice?.NSE);
                   const isPositive = priceChange >= 0;
                   
                   return (
@@ -803,7 +817,7 @@ const WatchlistPage = () => {
                               <div className="flex justify-between items-center">
                                 <span className="text-gray-300 text-sm font-bold">Current Price</span>
                                 <span className="font-black text-3xl bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent drop-shadow-lg">
-                                  ₹{parseFloat(stockData.currentPrice?.NSE || '0').toFixed(2)}
+                                  ₹{currentPrice.toFixed(2)}
                                 </span>
                               </div>
                               {stockData.percentChange !== undefined && (
@@ -818,21 +832,6 @@ const WatchlistPage = () => {
                                   </div>
                                 </div>
                               )}
-                              {/* Additional Stock Info */}
-                              <div className="pt-4 mt-4 border-t-2 border-white/10 grid grid-cols-2 gap-3 text-xs">
-                                <div className="flex flex-col p-3 rounded-xl bg-black/30 border border-green-500/30 backdrop-blur-md">
-                                  <span className="text-gray-400 font-bold mb-1">High</span>
-                                  <span className="text-green-300 font-extrabold text-base">
-                                    ₹{stockData.dayHigh || 'N/A'}
-                                  </span>
-                                </div>
-                                <div className="flex flex-col p-3 rounded-xl bg-black/30 border border-red-500/30 backdrop-blur-md">
-                                  <span className="text-gray-400 font-bold mb-1">Low</span>
-                                  <span className="text-red-300 font-extrabold text-base">
-                                    ₹{stockData.dayLow || 'N/A'}
-                                  </span>
-                                </div>
-                              </div>
                             </div>
                           ) : (
                             <div className="flex items-center justify-center py-8">

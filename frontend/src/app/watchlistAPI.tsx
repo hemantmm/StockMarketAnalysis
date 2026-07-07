@@ -1,13 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE || (
-  process.env.NODE_ENV === 'production'
-    ? 'https://stockmarketanalysis-1.onrender.com'
-    : 'http://localhost:8000'
-);
-
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: '/api',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'
@@ -25,6 +19,24 @@ export interface WatchlistResponse {
   message: string;
   data?: unknown;
 }
+
+const getApiErrorMessage = (error: unknown, fallback: string) => {
+  if (axios.isAxiosError(error)) {
+    const detail = error.response?.data?.detail;
+    const message = error.response?.data?.message;
+
+    if (typeof message === 'string') return message;
+    if (typeof detail === 'string') return detail;
+    if (error.code === 'ECONNABORTED') {
+      return 'Watchlist service timed out. Make sure the backend is running on port 8000.';
+    }
+    if (!error.response) {
+      return 'Could not reach the watchlist service. Make sure the backend is running on port 8000.';
+    }
+  }
+
+  return fallback;
+};
 
 export const addToWatchlist = async (
   userId: string, 
@@ -49,7 +61,7 @@ export const addToWatchlist = async (
     }
     return {
       success: false,
-      message: 'Failed to add stock to watchlist'
+      message: getApiErrorMessage(error, 'Failed to add stock to watchlist')
     };
   }
 };
@@ -60,12 +72,10 @@ export const removeFromWatchlist = async (
   stockName: string
 ): Promise<WatchlistResponse> => {
   try {
-    const response = await api.delete(`/watchlist/remove`, {
-      data: {
-        user_id: userId,
-        stock_symbol: stockSymbol,
-        stock_name: stockName
-      }
+    const response = await api.post(`/watchlist/remove`, {
+      user_id: userId,
+      stock_symbol: stockSymbol,
+      stock_name: stockName
     });
     return response.data;
   } catch (error) {
@@ -79,7 +89,7 @@ export const removeFromWatchlist = async (
     }
     return {
       success: false,
-      message: 'Failed to remove stock from watchlist'
+      message: getApiErrorMessage(error, 'Failed to remove stock from watchlist')
     };
   }
 };
