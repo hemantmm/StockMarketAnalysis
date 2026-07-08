@@ -659,28 +659,27 @@ const StockSearchs = () => {
   }, [stockData, stockName, userId, checkWatchlistStatus]);
 
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-hidden">
+    <div className="min-h-screen overflow-hidden bg-[#f6f8fb] text-slate-950">
       <canvas
         ref={canvasRef}
-        className="fixed inset-0 pointer-events-none"
+        className="fixed inset-0 pointer-events-none opacity-10 mix-blend-multiply"
         style={{ zIndex: 1 }}
       />
 
       <div className="relative z-10 min-h-screen flex flex-col">
-        <header className="relative z-50 px-4 sm:px-6 py-4 backdrop-blur-xl bg-black/20 border-b border-white/10 shrink-0">
+        <header className="sticky top-0 z-50 shrink-0 border-b border-slate-200/80 bg-white/90 px-4 py-3 shadow-sm backdrop-blur-xl sm:px-6">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
             <div className="flex items-center space-x-3 sm:space-x-4">
               <div className="relative">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-yellow-400 to-amber-600 rounded-xl flex items-center justify-center transform rotate-12 hover:rotate-0 transition-transform duration-500">
-                  <FaSearch className="text-black text-lg sm:text-xl" />
+                <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-slate-950 text-amber-300 shadow-lg shadow-slate-300/60">
+                  <FaSearch className="text-lg sm:text-xl" />
                 </div>
-                <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-green-400 rounded-full animate-pulse"></div>
               </div>
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 bg-clip-text text-transparent">
+                <h1 className="text-xl sm:text-2xl font-bold text-slate-950">
                   MarketSense
                 </h1>
-                <p className="text-xs text-gray-400 hidden sm:block">
+                <p className="text-xs text-slate-500 hidden sm:block">
                   Smart Stock Analysis
                 </p>
               </div>
@@ -689,28 +688,28 @@ const StockSearchs = () => {
             <div className="flex items-center space-x-2 sm:space-x-4 w-full sm:w-auto">
               <button
                 onClick={() => router.push("/")}
-                className="flex-1 sm:flex-initial px-4 sm:px-6 py-2 bg-gradient-to-r from-gray-600 to-gray-700 rounded-full font-semibold hover:shadow-lg hover:shadow-gray-500/25 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 text-sm sm:text-base"
+                className="flex-1 sm:flex-initial px-4 sm:px-5 py-2.5 rounded-lg border border-slate-200 bg-white font-bold text-slate-700 shadow-sm transition hover:border-slate-300 flex items-center justify-center space-x-2 text-sm sm:text-base"
               >
                 <FaHome className="text-xs sm:text-sm" />
                 <span className="hidden sm:inline">Home</span>
               </button>
               <button
                 onClick={() => router.push("/Portfolio")}
-                className="flex-1 sm:flex-initial px-4 sm:px-6 py-2 bg-gradient-to-r from-emerald-500 to-green-600 rounded-full font-semibold hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 text-sm sm:text-base"
+                className="flex-1 sm:flex-initial px-4 sm:px-5 py-2.5 rounded-lg border border-emerald-200 bg-emerald-50 font-bold text-emerald-800 shadow-sm transition hover:bg-emerald-100 flex items-center justify-center space-x-2 text-sm sm:text-base"
               >
                 <FaChartPie className="text-xs sm:text-sm" />
                 <span className="hidden sm:inline">Portfolio</span>
               </button>
               <button
                 onClick={() => router.push("/HoldStock")}
-                className="flex-1 sm:flex-initial px-4 sm:px-6 py-2 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-full font-semibold hover:shadow-lg hover:shadow-yellow-500/25 transition-all duration-300 transform hover:scale-105 text-sm sm:text-base"
+                className="flex-1 sm:flex-initial px-4 sm:px-5 py-2.5 rounded-lg border border-amber-200 bg-amber-50 font-bold text-amber-800 shadow-sm transition hover:bg-amber-100 text-sm sm:text-base"
               >
                 <span className="sm:hidden">Hold</span>
                 <span className="hidden sm:inline">Hold Stock</span>
               </button>
               <button
                 onClick={() => router.push("/Watchlist")}
-                className="flex-1 sm:flex-initial px-4 sm:px-6 py-2 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full font-semibold hover:shadow-lg hover:shadow-amber-500/25 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 text-sm sm:text-base"
+                className="flex-1 sm:flex-initial px-4 sm:px-5 py-2.5 rounded-lg bg-slate-950 font-bold text-white shadow-sm transition hover:bg-slate-800 flex items-center justify-center space-x-2 text-sm sm:text-base"
               >
                 <FaStar className="text-xs sm:text-sm" />
                 <span className="hidden sm:inline">Watchlist</span>
@@ -721,29 +720,46 @@ const StockSearchs = () => {
 
         <main className="relative z-10 px-4 sm:px-6 py-8 sm:py-12">
           <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-8 sm:mb-12">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-4 sm:mb-6">
-                <span className="bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 bg-clip-text text-transparent">
-                  Powered
-                </span>
-                <br />
-                <span className="text-white">Stock Analysis</span>
+            <div className="mb-8 grid gap-6 rounded-lg border border-slate-200 bg-[linear-gradient(135deg,#ffffff_0%,#eef7f6_52%,#fff7e6_100%)] p-6 shadow-xl shadow-slate-200/70 sm:mb-10 sm:p-8 lg:grid-cols-[1fr_360px] lg:items-end">
+              <div>
+                <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-bold uppercase text-emerald-700">
+                  <FaChartLine />
+                  Search, chart, decide
+                </p>
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight text-slate-950">
+                  Stock analysis built for fast decisions.
               </h1>
-              <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed mb-6 sm:mb-8 px-4">
-                Discover market insights with advanced predictions and real-time
-                data analysis.
-              </p>
+                <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600 sm:text-lg">
+                  Enter a symbol, choose the horizon, then review price action,
+                  technical averages, watchlist status, and AI recommendation in one view.
+                </p>
+              </div>
+              <div className="grid grid-cols-3 gap-3">
+                {["1m", "1yr", "max"].map((item) => (
+                  <button
+                    key={item}
+                    type="button"
+                    onClick={() => setPeriodWise(item)}
+                    className="rounded-lg border border-slate-200 bg-white p-3 text-center text-sm font-black text-slate-700 shadow-sm transition hover:border-emerald-200 hover:bg-emerald-50"
+                  >
+                    {item}
+                    <span className="mt-1 block text-[10px] font-bold uppercase text-slate-400">
+                      range
+                    </span>
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8 shadow-2xl">
+            <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm sm:p-6 mb-6 sm:mb-8">
               <div className="flex items-center space-x-2 sm:space-x-3 mb-4 sm:mb-6">
-                <FaChartLine className="text-yellow-400 text-xl sm:text-2xl" />
-                <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">
+                <FaChartLine className="text-emerald-600 text-xl sm:text-2xl" />
+                <h2 className="text-xl sm:text-2xl font-black text-slate-950">
                   Stock Search & Analysis
                 </h2>
                 <button
                   onClick={handleClearInput}
-                  className="px-2 py-2 rounded-lg bg-gray-700 text-white hover:bg-gray-800 transition-all duration-200 flex items-center justify-center"
+                  className="ml-auto px-2 py-2 rounded-lg border border-slate-200 bg-slate-50 text-slate-600 hover:bg-rose-50 hover:text-rose-600 transition-all duration-200 flex items-center justify-center"
                   type="button"
                   title="Clear"
                   style={{ height: "44px", width: "44px", minWidth: "44px" }}
@@ -762,18 +778,18 @@ const StockSearchs = () => {
                     setShowInputError(false);
                     setError("");
                   }}
-                  className={`lg:col-span-2 px-4 sm:px-6 py-3 sm:py-4 rounded-xl border border-white/20 bg-white/5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent backdrop-blur-sm text-base sm:text-lg ${showInputError ? "border-red-500" : ""}`}
+                  className={`lg:col-span-2 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3.5 text-base text-slate-950 placeholder:text-slate-400 outline-none transition focus:border-emerald-400 focus:bg-white focus:ring-4 focus:ring-emerald-100 sm:px-5 ${showInputError ? "border-red-500" : ""}`}
                 />
                 <select
                   value={periodWise}
                   onChange={(e) => setPeriodWise(e.target.value)}
-                  className="px-4 sm:px-6 py-3 sm:py-4 rounded-xl border border-white/20 bg-white/5 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent backdrop-blur-sm text-base sm:text-lg"
+                  className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3.5 text-base font-semibold text-slate-800 outline-none transition focus:border-emerald-400 focus:bg-white focus:ring-4 focus:ring-emerald-100 sm:px-5"
                 >
                   {periodWiseOptions.map((option) => (
                     <option
                       key={option}
                       value={option}
-                      className="bg-gray-800 text-white"
+                      className="bg-white text-slate-900"
                     >
                       {option}
                     </option>
@@ -781,32 +797,31 @@ const StockSearchs = () => {
                 </select>
               </div>
               {showInputError && (
-                <div className="mt-2 text-red-400 text-sm">Please enter a stock symbol to search.</div>
+                <div className="mt-2 text-sm font-semibold text-red-600">Please enter a stock symbol to search.</div>
               )}
               <button
                 onClick={handleSearchClick}
                 disabled={loading}
-                className="w-full group px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-xl font-bold text-base sm:text-lg hover:shadow-2xl hover:shadow-yellow-500/25 transition-all duration-500 transform hover:scale-105 relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+                className="group relative w-full overflow-hidden rounded-lg bg-slate-950 px-6 py-3.5 text-base font-black text-white shadow-lg shadow-slate-200 transition hover:-translate-y-0.5 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50 sm:px-8"
               >
                 <span className="relative z-10 flex items-center justify-center">
                   <FaSearch className="mr-2 sm:mr-3" />
                   {loading ? "Analyzing..." : "Analyze Stock"}
                 </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-amber-600 to-orange-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </button>
 
               {loading && (
                 <div className="flex items-center justify-center mt-4 sm:mt-6 space-x-3">
-                  <div className="animate-spin rounded-full h-5 w-5 sm:h-6 sm:w-6 border-b-2 border-yellow-400"></div>
-                  <p className="text-yellow-400 text-sm sm:text-base">
+                  <div className="animate-spin rounded-full h-5 w-5 sm:h-6 sm:w-6 border-b-2 border-emerald-500"></div>
+                  <p className="text-emerald-700 text-sm sm:text-base font-semibold">
                     Analyzing stock data...
                   </p>
                 </div>
               )}
 
               {error && (
-                <div className="mt-4 sm:mt-6 p-4 bg-red-500/20 border border-red-500/30 rounded-xl backdrop-blur-sm">
-                  <p className="text-red-300 text-center text-sm sm:text-base">
+                <div className="mt-4 sm:mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-red-700 text-center text-sm sm:text-base font-semibold">
                     {error}
                   </p>
                 </div>
@@ -814,22 +829,22 @@ const StockSearchs = () => {
             </div>
 
             {stockData && !loading && (
-              <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8 shadow-2xl">
+              <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm sm:p-6 mb-6 sm:mb-8">
                 {showDetails && (
-                  <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 sm:p-8 max-w-lg w-full relative max-h-[90vh] overflow-y-auto">
+                  <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                    <div className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-lg border border-slate-200 bg-white p-6 shadow-2xl sm:p-8">
                       <button
-                        className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors"
+                        className="absolute top-4 right-4 text-slate-400 hover:text-slate-900 transition-colors"
                         onClick={toggleDetails}
                       >
                         <IoMdClose size={24} />
                       </button>
-                      <h2 className="text-xl sm:text-2xl font-bold mb-4 text-white pr-8">
+                      <h2 className="text-xl sm:text-2xl font-black mb-4 text-slate-950 pr-8">
                         {stockData.companyName}
                       </h2>
-                      <div className="space-y-3 text-gray-300">
+                      <div className="space-y-3 text-slate-600">
                         <p className="text-sm sm:text-base">
-                          <strong className="text-yellow-400">Industry:</strong>{" "}
+                          <strong className="text-slate-950">Industry:</strong>{" "}
                           {stockData.industry}
                         </p>
                         <p className="text-sm sm:text-base leading-relaxed">
@@ -840,21 +855,21 @@ const StockSearchs = () => {
                   </div>
                 )}
 
-                <div className="backdrop-blur-sm bg-gradient-to-r from-yellow-500/10 to-amber-500/10 border border-yellow-500/20 rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6">
+                <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 sm:p-6 mb-4 sm:mb-6">
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
                     <div className="flex-1">
-                      <h3 className="text-base sm:text-lg font-medium text-gray-300 mb-2">
+                      <h3 className="text-sm font-bold uppercase text-emerald-700 mb-2">
                         Current Price
                       </h3>
                       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                        <p className="text-2xl sm:text-3xl font-bold text-white">
+                        <p className="text-3xl sm:text-4xl font-black text-slate-950">
                           ₹{stockData.currentPrice.NSE}
                         </p>
                         <div
                           className={`flex items-center space-x-1 px-3 py-1 rounded-full text-sm font-medium w-fit ${
                             stockData.percentChange > 0
-                              ? "bg-green-500/20 text-green-400 border border-green-500/30"
-                              : "bg-red-500/20 text-red-400 border border-red-500/30"
+                            ? "bg-green-100 text-green-700 border border-green-200"
+                            : "bg-red-100 text-red-700 border border-red-200"
                           }`}
                         >
                           {stockData.percentChange > 0 ? (
@@ -874,15 +889,15 @@ const StockSearchs = () => {
                         title={!userId ? "Login required" : isInWatchlist ? "Already in Watchlist" : "Add to Watchlist"}
                         className={`p-3 rounded-xl ${
                           isInWatchlist
-                            ? "bg-yellow-500/20 hover:bg-yellow-500/30 border-yellow-500/30"
-                            : "bg-white/10 hover:bg-white/20 border-white/20"
+                            ? "bg-amber-100 hover:bg-amber-200 border-amber-200"
+                            : "bg-white hover:bg-slate-50 border-slate-200"
                         } 
                         transition-colors border self-start flex items-center justify-center`}
                       >
                         <FaStar
                           size={18}
                           className={`${
-                            isInWatchlist ? "text-yellow-400" : "text-gray-400"
+                            isInWatchlist ? "text-amber-500" : "text-slate-400"
                           } sm:text-xl`}
                         />
                         {watchlistLoading && (
@@ -892,22 +907,22 @@ const StockSearchs = () => {
                       <button
                         onClick={toggleDetails}
                         aria-label="Show Stock Details"
-                        className="p-3 rounded-xl bg-white/10 hover:bg-white/20 transition-colors border border-white/20 self-start"
+                        className="p-3 rounded-xl bg-white hover:bg-slate-50 transition-colors border border-slate-200 self-start"
                       >
                         <FaInfoCircle
                           size={18}
-                          className="text-yellow-400 sm:text-xl"
+                          className="text-emerald-600 sm:text-xl"
                         />
                       </button>
                     </div>
                     {watchlistErrorMsg && (
-                      <div className="mt-2 text-red-400 text-sm">{watchlistErrorMsg}</div>
+                      <div className="mt-2 text-red-600 text-sm font-semibold">{watchlistErrorMsg}</div>
                     )}
                   </div>
                 </div>
 
-                <div className="backdrop-blur-sm bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-6">
-                  <h3 className="text-lg sm:text-xl font-semibold mb-4 text-white">
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 sm:p-6">
+                  <h3 className="text-lg sm:text-xl font-black mb-4 text-slate-950">
                     Technical Analysis
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
@@ -915,21 +930,21 @@ const StockSearchs = () => {
                       (item: StockData, index: number) => (
                         <div
                           key={index}
-                          className="backdrop-blur-sm bg-white/5 border border-white/10 rounded-xl p-3 sm:p-4"
+                          className="rounded-lg border border-slate-200 bg-white p-3 sm:p-4"
                         >
-                          <div className="text-xs sm:text-sm text-gray-400 mb-1">
+                          <div className="text-xs sm:text-sm font-bold uppercase text-slate-400 mb-1">
                             {item.days} Days Avg
                           </div>
                           <div className="space-y-1">
                             <div className="flex justify-between text-sm sm:text-base">
-                              <span className="text-gray-300">BSE:</span>
-                              <span className="text-white font-medium">
+                              <span className="text-slate-500">BSE:</span>
+                              <span className="text-slate-950 font-bold">
                                 ₹{item.bsePrice}
                               </span>
                             </div>
                             <div className="flex justify-between text-sm sm:text-base">
-                              <span className="text-gray-300">NSE:</span>
-                              <span className="text-white font-medium">
+                              <span className="text-slate-500">NSE:</span>
+                              <span className="text-slate-950 font-bold">
                                 ₹{item.nsePrice}
                               </span>
                             </div>
@@ -943,12 +958,12 @@ const StockSearchs = () => {
             )}
 
             {stockPriceData.length > 0 && !loading && (
-              <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl">
-                <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">
+              <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+                <h3 className="text-xl sm:text-2xl font-black mb-4 sm:mb-6 text-slate-950">
                   Price Chart
                 </h3>
 
-                <div className="backdrop-blur-sm bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6">
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 sm:p-5 mb-4 sm:mb-6">
                   <div className="h-64 sm:h-80 lg:h-96">
                     <Line
                       data={{
@@ -961,11 +976,11 @@ const StockSearchs = () => {
                             ),
                             tension: 0.4,
                             fill: true,
-                            borderColor: "rgba(251, 191, 36, 1)",
-                            backgroundColor: "rgba(251, 191, 36, 0.1)",
+                            borderColor: "rgba(5, 150, 105, 1)",
+                            backgroundColor: "rgba(5, 150, 105, 0.1)",
                             borderWidth: 3,
-                            pointBackgroundColor: "rgba(251, 191, 36, 1)",
-                            pointBorderColor: "rgba(255, 255, 255, 0.8)",
+                            pointBackgroundColor: "rgba(5, 150, 105, 1)",
+                            pointBorderColor: "rgba(255, 255, 255, 0.9)",
                             pointBorderWidth: 2,
                             pointRadius: 4,
                             pointHoverRadius: 6,
@@ -984,12 +999,12 @@ const StockSearchs = () => {
                             display: true,
                             position: "top",
                             labels: {
-                              color: "rgba(255, 255, 255, 0.8)",
+                              color: "rgba(15, 23, 42, 0.85)",
                               font: { size: 14, weight: "bold" },
                             },
                           },
                           tooltip: {
-                            backgroundColor: "rgba(0, 0, 0, 0.8)",
+                            backgroundColor: "rgba(15, 23, 42, 0.92)",
                             titleFont: { size: 16, weight: "bold" },
                             bodyFont: { size: 14 },
                             padding: 12,
@@ -1047,28 +1062,28 @@ const StockSearchs = () => {
                             title: {
                               display: true,
                               text: "Date",
-                              color: "rgba(255, 255, 255, 0.7)",
+                              color: "rgba(71, 85, 105, 0.95)",
                               font: { size: 14 },
                             },
                             ticks: {
-                              color: "rgba(255, 255, 255, 0.6)",
+                              color: "rgba(71, 85, 105, 0.9)",
                               font: { size: 12 },
                               maxTicksLimit: 8,
                             },
-                            grid: { color: "rgba(255, 255, 255, 0.1)" },
+                            grid: { color: "rgba(148, 163, 184, 0.22)" },
                           },
                           y: {
                             title: {
                               display: true,
                               text: "Price (₹)",
-                              color: "rgba(255, 255, 255, 0.7)",
+                              color: "rgba(71, 85, 105, 0.95)",
                               font: { size: 14 },
                             },
                             ticks: {
-                              color: "rgba(255, 255, 255, 0.6)",
+                              color: "rgba(71, 85, 105, 0.9)",
                               font: { size: 12 },
                             },
-                            grid: { color: "rgba(255, 255, 255, 0.1)" },
+                            grid: { color: "rgba(148, 163, 184, 0.22)" },
                             beginAtZero: false,
                           },
                         },
@@ -1080,16 +1095,16 @@ const StockSearchs = () => {
             )}
 
             {stockData && !loading && (
-              <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8 shadow-2xl">
-                <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">
+              <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm sm:p-6 mb-6 sm:mb-8">
+                <h3 className="text-xl sm:text-2xl font-black mb-4 sm:mb-6 text-slate-950">
                   AI-Powered Recommendation
                 </h3>
 
-                <div className="backdrop-blur-sm bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-6">
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 sm:p-6">
                   {recommendationLoading ? (
                     <div className="flex items-center justify-center py-8">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-400"></div>
-                      <p className="ml-3 text-yellow-400">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500"></div>
+                      <p className="ml-3 text-emerald-700 font-semibold">
                         Analyzing stock trends...
                       </p>
                     </div>
@@ -1099,17 +1114,17 @@ const StockSearchs = () => {
                         <div
                           className={`px-4 py-2 rounded-lg text-lg font-bold ${
                             stockRecommendation.recommendation === "Buy"
-                              ? "bg-green-500/30 text-green-400 border border-green-500/30"
+                              ? "bg-green-100 text-green-700 border border-green-200"
                               : stockRecommendation.recommendation === "Sell"
-                              ? "bg-red-500/30 text-red-400 border border-red-500/30"
-                              : "bg-yellow-500/30 text-yellow-400 border border-yellow-500/30"
+                              ? "bg-red-100 text-red-700 border border-red-200"
+                              : "bg-amber-100 text-amber-800 border border-amber-200"
                           }`}
                         >
                           Recommendation: {stockRecommendation.recommendation}
                         </div>
-                        <div className="text-gray-400 text-sm">
+                        <div className="text-slate-500 text-sm font-medium">
                           Confidence:{" "}
-                          <span className="text-white">
+                          <span className="text-slate-950 font-bold">
                             {stockRecommendation.confidence}
                           </span>
                           {stockRecommendation.period && (
@@ -1119,7 +1134,7 @@ const StockSearchs = () => {
                           )}
                         </div>
                         {stockRecommendation.targetPrice && (
-                          <div className="text-white text-sm bg-white/10 px-3 py-1 rounded-lg">
+                          <div className="text-slate-700 text-sm bg-white border border-slate-200 px-3 py-1 rounded-lg font-semibold">
                             Target price: ₹{stockRecommendation.targetPrice}
                           </div>
                         )}
@@ -1128,16 +1143,16 @@ const StockSearchs = () => {
                       {stockRecommendation.supportLevel &&
                         stockRecommendation.resistanceLevel && (
                           <div className="my-4 px-2">
-                            <div className="text-sm text-white mb-2">
+                            <div className="text-sm text-slate-700 font-bold mb-2">
                               Price Range Analysis:
                             </div>
-                            <div className="relative h-10 bg-gray-800/50 rounded-lg">
+                            <div className="relative h-10 rounded-lg bg-white border border-slate-200">
                               {/* Resistance Level */}
                               <div
                                 className="absolute top-0 h-full border-r-2 border-red-400"
                                 style={{ left: "100%" }}
                               >
-                                <div className="absolute top-0 right-0 transform translate-x-2 -translate-y-6 text-xs text-red-400">
+                                  <div className="absolute top-0 right-0 transform translate-x-2 -translate-y-6 text-xs font-semibold text-red-600">
                                   Resistance: ₹
                                   {Number(
                                     stockRecommendation.resistanceLevel
@@ -1172,7 +1187,7 @@ const StockSearchs = () => {
                                     })()}%`,
                                   }}
                                 >
-                                  <div className="absolute top-0 right-0 transform translate-x-2 -translate-y-1 text-xs text-white">
+                                  <div className="absolute top-0 right-0 transform translate-x-2 -translate-y-1 text-xs font-semibold text-slate-700">
                                     Current: ₹
                                     {Number(stockData.currentPrice.NSE).toFixed(
                                       2
@@ -1186,7 +1201,7 @@ const StockSearchs = () => {
                                 className="absolute top-0 h-full border-r-2 border-green-400"
                                 style={{ left: "0%" }}
                               >
-                                <div className="absolute top-0 left-0 transform -translate-x-2 -translate-y-6 text-xs text-green-400">
+                                  <div className="absolute top-0 left-0 transform -translate-x-2 -translate-y-6 text-xs font-semibold text-green-600">
                                   Support: ₹
                                   {Number(
                                     stockRecommendation.supportLevel
@@ -1220,7 +1235,7 @@ const StockSearchs = () => {
                                     })()}%`,
                                   }}
                                 >
-                                  <div className="absolute bottom-0 right-0 transform translate-x-2 translate-y-6 text-xs text-yellow-400">
+                                  <div className="absolute bottom-0 right-0 transform translate-x-2 translate-y-6 text-xs font-semibold text-amber-600">
                                     Target: ₹
                                     {Number(
                                       stockRecommendation.targetPrice
@@ -1233,12 +1248,12 @@ const StockSearchs = () => {
                         )}
 
                       {stockRecommendation.riskRating && (
-                        <div className="bg-white/5 rounded-lg p-3">
-                          <div className="text-sm text-white mb-2">
+                        <div className="rounded-lg border border-slate-200 bg-white p-3">
+                          <div className="text-sm text-slate-700 font-bold mb-2">
                             Risk Assessment:
                           </div>
                           <div className="flex items-center">
-                            <div className="w-full bg-gray-800/50 rounded-full h-2.5">
+                            <div className="w-full bg-slate-200 rounded-full h-2.5">
                               <div
                                 className={`h-2.5 rounded-full ${
                                   stockRecommendation.riskRating === "Low"
@@ -1266,12 +1281,12 @@ const StockSearchs = () => {
                       )}
 
                       {stockRecommendation.trendStrength && (
-                        <div className="bg-white/5 rounded-lg p-3">
-                          <div className="text-sm text-white mb-2">
+                        <div className="rounded-lg border border-slate-200 bg-white p-3">
+                          <div className="text-sm text-slate-700 font-bold mb-2">
                             Trend Strength:
                           </div>
                           <div className="flex items-center">
-                            <div className="w-full bg-gray-800/50 rounded-full h-2.5">
+                            <div className="w-full bg-slate-200 rounded-full h-2.5">
                               <div
                                 className={`h-2.5 rounded-full ${
                                   parseFloat(
@@ -1296,23 +1311,23 @@ const StockSearchs = () => {
                                 }}
                               ></div>
                             </div>
-                            <span className="ml-2 text-sm font-medium text-white">
+                            <span className="ml-2 text-sm font-bold text-slate-700">
                               {stockRecommendation.trendStrength}%
                             </span>
                           </div>
                         </div>
                       )}
 
-                      <p className="text-gray-300 mt-4">
+                      <p className="text-slate-700 mt-4 leading-7">
                         {stockRecommendation.reason}
                       </p>
-                      <div className="text-sm text-gray-400 mt-2">
+                      <div className="text-sm text-slate-500 mt-2">
                         This recommendation is based on technical analysis of
                         recent price movements and trends.
                       </div>
                     </div>
                   ) : (
-                    <p className="text-gray-400">
+                    <p className="text-slate-500">
                       No recommendation available for this stock.
                     </p>
                   )}
