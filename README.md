@@ -1,5 +1,12 @@
 # MarketSense: AI-Powered Stock Market Analysis Platform
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Frontend: Next.js](https://img.shields.io/badge/frontend-Next.js-black)](frontend)
+[![Backend: FastAPI](https://img.shields.io/badge/backend-FastAPI-009688)](backend)
+[![Auth: Express](https://img.shields.io/badge/auth-Express-404d59)](backend)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](frontend/tsconfig.json)
+[![Open Source](https://img.shields.io/badge/open%20source-friendly-brightgreen)](CONTRIBUTING.md)
+
 MarketSense is an advanced, open-source stock market analysis platform powered by AI and machine learning. It provides real-time insights, predictive analytics, and intelligent recommendations of trading simulation tools for both beginners and experienced traders.
 
 ## Features
