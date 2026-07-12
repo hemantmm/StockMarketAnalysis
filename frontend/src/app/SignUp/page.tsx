@@ -25,7 +25,7 @@ const SignUpPage = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleLoginPage = () => {
-    router.push('/Login');
+    router.push("/login");
   };
 
   const validateForm = () => {
@@ -84,7 +84,7 @@ const SignUpPage = () => {
       });
       setSuccessMsg('Account created successfully! Redirecting to login...');
       setTimeout(() => {
-        router.push('/Login');
+        router.push("/login");
       }, 2000);
     } catch (error) {
       console.error('There was an error!', error);

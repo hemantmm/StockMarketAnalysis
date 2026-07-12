@@ -694,7 +694,7 @@ const StockSearchs = () => {
                 <span className="hidden sm:inline">Home</span>
               </button>
               <button
-                onClick={() => router.push("/Portfolio")}
+                onClick={() => router.push("/portfolio")}
                 className="flex-1 sm:flex-initial px-4 sm:px-5 py-2.5 rounded-lg border border-emerald-200 bg-emerald-50 font-bold text-emerald-800 shadow-sm transition hover:bg-emerald-100 flex items-center justify-center space-x-2 text-sm sm:text-base"
               >
                 <FaChartPie className="text-xs sm:text-sm" />
@@ -708,7 +708,7 @@ const StockSearchs = () => {
                 <span className="hidden sm:inline">Hold Stock</span>
               </button>
               <button
-                onClick={() => router.push("/Watchlist")}
+                onClick={() => router.push("/watchlist")}
                 className="flex-1 sm:flex-initial px-4 sm:px-5 py-2.5 rounded-lg bg-slate-950 font-bold text-white shadow-sm transition hover:bg-slate-800 flex items-center justify-center space-x-2 text-sm sm:text-base"
               >
                 <FaStar className="text-xs sm:text-sm" />

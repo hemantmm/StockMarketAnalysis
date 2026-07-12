@@ -57,7 +57,7 @@ export default function TradingPage() {
         } else {
           setMessage('Please login to access trading features');
           setMessageType('error');
-          setTimeout(() => router.push('/Login'), 2000);
+          setTimeout(() => router.push("/login"), 2000);
         }
       } catch (err) {
         console.error('Auth check error:', err);
@@ -287,7 +287,7 @@ export default function TradingPage() {
           <FaSearch size={24} />
         </button>
         <button
-          onClick={() => router.push("/Watchlist")}
+          onClick={() => router.push("/watchlist")}
           className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-yellow-300 hover:bg-white/10 transition-all"
         >
           <FaStar size={24} />
@@ -299,7 +299,7 @@ export default function TradingPage() {
           <FaRocket size={24} />
         </button>
         <button
-          onClick={() => router.push("/Portfolio")}
+          onClick={() => router.push("/portfolio")}
           className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-emerald-400 hover:bg-white/10 transition-all"
         >
           <FaChartPie size={24} />
@@ -323,7 +323,7 @@ export default function TradingPage() {
             <UserMenu user={user} />
           ) : (
             <button
-              onClick={() => router.push('/Login')}
+              onClick={() => router.push("/login")}
               className="px-6 py-2 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-full font-semibold hover:shadow-lg hover:shadow-yellow-500/25 transition-all duration-300 transform hover:scale-105"
             >
               Login
@@ -498,7 +498,7 @@ export default function TradingPage() {
           <div className="text-3xl font-bold bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent mb-4">Authentication Required</div>
           <p className="text-gray-300 mb-6">Please log in to access the trading platform</p>
           <button 
-            onClick={() => router.push('/Login')}
+            onClick={() => router.push("/login")}
             className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-amber-600 text-black rounded-xl font-semibold hover:opacity-90 transition-opacity"
           >
             Go to Login

@@ -65,7 +65,7 @@ const ProfilePage = () => {
           <p className="mb-6">You must be logged in to view your profile.</p>
           <button
             className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold"
-            onClick={() => router.push("/Login")}
+            onClick={() => router.push("/login")}
           >
             Login
           </button>

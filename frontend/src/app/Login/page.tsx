@@ -19,7 +19,7 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSignUpPage = () => {
-    router.push('/SignUp');
+    router.push("/signup");
   };
 
   const handleLogin = async (e: React.FormEvent) => {

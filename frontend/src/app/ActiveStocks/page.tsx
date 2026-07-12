@@ -334,7 +334,7 @@ const ActiveStocks = () => {
               <UserMenu user={user} />
             ) : (
               <button
-                onClick={() => router.push('/Login')}
+                onClick={() => router.push("/login")}
                 aria-label="Login"
                 className="px-4 lg:px-6 py-2 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-full font-semibold hover:shadow-lg hover:shadow-yellow-500/25 transition-all duration-300 transform hover:scale-105 text-sm"
               >
@@ -387,7 +387,7 @@ const ActiveStocks = () => {
               <span className="hidden sm:inline text-sm">Search</span>
             </button>
             <button
-              onClick={() => router.push("/Portfolio")}
+              onClick={() => router.push("/portfolio")}
               aria-label="Portfolio"
               className="flex items-center space-x-2 px-3 sm:px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 transition-all duration-300 shrink-0"
             >

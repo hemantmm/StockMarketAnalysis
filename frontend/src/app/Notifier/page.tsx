@@ -576,7 +576,7 @@ const NotifierPage = () => {
             </div>
 
             <div 
-              onClick={() => router.push("/Portfolio")}
+              onClick={() => router.push("/portfolio")}
               className="backdrop-blur-xl bg-gradient-to-br from-emerald-500/10 to-green-600/10 rounded-2xl border border-emerald-500/30 p-6 cursor-pointer hover:bg-emerald-500/20 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-emerald-500/25 group"
             >
               <div className="flex items-center space-x-4">
@@ -642,7 +642,7 @@ const NotifierPage = () => {
               <div className="space-y-2">
                 <button onClick={() => router.push("/")} className="block text-gray-400 hover:text-yellow-400 transition-colors text-sm">Home</button>
                 <button onClick={() => router.push("/StockSearchs")} className="block text-gray-400 hover:text-yellow-400 transition-colors text-sm">Stock Search</button>
-                <button onClick={() => router.push("/Portfolio")} className="block text-gray-400 hover:text-yellow-400 transition-colors text-sm">Portfolio</button>
+                <button onClick={() => router.push("/portfolio")} className="block text-gray-400 hover:text-yellow-400 transition-colors text-sm">Portfolio</button>
               </div>
             </div>
             

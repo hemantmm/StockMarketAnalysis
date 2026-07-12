@@ -64,7 +64,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
           </div>
           
           <button 
-            onClick={() => router.push('/Portfolio')}
+            onClick={() => router.push("/portfolio")}
             className="flex w-full items-center px-4 py-2 text-sm text-white hover:bg-gray-700"
           >
             <FaHistory className="mr-2" />
@@ -72,7 +72,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
           </button>
           
           <button 
-            onClick={() => router.push('/Profile')}
+            onClick={() => router.push("/profile")}
             className="flex w-full items-center px-4 py-2 text-sm text-white hover:bg-gray-700"
           >
             <FaCog className="mr-2" />

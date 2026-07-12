@@ -376,7 +376,7 @@ const Portfolio = () => {
               </button>
 
               <button
-                onClick={() => router.push('/Trading')}
+                onClick={() => router.push("/trading")}
                 className="group flex items-center space-x-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-gray-300 hover:text-yellow-300 hover:border-yellow-500/40 transition-all duration-300"
               >
                 <FaChartLine className="group-hover:rotate-12 transition-transform duration-300" />
@@ -522,7 +522,7 @@ const Portfolio = () => {
               <p className="text-2xl font-bold text-gray-300 mb-2">No Holdings Yet</p>
               <p className="text-gray-500 mb-6">Start trading when the market opens to build your portfolio</p>
               <button
-                onClick={() => router.push('/Trading')}
+                onClick={() => router.push("/trading")}
                 className="bg-gradient-to-r from-yellow-400 to-amber-600 hover:from-yellow-300 hover:to-amber-500 px-8 py-3 rounded-xl text-black font-semibold transition-all duration-300 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 hover:scale-105"
               >
                 Start Trading

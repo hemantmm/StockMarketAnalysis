@@ -35,14 +35,14 @@ const navigationItems = [
   {
     label: "Watchlist",
     icon: FaStar,
-    href: "/Watchlist",
+    href: "/watchlist",
     description: "Keep your preferred symbols close and compare them from one focused view.",
     metric: "Saved ideas",
   },
   {
     label: "Portfolio",
     icon: FaChartPie,
-    href: "/Portfolio",
+    href: "/portfolio",
     description: "Track allocation, holdings, and investment exposure in a cleaner workspace.",
     metric: "Holdings",
   },
@@ -56,7 +56,7 @@ const navigationItems = [
   {
     label: "Trading",
     icon: FaChartLine,
-    href: "/Trading",
+    href: "/trading",
     description: "Review strategy signals and trading activity before taking the next step.",
     metric: "Execution",
   },
@@ -157,7 +157,7 @@ const HomePage = () => {
               <UserMenu user={user} />
             ) : (
               <button
-                onClick={() => router.push("/Login")}
+                onClick={() => router.push("/login")}
                 className="rounded-lg bg-slate-950 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-slate-800"
               >
                 Login

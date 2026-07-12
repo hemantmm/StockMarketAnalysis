@@ -412,7 +412,7 @@ const WatchlistPage = () => {
                 <span className="hidden sm:inline">Search</span>
               </button>
               <button
-                onClick={() => router.push("/Portfolio")}
+                onClick={() => router.push("/portfolio")}
                 className="group flex-1 sm:flex-initial px-4 sm:px-6 py-2.5 bg-gradient-to-br from-emerald-600 via-green-600 to-green-700 rounded-full font-bold hover:shadow-2xl hover:shadow-emerald-500/50 transition-all duration-300 transform hover:scale-110 hover:-translate-y-0.5 flex items-center justify-center space-x-2 text-sm sm:text-base border border-emerald-400/30"
               >
                 <FaChartPie className="text-xs sm:text-sm group-hover:rotate-12 transition-transform" />
@@ -422,7 +422,7 @@ const WatchlistPage = () => {
                 <UserMenu user={user} />
               ) : (
                 <button 
-                  onClick={() => router.push('/Login')}
+                  onClick={() => router.push("/login")}
                   className="px-4 sm:px-6 py-2.5 bg-gradient-to-br from-blue-600 via-indigo-600 to-indigo-700 rounded-full font-bold hover:shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 transform hover:scale-110 hover:-translate-y-0.5 text-sm sm:text-base border border-blue-400/30"
                 >
                   Login
@@ -637,7 +637,7 @@ const WatchlistPage = () => {
                 {!userId && (
                   <div className="text-center mt-6">
                     <button 
-                      onClick={() => router.push('/Login')}
+                      onClick={() => router.push("/login")}
                       className="px-8 py-3 bg-gradient-to-br from-blue-600 via-indigo-600 to-indigo-700 rounded-2xl font-black hover:shadow-2xl hover:shadow-blue-500/50 transition-all transform hover:scale-110 hover:-translate-y-1 border-2 border-blue-400/30"
                     >
                       Log In
@@ -699,7 +699,7 @@ const WatchlistPage = () => {
                   Sign in to create and manage your personal watchlist
                 </p>
                 <button
-                  onClick={() => router.push("/Login")}
+                  onClick={() => router.push("/login")}
                   className="px-10 py-4 bg-gradient-to-br from-yellow-400 via-amber-500 to-orange-500 text-black rounded-2xl font-black hover:shadow-2xl hover:shadow-yellow-500/50 transition-all duration-300 transform hover:scale-110 hover:-translate-y-1 text-lg"
                 >
                   Sign In
